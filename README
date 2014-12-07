@@ -2,20 +2,22 @@ README
 ======
 
 libwired is a portable C runtime library that provides support for a lightweight
-object-oriented class system with polymorphic functions. It also provides easy to
-use APIs for common data structures, strings, files and sockets, including secure
-TLS based networking. It was originally created for a client/server system called
-"Wired", and is especially suited for creating portable network applications.
+object-oriented class system with polymorphic functions. It also provides easy
+to use APIs for common data structures, strings, files and sockets, including
+secure TLS based networking. It was originally created for a client/server
+system called "Wired", and is especially suited for creating portable network
+applications.
 
 
 USAGE
 =====
 
-Run the `configure` script provided with the `--help` flag to see available options.
-Depending on the options, certain functionality may not be included. After configuring
-as needed, run `make`. The library and its header files will be placed in the `run/`
-directory. From there, either copy the library and the headers to your project, or
-include the `run/include/` and `run/lib` paths when building your project.
+Run the `configure` script provided with the `--help` flag to see available
+options. Depending on the options, certain functionality may not be included.
+After configuring as needed, run `make`. The library and its header files will
+be placed in the `run/` directory. From there, either copy the library and the
+headers to your project, or include the `run/include/` and `run/lib` paths when
+building your project.
 
 libwired is currently only available as a static library.
 
@@ -24,12 +26,12 @@ CLASS SYSTEM
 ============
 
 libwired is designed around a class system where objects are called "instances".
-An instance is a struct which contains a special runtime base struct as its first
-member. Registering an instance with the runtime gives it an "instance id", which
-can later be queried. Instance registration also points out concrete implementations
-of functions that can then be polymorphic, i.e. used with any instance in the system.
-These include the memory management functions, and functions to copy, hash or get a
-description for an instance.
+An instance is a struct which contains a special runtime base struct as its
+first member. Registering an instance with the runtime gives it an "instance
+id", which can later be queried. Instance registration also points out concrete
+implementations of functions that can then be polymorphic, i.e. used with any
+instance in the system. These include the memory management functions, and
+functions to copy, hash or get a description for an instance.
 
 See `wi-runtime.h` for more information.
 
@@ -37,16 +39,17 @@ See `wi-runtime.h` for more information.
 MEMORY MANAGEMENT
 =================
 
-Memory is managed by a retain count system. All instances respond to functions to
-retain the instance, release the instance and query the instance's current retain
-count. This system is based on ownership. If you create an instance using an "alloc"
-function or a "copy" function, e.g. a function that includes those terms as part of
-its name, you now own the instance. You can also gain ownership of an existing instance
-by calling "retain" on it. After "alloc"-ing, "copy"-ing or "retain"-ing, you are
-responsible for calling "release" on the instance when you're done with it. If you
-are the last or only owner of the instance, "release"-ing will cause the instance's
-retain count to go to zero, and the instance's "dealloc" function will be called and
-the instance's memory deallocated.
+Memory is managed by a retain count system. All instances respond to functions
+to retain the instance, release the instance and query the instance's current
+retain count. This system is based on ownership. If you create an instance using
+an "alloc" function or a "copy" function, e.g. a function that includes those
+terms as part of its name, you now own the instance. You can also gain ownership
+of an existing instance by calling "retain" on it. After "alloc"-ing, "copy"-ing
+or "retain"-ing, you are responsible for calling "release" on the instance when
+you're done with it. If you are the last or only owner of the instance,
+"release"-ing will cause the instance's retain count to go to zero, and the
+instance's "dealloc" function will be called and the instance's memory
+deallocated.
 
 As a special feature, you can also call "autorelease" on an instance. There is a
 special class of instances called "pools". Creating a "pool" instance makes that
@@ -55,7 +58,8 @@ instance will not be immediately released nor will its retain count immediately
 go down. Instead, the actual release will be called when the current pool is
 drained or deallocated.
 
-Most functionality in libwired requires there to be a pool in place. A pool should
-be created at startup and depending on the application itself, periodically drained.
+Most functionality in libwired requires there to be a pool in place. A pool
+should be created at startup and depending on the application itself,
+periodically drained.
 
 See `wi-runtime.h` and `wi-pool.h` for more information.
