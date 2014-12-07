@@ -194,10 +194,6 @@ typedef struct _wi_array			wi_mutable_array_t;
 typedef struct _wi_string			wi_string_t;
 typedef struct _wi_string			wi_mutable_string_t;
 
-typedef struct _wi_p7_message		wi_p7_message_t;
-typedef struct _wi_p7_socket		wi_p7_socket_t;
-typedef struct _wi_p7_spec			wi_p7_spec_t;
-
 
 WI_EXPORT void						wi_initialize(void);
 WI_EXPORT void						wi_load(int, const char **);
