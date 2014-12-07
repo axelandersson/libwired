@@ -1,7 +1,5 @@
-/* $Id: wi-ip.c 7196 2009-03-27 16:15:57Z morris $ */
-
 /*
- *  Copyright (c) 2003-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

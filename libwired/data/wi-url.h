@@ -1,7 +1,5 @@
-/* $Id: wi-url.h 7835 2009-10-01 01:39:41Z morris $ */
-
 /*
- *  Copyright (c) 2003-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

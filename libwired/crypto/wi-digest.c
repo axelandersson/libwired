@@ -1,7 +1,5 @@
-/* $Id: wi-digest.c 7800 2009-09-27 14:28:23Z morris $ */
-
 /*
- *  Copyright (c) 2008-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

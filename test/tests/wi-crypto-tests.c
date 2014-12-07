@@ -1,7 +1,5 @@
-/* $Id: wi-crypto-tests.c 7501 2009-09-02 10:42:06Z morris $ */
-
 /*
- *  Copyright (c) 2007-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

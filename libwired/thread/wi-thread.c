@@ -1,7 +1,5 @@
-/* $Id: wi-thread.c 7176 2009-03-27 11:17:05Z morris $ */
-
 /*
- *  Copyright (c) 2005-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

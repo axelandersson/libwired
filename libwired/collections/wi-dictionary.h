@@ -1,7 +1,5 @@
-/* $Id: wi-dictionary.h 7880 2009-10-11 02:12:14Z morris $ */
-
 /*
- *  Copyright (c) 2005-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

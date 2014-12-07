@@ -1,7 +1,5 @@
-/* $Id: wi-file.h 7403 2009-08-20 21:20:06Z morris $ */
-
 /*
- *  Copyright (c) 2005-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  * 
  *  Redistribution and use in source and binary forms, with or without

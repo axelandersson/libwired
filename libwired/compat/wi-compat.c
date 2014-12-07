@@ -1,7 +1,5 @@
-/* $Id: wi-compat.c 8194 2010-06-08 23:21:02Z morris $ */
-
 /*
- *  Copyright (c) 2005-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

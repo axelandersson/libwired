@@ -1,7 +1,5 @@
-/* $Id: wi-error.c 8167 2009-11-28 01:28:53Z morris $ */
-
 /*
- *  Copyright (c) 2003-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

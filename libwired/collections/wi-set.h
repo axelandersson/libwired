@@ -1,7 +1,5 @@
-/* $Id: wi-set.h 8071 2009-10-31 22:18:03Z morris $ */
-
 /*
- *  Copyright (c) 2006-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

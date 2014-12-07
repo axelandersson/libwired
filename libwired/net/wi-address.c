@@ -1,7 +1,5 @@
-/* $Id: wi-address.c 6776 2009-02-04 18:39:51Z morris $ */
-
 /*
- *  Copyright (c) 2003-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

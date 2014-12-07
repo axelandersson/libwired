@@ -1,7 +1,5 @@
-/* $Id: wi-plist.c 8141 2009-11-18 13:13:21Z morris $ */
-
 /*
- *  Copyright (c) 2008-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  * 
  *  Redistribution and use in source and binary forms, with or without

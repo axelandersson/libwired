@@ -1,7 +1,5 @@
-/* $Id: wi-x509.c 7191 2009-03-27 14:13:09Z morris $ */
-
 /*
- *  Copyright (c) 2008-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

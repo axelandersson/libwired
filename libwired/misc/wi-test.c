@@ -1,7 +1,5 @@
-/* $Id: wi-test.c 7201 2009-03-27 17:24:30Z morris $ */
-
 /*
- *  Copyright (c) 2007-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

@@ -1,7 +1,5 @@
-/* $Id: wi-timer-tests.c 7154 2009-03-24 18:43:33Z morris $ */
-
 /*
- *  Copyright (c) 2008-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

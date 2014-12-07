@@ -1,7 +1,5 @@
-/* $Id: wi-base.c 8147 2009-11-18 22:02:50Z morris $ */
-
 /*
- *  Copyright (c) 2005-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

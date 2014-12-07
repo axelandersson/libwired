@@ -1,5 +1,3 @@
-/* $Id: wi-byteorder.h 7823 2009-09-28 16:52:40Z morris $ */
-
 /*
  *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.

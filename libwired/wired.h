@@ -1,7 +1,5 @@
-/* $Id: wired.h 8146 2009-11-18 16:20:19Z morris $ */
-
 /*
- *  Copyright (c) 2003-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

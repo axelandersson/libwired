@@ -1,7 +1,5 @@
-/* $Id: wi-task.c 7181 2009-03-27 13:39:02Z morris $ */
-
 /*
- *  Copyright (c) 2007-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

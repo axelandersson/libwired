@@ -1,7 +1,5 @@
-/* $Id: wi-cipher.c 7936 2009-10-15 19:22:31Z morris $ */
-
 /*
- *  Copyright (c) 2007-2009 Axel Andersson
+ *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
