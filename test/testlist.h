@@ -2,6 +2,7 @@ WI_TEST_EXPORT void						wi_test_crypto_cipher(void);
 WI_TEST_EXPORT void						wi_test_crypto_rsa(void);
 WI_TEST_EXPORT void						wi_test_fsevents(void);
 WI_TEST_EXPORT void						wi_test_ip(void);
+WI_TEST_EXPORT void						wi_test_json(void);
 WI_TEST_EXPORT void						wi_test_number(void);
 WI_TEST_EXPORT void						wi_test_plist(void);
 WI_TEST_EXPORT void						wi_test_runtime_initialize(void);

@@ -112,6 +112,11 @@ static const char 						*_wi_error_strings[] = {
 	/* WI_ERROR_PLIST_WRITEFAILED */
 	"Property list write failed",
 	
+    /* WI_ERROR_JSON_READFAILED */
+    "JSON read failed",
+    /* WI_ERROR_JSON_WRITEFAILED */
+    "JSON write failed",
+    
 	/* WI_ERROR_REGEXP_NOSLASH */
 	"Missing \"/\"",
 	/* WI_ERROR_REGEXP_INVALIDOPTION */

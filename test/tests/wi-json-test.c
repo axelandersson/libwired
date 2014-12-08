@@ -24,53 +24,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WIRED_H
-#define WIRED_H 1
+#include <wired/wired.h>
+#include "test.h"
 
-#include <wired/wi-address.h>
-#include <wired/wi-array.h>
-#include <wired/wi-assert.h>
-#include <wired/wi-base.h>
-#include <wired/wi-byteorder.h>
-#include <wired/wi-cipher.h>
-#include <wired/wi-compat.h>
-#include <wired/wi-data.h>
-#include <wired/wi-date.h>
-#include <wired/wi-dictionary.h>
-#include <wired/wi-digest.h>
-#include <wired/wi-enumerator.h>
-#include <wired/wi-error.h>
-#include <wired/wi-file.h>
-#include <wired/wi-fs.h>
-#include <wired/wi-fsenumerator.h>
-#include <wired/wi-fsevents.h>
-#include <wired/wi-fts.h>
-#include <wired/wi-host.h>
-#include <wired/wi-ip.h>
-#include <wired/wi-json.h>
-#include <wired/wi-lock.h>
-#include <wired/wi-log.h>
-#include <wired/wi-macros.h>
-#include <wired/wi-null.h>
-#include <wired/wi-number.h>
-#include <wired/wi-plist.h>
-#include <wired/wi-pool.h>
-#include <wired/wi-process.h>
-#include <wired/wi-random.h>
-#include <wired/wi-rsa.h>
-#include <wired/wi-regexp.h>
-#include <wired/wi-runtime.h>
-#include <wired/wi-set.h>
-#include <wired/wi-socket.h>
-#include <wired/wi-string.h>
-#include <wired/wi-system.h>
-#include <wired/wi-task.h>
-#include <wired/wi-test.h>
-#include <wired/wi-timer.h>
-#include <wired/wi-thread.h>
-#include <wired/wi-url.h>
-#include <wired/wi-uuid.h>
-#include <wired/wi-version.h>
-#include <wired/wi-x509.h>
+WI_TEST_EXPORT void						wi_test_json(void);
 
-#endif /* WIRED_H */
+
+void wi_test_json(void) {
+	wi_string_t			*string1, *string2;
+	wi_dictionary_t		*dictionary1, *dictionary2;
+	
+	string1 = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-json-tests-1.json"))));
+
+	dictionary1 = wi_json_instance_for_string(string1);
+	
+	WI_TEST_ASSERT_NOT_NULL(dictionary1, "%m");
+	
+	dictionary2 = wi_dictionary_with_data_and_keys(
+		WI_STR("hello world"),
+			WI_STR("string"),
+		wi_number_with_bool(true),
+			WI_STR("true"),
+		wi_number_with_bool(false),
+			WI_STR("false"),
+		wi_number_with_integer(42),
+			WI_STR("integer"),
+		wi_number_with_double(3.14),
+			WI_STR("real"),
+        wi_null(),
+            WI_STR("null"),
+		wi_dictionary_with_data_and_keys(WI_STR("value1"), WI_STR("key1"), WI_STR("value2"), WI_STR("key2"), NULL),
+			WI_STR("dict"),
+		wi_array_with_data(WI_STR("value1"), WI_STR("value2"), NULL),
+			WI_STR("array"),
+		NULL);
+	
+	WI_TEST_ASSERT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
+	
+	string2 = wi_json_string_for_instance(dictionary2);
+	
+	WI_TEST_ASSERT_EQUAL_INSTANCES(string1, string2, "");
+}

@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
- *
+ * 
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
  *  are met:
@@ -10,7 +10,7 @@
  *  2. Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,53 +24,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WIRED_H
-#define WIRED_H 1
+#ifndef WI_JSON_H
+#define WI_JSON_H 1
 
-#include <wired/wi-address.h>
-#include <wired/wi-array.h>
-#include <wired/wi-assert.h>
 #include <wired/wi-base.h>
-#include <wired/wi-byteorder.h>
-#include <wired/wi-cipher.h>
-#include <wired/wi-compat.h>
-#include <wired/wi-data.h>
-#include <wired/wi-date.h>
-#include <wired/wi-dictionary.h>
-#include <wired/wi-digest.h>
-#include <wired/wi-enumerator.h>
-#include <wired/wi-error.h>
-#include <wired/wi-file.h>
-#include <wired/wi-fs.h>
-#include <wired/wi-fsenumerator.h>
-#include <wired/wi-fsevents.h>
-#include <wired/wi-fts.h>
-#include <wired/wi-host.h>
-#include <wired/wi-ip.h>
-#include <wired/wi-json.h>
-#include <wired/wi-lock.h>
-#include <wired/wi-log.h>
-#include <wired/wi-macros.h>
-#include <wired/wi-null.h>
-#include <wired/wi-number.h>
-#include <wired/wi-plist.h>
-#include <wired/wi-pool.h>
-#include <wired/wi-process.h>
-#include <wired/wi-random.h>
-#include <wired/wi-rsa.h>
-#include <wired/wi-regexp.h>
 #include <wired/wi-runtime.h>
-#include <wired/wi-set.h>
-#include <wired/wi-socket.h>
-#include <wired/wi-string.h>
-#include <wired/wi-system.h>
-#include <wired/wi-task.h>
-#include <wired/wi-test.h>
-#include <wired/wi-timer.h>
-#include <wired/wi-thread.h>
-#include <wired/wi-url.h>
-#include <wired/wi-uuid.h>
-#include <wired/wi-version.h>
-#include <wired/wi-x509.h>
 
-#endif /* WIRED_H */
+WI_EXPORT wi_runtime_instance_t *		wi_json_read_instance_from_file(wi_string_t *);
+WI_EXPORT wi_runtime_instance_t *		wi_json_instance_for_string(wi_string_t *);
+
+WI_EXPORT wi_boolean_t					wi_json_write_instance_to_file(wi_runtime_instance_t *, wi_string_t *);
+WI_EXPORT wi_string_t *					wi_json_string_for_instance(wi_runtime_instance_t *);
+
+#endif /* WI_JSON_H */

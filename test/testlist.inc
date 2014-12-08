@@ -2,6 +2,7 @@ wi_tests_run_test("wi_test_crypto_cipher", wi_test_crypto_cipher);
 wi_tests_run_test("wi_test_crypto_rsa", wi_test_crypto_rsa);
 wi_tests_run_test("wi_test_fsevents", wi_test_fsevents);
 wi_tests_run_test("wi_test_ip", wi_test_ip);
+wi_tests_run_test("wi_test_json", wi_test_json);
 wi_tests_run_test("wi_test_number", wi_test_number);
 wi_tests_run_test("wi_test_plist", wi_test_plist);
 wi_tests_run_test("wi_test_runtime_initialize", wi_test_runtime_initialize);
