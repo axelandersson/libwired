@@ -692,6 +692,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_warnings
+enable_all
 enable_pthreads
 enable_ssl
 enable_iconv
@@ -1324,6 +1325,7 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-warnings       enable warnings
+  --enable-all            enable all support
   --enable-pthreads       enable pthreads support
   --enable-ssl            enable OpenSSL support
   --enable-iconv          enable iconv support
@@ -3937,6 +3939,14 @@ $as_echo "none" >&6; }
 fi
 
 
+# Check for all support
+# Check whether --enable-all was given.
+if test "${enable_all+set}" = set; then :
+  enableval=$enable_all;
+fi
+
+
+
 # Check for pthreads support
 # Check whether --enable-pthreads was given.
 if test "${enable_pthreads+set}" = set; then :
@@ -4682,7 +4692,7 @@ done
 
 
 
-if test -n "$enable_pthreads"; then
+if test -n "$enable_pthreads" -o -n "$enable_all"; then
 
 	if test "$wi_include_pthreads_done" != "yes"; then
 		case $host in
@@ -5054,7 +5064,7 @@ done
 
 fi
 
-if test -n "$enable_ssl"; then
+if test -n "$enable_ssl" -o -n "$enable_all"; then
 
 
 	if test "$wi_include_crypto_library_done" != "yes"; then
@@ -5389,7 +5399,7 @@ fi
 
 fi
 
-if test -n "$enable_iconv"; then
+if test -n "$enable_iconv" -o -n "$enable_all"; then
 
 	if test "$wi_include_iconv_library_done" != "yes"; then
 		for ac_header in iconv.h
@@ -5593,7 +5603,7 @@ fi
 
 fi
 
-if test -n "$enable_libxml2"; then
+if test -n "$enable_libxml2" -o -n "$enable_all"; then
 
 	if test "$wi_include_libxml2_library_done" != "yes"; then
 		if test -d /usr/include/libxml2; then
@@ -7589,10 +7599,10 @@ fi
 #######################################################################
 # Print summary
 
-if test -n "$enable_pthreads"; then enable_pthreads_string=yes; else enable_pthreads_string=no; fi
-if test -n "$enable_ssl"; then enable_ssl_string=yes; else enable_ssl_string=no; fi
-if test -n "$enable_iconv"; then enable_iconv_string=yes; else enable_iconv_string=no; fi
-if test -n "$enable_libxml2"; then enable_libxml2_string=yes; else enable_libxml2_string=no; fi
+if test -n "$enable_pthreads" -o -n "$enable_all"; then enable_pthreads_string=yes; else enable_pthreads_string=no; fi
+if test -n "$enable_ssl" -o -n "$enable_all"; then enable_ssl_string=yes; else enable_ssl_string=no; fi
+if test -n "$enable_iconv" -o -n "$enable_all"; then enable_iconv_string=yes; else enable_iconv_string=no; fi
+if test -n "$enable_libxml2" -o -n "$enable_all"; then enable_libxml2_string=yes; else enable_libxml2_string=no; fi
 
 echo ""
 echo "libwired has been configured with the following options:"
