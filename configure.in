@@ -43,10 +43,13 @@ if test -n "$enable_warnings"; then
 	WI_INCLUDE_WARNING_FLAG([-Wmissing-prototypes])
 	WI_INCLUDE_WARNING_FLAG([-Wmissing-declarations])
 	WI_INCLUDE_WARNING_FLAG([-Wredundant-decls])
+    WI_INCLUDE_WARNING_FLAG([-Wno-deprecated-declarations])
 
 	AC_MSG_RESULT([$WARNFLAGS])
 else
-	AC_MSG_RESULT([none])
+    WI_INCLUDE_WARNING_FLAG([-Wno-deprecated-declarations])
+
+    AC_MSG_RESULT([$WARNFLAGS])
 fi
 
 

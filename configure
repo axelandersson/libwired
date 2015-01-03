@@ -3559,11 +3559,7 @@ if test -n "$enable_warnings"; then
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3602,11 +3598,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3645,11 +3637,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3688,11 +3676,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3731,11 +3715,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3774,11 +3754,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3817,11 +3793,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3860,11 +3832,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3903,11 +3871,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-(
-		int main() {
-			return 0;
-		}
-	)
+
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
@@ -3931,11 +3895,90 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
+	OLD_CFLAGS="$CFLAGS"
+
+	if test -z "$CFLAGS"; then
+		CFLAGS="-Wno-deprecated-declarations"
+	else
+		MATCH=`expr -- "$CFLAGS" : ".*-Wno-deprecated-declarations"`
+
+		if test "$MATCH" = "0"; then
+			CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+		fi
+	fi
+
+
+	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+
+	if test -z "$WARNFLAGS"; then
+		WARNFLAGS="-Wno-deprecated-declarations"
+	else
+		MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-deprecated-declarations"`
+
+		if test "$MATCH" = "0"; then
+			WARNFLAGS="$WARNFLAGS -Wno-deprecated-declarations"
+		fi
+	fi
+
+
+else
+
+		CFLAGS="$OLD_CFLAGS"
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $WARNFLAGS" >&5
 $as_echo "$WARNFLAGS" >&6; }
 else
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: none" >&5
-$as_echo "none" >&6; }
+
+	OLD_CFLAGS="$CFLAGS"
+
+	if test -z "$CFLAGS"; then
+		CFLAGS="-Wno-deprecated-declarations"
+	else
+		MATCH=`expr -- "$CFLAGS" : ".*-Wno-deprecated-declarations"`
+
+		if test "$MATCH" = "0"; then
+			CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+		fi
+	fi
+
+
+	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+
+	if test -z "$WARNFLAGS"; then
+		WARNFLAGS="-Wno-deprecated-declarations"
+	else
+		MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-deprecated-declarations"`
+
+		if test "$MATCH" = "0"; then
+			WARNFLAGS="$WARNFLAGS -Wno-deprecated-declarations"
+		fi
+	fi
+
+
+else
+
+		CFLAGS="$OLD_CFLAGS"
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $WARNFLAGS" >&5
+$as_echo "$WARNFLAGS" >&6; }
 fi
 
 
