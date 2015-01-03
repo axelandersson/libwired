@@ -47,8 +47,6 @@
 
 wi_string_t					*wi_root_path = NULL;
 
-wi_boolean_t				wi_chrooted = false;
-
 
 
 void wi_initialize(void) {
