@@ -19,6 +19,12 @@ be placed in the `run/` directory. From there, either copy the library and the
 headers to your project, or include the `run/include/` and `run/lib` paths when
 building your project.
 
+The short, recommended way:
+
+    ./configure --enable-all
+    make
+    ls -l run/lib run/include/wired
+
 libwired is currently only available as a static library.
 
 
