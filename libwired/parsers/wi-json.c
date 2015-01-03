@@ -40,7 +40,7 @@
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
 
-static wi_string_t *                _wi_json_quoted_string_for_string(wi_string_t *);
+static wi_string_t *                _wi_json_quoted_string_for_string(wi_string_t *, wi_uinteger_t *);
 static wi_string_t *                _wi_json_number_string_for_string(wi_string_t *, wi_boolean_t *);
 static wi_string_t *                _wi_json_boolean_or_null_string_for_string(wi_string_t *);
 
@@ -66,7 +66,7 @@ wi_runtime_instance_t * wi_json_read_instance_from_file(wi_string_t *path) {
 wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
 	wi_runtime_instance_t       *top_container, *current_container, *current_underlying_container, *container, *current_value;
     wi_string_t                 *substring, *current_key;
-    wi_uinteger_t               i;
+    wi_uinteger_t               i, characters;
     wi_boolean_t                isfloat;
     char                        ch;
     
@@ -91,7 +91,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                     if(wi_runtime_id(current_container) == wi_dictionary_runtime_id()) {
                         if(!current_key) {
                             wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
-                                WI_STR("Syntax error while reading collection"));
+                                WI_STR("Syntax error while reading collection (no key parsed)"));
                             
                             return NULL;
                         }
@@ -121,10 +121,12 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                 break;
             
             case '"':
-                substring = _wi_json_quoted_string_for_string(wi_string_substring_from_index(string, i));
+                substring = _wi_json_quoted_string_for_string(wi_string_substring_from_index(string, i), &characters);
                 
                 if(!substring) {
-                    wi_log_info(WI_STR("no string parsed"));
+                    wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
+                        WI_STR("Syntax error while reading string (no value parsed)"));
+                    
                     return NULL;
                 }
                 
@@ -137,7 +139,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                     if(wi_runtime_id(current_container) == wi_dictionary_runtime_id()) {
                         if(!current_key) {
                             wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
-                                WI_STR("Syntax error while reading string"));
+                                WI_STR("Syntax error while reading string (no key parsed)"));
                             
                             return NULL;
                         }
@@ -153,7 +155,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                     current_value = NULL;
                 }
                 
-                i += wi_string_length(substring) + 1;
+                i += characters + 1;
                 break;
             
             case '0':
@@ -170,7 +172,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                 
                 if(!substring) {
                     wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
-                        WI_STR("Syntax error while reading number"));
+                        WI_STR("Syntax error while reading number (no value parsed)"));
                     
                     return NULL;
                 }
@@ -184,7 +186,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                     if(wi_runtime_id(current_container) == wi_dictionary_runtime_id()) {
                         if(!current_key) {
                             wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
-                                WI_STR("Syntax error while reading number"));
+                                WI_STR("Syntax error while reading number (no key parsed)"));
                             
                             return NULL;
                         }
@@ -210,7 +212,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                 
                 if(!substring) {
                     wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
-                        WI_STR("Syntax error while reading boolean or null"));
+                        WI_STR("Syntax error while reading boolean or null (no value parsed)"));
                     
                     return NULL;
                 }
@@ -226,7 +228,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
                     if(wi_runtime_id(current_container) == wi_dictionary_runtime_id()) {
                         if(!current_key) {
                             wi_error_set_libwired_error_with_format(WI_ERROR_JSON_READFAILED,
-                                WI_STR("Syntax error while reading boolean or null"));
+                                WI_STR("Syntax error while reading boolean or null (no key parsed)"));
                             
                             return NULL;
                         }
@@ -284,28 +286,55 @@ wi_string_t * wi_json_string_for_instance(wi_runtime_instance_t *instance) {
 
 #pragma mark -
 
-static wi_string_t * _wi_json_quoted_string_for_string(wi_string_t *string) {
-    wi_uinteger_t       i;
-    wi_range_t          range;
-    char                ch;
+static wi_string_t * _wi_json_quoted_string_for_string(wi_string_t *string, wi_uinteger_t *characters) {
+    wi_mutable_string_t     *quoted_string;
+    wi_uinteger_t           i, skipped;
+    char                    ch;
     
-    range.location = 1;
+    quoted_string = wi_mutable_string();
+    skipped = 0;
     
     for(i = 1; i < wi_string_length(string); i++) {
         ch = wi_string_character_at_index(string, i);
         
-        if(ch == '"') {
-            range.length = i - 1;
-            
+        if(ch == '\"') {
             break;
-        } else {
-            if(ch == '\\' && i + 1 < wi_string_length(string)) {
+        }
+        else if(ch == '\\' && i + 1 < wi_string_length(string)) {
+            ch = wi_string_character_at_index(string, ++i);
+            
+            switch(ch) {
+                case '\"':
+                case '\\':
+                case '/':
+                case 'b':
+                case 'f':
+                case 'r':
+                case 'n':
+                case 't':
+                    wi_mutable_string_append_format(quoted_string, WI_STR("%c"), ch);
+                    break;
                 
+                case 'u':
+                    break;
+                
+                default:
+                    return NULL;
+                    break;
             }
+            
+            skipped++;
+        }
+        else {
+            wi_mutable_string_append_format(quoted_string, WI_STR("%c"), ch);
         }
     }
     
-    return wi_string_substring_with_range(string, range);
+    WI_LOG_INSTANCE(quoted_string);
+    
+    *characters = wi_string_length(quoted_string) + skipped;
+    
+    return quoted_string;
 }
 
 
@@ -438,7 +467,16 @@ static wi_string_t * _wi_json_string_for_value(wi_runtime_instance_t *value) {
 
 
 static wi_string_t * _wi_json_string_for_string(wi_string_t *value) {
-    return wi_string_with_format(WI_STR("\"%@\""), value);
+    wi_mutable_string_t     *escaped_string;
+    
+    escaped_string = wi_mutable_copy(value);
+    
+    wi_mutable_string_replace_string_with_string(escaped_string, WI_STR("\\"), WI_STR("\\\\"), 0);
+    wi_mutable_string_replace_string_with_string(escaped_string, WI_STR("\""), WI_STR("\\\""), 0);
+    
+    WI_LOG_INSTANCE(escaped_string);
+    
+    return wi_string_with_format(WI_STR("\"%@\""), escaped_string);
 }
 
 

@@ -107,7 +107,7 @@ static void								_wi_string_append_arguments(wi_string_t *, const char *, va_l
 static void								_wi_string_append_cstring(wi_string_t *, const char *);
 static void								_wi_string_append_bytes(wi_string_t *, const void *, wi_uinteger_t);
 
-static wi_string_t *					_wi_string_sqlite3_escaped_string(wi_string_t *);
+static wi_string_t *					_wi_string_quoted_string(wi_string_t *);
 
 static wi_boolean_t						_wi_mutable_string_char_is_whitespace(char);
 
@@ -584,7 +584,7 @@ nextflag:
 				description = wi_description(va_arg(ap, wi_runtime_instance_t *));
 				
 				if(description) {
-					description = _wi_string_sqlite3_escaped_string(description);
+					description = _wi_string_quoted_string(description);
 					_wi_string_append_cstring(string, description->string);
 					totalsize += description->length;
 				} else {
@@ -597,7 +597,7 @@ nextflag:
 				description = wi_description(va_arg(ap, wi_runtime_instance_t *));
 				
 				if(description) {
-					description = _wi_string_sqlite3_escaped_string(description);
+					description = _wi_string_quoted_string(description);
 					_wi_string_append_cstring(string, "'");
 					_wi_string_append_cstring(string, description->string);
 					_wi_string_append_cstring(string, "'");
@@ -807,12 +807,12 @@ static void _wi_string_append_bytes(wi_string_t *string, const void *buffer, wi_
 
 #pragma mark -
 
-static wi_string_t * _wi_string_sqlite3_escaped_string(wi_string_t *string) {
+static wi_string_t * _wi_string_quoted_string(wi_string_t *string) {
 	wi_mutable_string_t		*newstring;
 	wi_range_t				range, searchrange;
 	
-	newstring		= wi_mutable_copy(string);
-	searchrange		= wi_make_range(0, wi_string_length(newstring));
+	newstring = wi_mutable_copy(string);
+	searchrange = wi_make_range(0, wi_string_length(newstring));
 	
 	while((range = wi_string_range_of_string_in_range(newstring, WI_STR("'"), 0, searchrange)).location != WI_NOT_FOUND) {
 		wi_mutable_string_replace_characters_in_range_with_string(newstring, range, WI_STR("''"));
@@ -1750,13 +1750,17 @@ void wi_mutable_string_replace_characters_in_range_with_string(wi_mutable_string
 
 
 void wi_mutable_string_replace_string_with_string(wi_mutable_string_t *string, wi_string_t *target, wi_string_t *replacement, wi_uinteger_t options) {
-	wi_range_t		range;
+	wi_range_t		range, searchrange;
 	
 	WI_RUNTIME_ASSERT_MUTABLE(string);
+    
+    searchrange = wi_make_range(0, wi_string_length(string));
 	
-	while((range = wi_string_range_of_string(string, target, options)).location != WI_NOT_FOUND) {
-		wi_mutable_string_delete_characters_in_range(string, range);
-		wi_mutable_string_insert_string_at_index(string, replacement, range.location);
+	while((range = wi_string_range_of_string_in_range(string, target, options, searchrange)).location != WI_NOT_FOUND) {
+        wi_mutable_string_replace_characters_in_range_with_string(string, range, replacement);
+        
+        searchrange.location = range.location + wi_string_length(replacement);
+        searchrange.length = wi_string_length(string) - searchrange.location;
 	}
 }
 
