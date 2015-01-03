@@ -330,8 +330,6 @@ static wi_string_t * _wi_json_quoted_string_for_string(wi_string_t *string, wi_u
         }
     }
     
-    WI_LOG_INSTANCE(quoted_string);
-    
     *characters = wi_string_length(quoted_string) + skipped;
     
     return quoted_string;
@@ -473,8 +471,6 @@ static wi_string_t * _wi_json_string_for_string(wi_string_t *value) {
     
     wi_mutable_string_replace_string_with_string(escaped_string, WI_STR("\\"), WI_STR("\\\\"), 0);
     wi_mutable_string_replace_string_with_string(escaped_string, WI_STR("\""), WI_STR("\\\""), 0);
-    
-    WI_LOG_INSTANCE(escaped_string);
     
     return wi_string_with_format(WI_STR("\"%@\""), escaped_string);
 }

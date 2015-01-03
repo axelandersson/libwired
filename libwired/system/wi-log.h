@@ -42,12 +42,23 @@ enum _wi_log_level {
 };
 typedef enum _wi_log_level			wi_log_level_t;
 
+enum _wi_log_style {
+    WI_LOG_DAEMON,
+    WI_LOG_TOOL
+};
+typedef enum _wi_log_style          wi_log_style_t;
+
 
 typedef void						wi_log_callback_func_t(wi_log_level_t, wi_string_t *);
 
 
-WI_EXPORT void						wi_log_open(void);
-WI_EXPORT void						wi_log_close(void);
+WI_EXPORT void                      wi_log_set_level(wi_log_level_t);
+WI_EXPORT wi_log_level_t            wi_log_level(void);
+
+WI_EXPORT void                      wi_log_add_stdout_logger(wi_log_style_t);
+WI_EXPORT void                      wi_log_add_file_logger(wi_string_t *, wi_uinteger_t);
+WI_EXPORT void                      wi_log_add_syslog_logger(int);
+WI_EXPORT void                      wi_log_add_callback_logger(wi_log_callback_func_t);
 
 WI_EXPORT int						wi_log_syslog_facility_with_name(wi_string_t *);
 
@@ -56,21 +67,5 @@ WI_EXPORT void						wi_log_info(wi_string_t *, ...);
 WI_EXPORT void						wi_log_warn(wi_string_t *, ...);
 WI_EXPORT void						wi_log_error(wi_string_t *, ...);
 WI_EXPORT void						wi_log_fatal(wi_string_t *, ...);
-
-
-WI_EXPORT wi_boolean_t				wi_log_stdout;
-WI_EXPORT wi_boolean_t				wi_log_stderr;
-WI_EXPORT wi_boolean_t				wi_log_tool;
-WI_EXPORT wi_boolean_t				wi_log_plain;
-WI_EXPORT wi_boolean_t				wi_log_syslog;
-WI_EXPORT wi_boolean_t				wi_log_file;
-
-WI_EXPORT wi_log_level_t			wi_log_level;
-WI_EXPORT int						wi_log_syslog_facility;
-WI_EXPORT wi_uinteger_t				wi_log_limit;
-
-WI_EXPORT wi_string_t				*wi_log_path;
-
-WI_EXPORT wi_log_callback_func_t	*wi_log_callback;
 
 #endif /* WI_LOG_H */

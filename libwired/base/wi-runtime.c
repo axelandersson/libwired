@@ -454,13 +454,9 @@ wi_hash_code_t wi_hash(wi_runtime_instance_t *instance) {
 #pragma mark -
 
 void wi_show(wi_runtime_instance_t *instance) {
-	wi_pool_t		*pool;
-	wi_boolean_t	value;
+	wi_pool_t   *pool;
 	
 	pool = wi_pool_init(wi_pool_alloc());
-	value = wi_log_stdout;
-	wi_log_stdout = true;
-	wi_log_info(WI_STR("%@"), instance);
-	wi_log_stdout = value;
+    printf("%s\n", wi_string_cstring(wi_description(instance)));
 	wi_release(pool);
 }

@@ -60,13 +60,6 @@
 void wi_switch_user(uid_t uid, gid_t gid) {
 	struct passwd	*user;
 	
-	if(wi_log_path) {
-		if(chown(wi_string_cstring(wi_log_path), uid, gid) < 0) {
-			wi_log_error(WI_STR("Could not change owner of %@: %s"),
-				wi_log_path, strerror(errno));
-		}
-	}
-	
 	if(gid != getegid()) {
 		user = getpwuid(uid);
 		

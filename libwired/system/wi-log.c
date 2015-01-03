@@ -55,29 +55,28 @@
 
 
 static void						_wi_log_vlog(wi_log_level_t, wi_string_t *, va_list);
-static void						_wi_log_date(char *);
-static void						_wi_log_truncate(const char *);
+static void						_wi_log_get_date(char *);
+static void						_wi_log_truncate_file(const char *);
 
 
-wi_boolean_t					wi_log_stdout = false;
-wi_boolean_t					wi_log_stderr = false;
-wi_boolean_t					wi_log_startup = false;
-wi_boolean_t					wi_log_tool = false;
-wi_boolean_t					wi_log_plain = false;
-wi_boolean_t					wi_log_syslog = false;
-wi_boolean_t					wi_log_file = false;
+static wi_log_level_t           _wi_log_level = WI_LOG_INFO;
 
-wi_log_level_t					wi_log_level = WI_LOG_INFO;
-int								wi_log_syslog_facility = LOG_DAEMON;
-wi_uinteger_t					wi_log_limit = 0;
+static wi_boolean_t             _wi_log_stdout_enabled;
+static wi_log_style_t           _wi_log_stdout_style;
 
-wi_string_t						*wi_log_path = NULL;
+static wi_boolean_t             _wi_log_file_enabled;
+static wi_string_t              *_wi_log_file_path;
+static wi_uinteger_t            _wi_log_file_limit;
 
-wi_log_callback_func_t			*wi_log_callback = NULL;
+static wi_boolean_t             _wi_log_syslog_enabled;
+static int                      _wi_log_syslog_facility;
 
-static int						_wi_log_lines;
+static wi_boolean_t             _wi_log_callback_enabled;
+wi_log_callback_func_t			*_wi_log_callback_function;
+
+static wi_uinteger_t            _wi_log_file_lines;
+static wi_recursive_lock_t		*_wi_log_file_lock;
 static wi_boolean_t				_wi_log_in_callback;
-static wi_recursive_lock_t		*_wi_log_lock;
 
 
 
@@ -87,28 +86,54 @@ void wi_log_register(void) {
 
 
 void wi_log_initialize(void) {
-	_wi_log_lock = wi_recursive_lock_init(wi_recursive_lock_alloc());
+	_wi_log_file_lock = wi_recursive_lock_init(wi_recursive_lock_alloc());
 }
 
 
 
 #pragma mark -
 
-void wi_log_open(void) {
-	wi_string_t		*name;
-	
-	if(wi_log_syslog) {
-		name = wi_process_name(wi_process());
-		
-		openlog(wi_string_cstring(name), LOG_PID | LOG_NDELAY, wi_log_syslog_facility);
-	}
+void wi_log_set_level(wi_log_level_t level) {
+    _wi_log_level = level;
 }
 
 
 
-void wi_log_close(void) {
-	if(wi_log_syslog)
-		closelog();
+wi_log_level_t wi_log_level(void) {
+    return _wi_log_level;
+}
+
+
+
+#pragma mark -
+
+void wi_log_add_stdout_logger(wi_log_style_t style) {
+    _wi_log_stdout_enabled = true;
+    _wi_log_stdout_style = style;
+}
+
+
+
+void wi_log_add_file_logger(wi_string_t *path, wi_uinteger_t limit) {
+    _wi_log_file_enabled = true;
+    _wi_log_file_path = wi_retain(path);
+    _wi_log_file_limit = limit;
+}
+
+
+
+void wi_log_add_syslog_logger(int facility) {
+    _wi_log_syslog_enabled = true;
+    _wi_log_syslog_facility = facility;
+    
+    openlog(wi_string_cstring(wi_process_name(wi_process())), LOG_PID | LOG_NDELAY, facility);
+}
+
+
+
+void wi_log_add_callback_logger(wi_log_callback_func_t function) {
+    _wi_log_callback_enabled = true;
+    _wi_log_callback_function = function;
 }
 
 
@@ -155,11 +180,11 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
 	if(_wi_log_in_callback)
 		return;
 	
-	string		= wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-	cstring		= wi_string_cstring(string);
-	name		= wi_string_cstring(wi_process_name(wi_process()));
+	string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
+	cstring = wi_string_cstring(string);
+	name = wi_string_cstring(wi_process_name(wi_process()));
 	
-	_wi_log_date(date);
+	_wi_log_get_date(date);
 	
 	switch(level) {
 		default:
@@ -188,38 +213,28 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
 			prefix = "Debug";
 			break;
 	}
+    
+    if(_wi_log_stdout_enabled) {
+        switch(_wi_log_stdout_style) {
+            case WI_LOG_DAEMON:
+                printf("%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
+                break;
+                
+            case WI_LOG_TOOL:
+                printf("%s: %s\n", name, cstring);
+                break;
+        }
+        
+        fflush(stdout);
+    }
 
-	if(wi_log_stdout || wi_log_stderr) {
-		fp = wi_log_stdout ? stdout : stderr;
-
-		fprintf(fp, "%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
-	}
-	else if(wi_log_tool) {
-		fp = (level < WI_LOG_INFO) ? stderr : stdout;
-
-		fprintf(fp, "%s: %s\n", name, cstring);
-	}
-	else if(wi_log_plain) {
-		fp = (level < WI_LOG_INFO) ? stderr : stdout;
-
-		fprintf(fp, "%s\n", cstring);
-	}
-	else if(level == WI_LOG_FATAL) {
-		fp = stderr;
-
-		fprintf(fp, "%s: %s\n", name, cstring);
-	}
-
-	if(fp)
-		fflush(fp);
-
-	if(wi_log_syslog)
+	if(_wi_log_syslog_enabled)
 		syslog(priority, "%s", cstring);
 
-	if(wi_log_file && wi_log_path) {
-		wi_recursive_lock_lock(_wi_log_lock);
+	if(_wi_log_file_enabled) {
+		wi_recursive_lock_lock(_wi_log_file_lock);
 
-		path = wi_string_cstring(wi_log_path);
+		path = wi_string_cstring(_wi_log_file_path);
 
 		fp = fopen(path, "a");
 
@@ -227,25 +242,25 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
 			fprintf(fp, "%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
 			fclose(fp);
 			
-			if(_wi_log_lines > 0 && wi_log_limit > 0) {
-				if(_wi_log_lines % (int) ((float) wi_log_limit / 10.0f) == 0) {
-					_wi_log_truncate(path);
+			if(_wi_log_file_lines > 0 && _wi_log_file_limit > 0) {
+				if(_wi_log_file_lines % (int) ((float) _wi_log_file_limit / 10.0f) == 0) {
+					_wi_log_truncate_file(path);
 					
-					_wi_log_lines = wi_log_limit;
+					_wi_log_file_lines = _wi_log_file_limit;
 				}
 			}
 			
-			_wi_log_lines++;
+			_wi_log_file_lines++;
 		} else {
 			fprintf(stderr, "%s: %s: %s\n", name, path, strerror(errno));
 		}
 
-		wi_recursive_lock_unlock(_wi_log_lock);
+		wi_recursive_lock_unlock(_wi_log_file_lock);
 	}
 
-	if(wi_log_callback) {
+	if(_wi_log_callback_enabled) {
 		_wi_log_in_callback = true;
-		(*wi_log_callback)(level, string);
+		(*_wi_log_callback_function)(level, string);
 		_wi_log_in_callback = false;
 	}
 	
@@ -257,7 +272,7 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
 
 
 
-static void _wi_log_date(char *string) {
+static void _wi_log_get_date(char *string) {
     struct tm   tm;
 	time_t      now;
 
@@ -268,7 +283,7 @@ static void _wi_log_date(char *string) {
 
 
 
-static void _wi_log_truncate(const char *path) {
+static void _wi_log_truncate_file(const char *path) {
 	wi_file_t		*file = NULL;
 	FILE			*fp = NULL, *tmp = NULL;
 	struct stat		sb;
@@ -294,7 +309,7 @@ static void _wi_log_truncate(const char *path) {
 	if(!tmp)
 		goto end;
 
-	lines = wi_log_limit;
+	lines = _wi_log_file_limit;
 
 	for(position = sb.st_size - 2; lines > 0 && position >= 0; position--) {
 		if(fseeko(fp, position, SEEK_SET) < 0)
@@ -338,7 +353,7 @@ end:
 void wi_log_debug(wi_string_t *fmt, ...) {
 	va_list     ap;
 
-	if(wi_log_level >= WI_LOG_DEBUG) {
+	if(_wi_log_level >= WI_LOG_DEBUG) {
 		va_start(ap, fmt);
 		_wi_log_vlog(WI_LOG_DEBUG, fmt, ap);
 		va_end(ap);
@@ -350,7 +365,7 @@ void wi_log_debug(wi_string_t *fmt, ...) {
 void wi_log_info(wi_string_t *fmt, ...) {
 	va_list     ap;
 
-	if(wi_log_level >= WI_LOG_INFO) {
+	if(_wi_log_level >= WI_LOG_INFO) {
 		va_start(ap, fmt);
 		_wi_log_vlog(WI_LOG_INFO, fmt, ap);
 		va_end(ap);
@@ -362,7 +377,7 @@ void wi_log_info(wi_string_t *fmt, ...) {
 void wi_log_warn(wi_string_t *fmt, ...) {
 	va_list     ap;
 
-	if(wi_log_level >= WI_LOG_WARN) {
+	if(_wi_log_level >= WI_LOG_WARN) {
 		va_start(ap, fmt);
 		_wi_log_vlog(WI_LOG_WARN, fmt, ap);
 		va_end(ap);
@@ -374,7 +389,7 @@ void wi_log_warn(wi_string_t *fmt, ...) {
 void wi_log_error(wi_string_t *fmt, ...) {
 	va_list     ap;
 
-	if(wi_log_level >= WI_LOG_ERROR) {
+	if(_wi_log_level >= WI_LOG_ERROR) {
 		va_start(ap, fmt);
 		_wi_log_vlog(WI_LOG_ERROR, fmt, ap);
 		va_end(ap);

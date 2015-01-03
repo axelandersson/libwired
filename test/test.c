@@ -36,8 +36,8 @@ int main(int argc, const char **argv) {
 	wi_initialize();
 	wi_load(argc, argv);
 	
-	wi_log_plain = true;
-	wi_log_level = WI_LOG_DEBUG;
+    wi_log_set_level(WI_LOG_DEBUG);
+    wi_log_add_stdout_logger(WI_LOG_TOOL);
 	
 	pool = wi_pool_init(wi_pool_alloc());
 
