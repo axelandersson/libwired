@@ -53,13 +53,13 @@
  * Infinities are, however, preserved on IEEE machines.
  *
  * These routines have been tested on the following machines:
- *	Apple Macintosh, MPW 3.1 C compiler
- *	Apple Macintosh, THINK C compiler
- *	Silicon Graphics IRIS, MIPS compiler
- *	Cray X/MP and Y/MP
- *	Digital Equipment VAX
- *	Sequent Balance (Multiprocesor 386)
- *	NeXT
+ *    Apple Macintosh, MPW 3.1 C compiler
+ *    Apple Macintosh, THINK C compiler
+ *    Silicon Graphics IRIS, MIPS compiler
+ *    Cray X/MP and Y/MP
+ *    Digital Equipment VAX
+ *    Sequent Balance (Multiprocesor 386)
+ *    NeXT
  *
  *
  * Implemented by Malcolm Slaney and Ken Turkowski.
@@ -75,116 +75,116 @@
  * NaN's, and denormalized numbers.
  */
 
-#define _WI_BYTEORDER_IEEE754_EXP_MAX			2047
-#define _WI_BYTEORDER_IEEE754_EXP_OFFSET		1023
-#define _WI_BYTEORDER_IEEE754_EXP_SIZE			11
-#define _WI_BYTEORDER_IEEE754_EXP_POSITION		(32 - _WI_BYTEORDER_IEEE754_EXP_SIZE - 1)
+#define _WI_BYTEORDER_IEEE754_EXP_MAX           2047
+#define _WI_BYTEORDER_IEEE754_EXP_OFFSET        1023
+#define _WI_BYTEORDER_IEEE754_EXP_SIZE          11
+#define _WI_BYTEORDER_IEEE754_EXP_POSITION      (32 - _WI_BYTEORDER_IEEE754_EXP_SIZE - 1)
 
 
 double wi_read_double_from_ieee754(void *base, uintptr_t offset) {
-	unsigned char	*bytes;
-	double			value;
-	int32_t			mantissa, exp;
-	uint32_t		first, second;
-	
-	bytes	= base + offset;
-	first	= (((uint32_t) (bytes[0] & 0xFF) << 24) |
-			   ((uint32_t) (bytes[1] & 0xFF) << 16) |
-			   ((uint32_t) (bytes[2] & 0xFF) <<  8) |
-			    (uint32_t) (bytes[3] & 0xFF));
-	second	= (((uint32_t) (bytes[4] & 0xFF) << 24) |
-			   ((uint32_t) (bytes[5] & 0xFF) << 16) |
-			   ((uint32_t) (bytes[6] & 0xFF) <<  8) |
-			    (uint32_t) (bytes[7] & 0xFF));
-	
-	if(first == 0 && second == 0) {
-		value = 0.0;
-	} else {
-		exp = (first & 0x7FF00000) >> _WI_BYTEORDER_IEEE754_EXP_POSITION;
-		
-		if(exp == _WI_BYTEORDER_IEEE754_EXP_MAX) {	/* Infinity or NaN */
-			value = HUGE_VAL;	/* Map NaN's to infinity */
-		} else {
-			if(exp == 0) {	/* Denormalized number */
-				mantissa	= (first & 0x000FFFFF);
-				value		= ldexp((double) mantissa, exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION + 1);
-				value		+= ldexp((double) second,  exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION + 1 - 32);
-			} else {	/* Normalized number */
-				mantissa	= (first & 0x000FFFFF) + 0x00100000;	/* Insert hidden bit */
-				value		= ldexp((double) mantissa, exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION);
-				value		+= ldexp((double) second,  exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION - 32);
-			}
-		}
-	}
-	
-	if(first & 0x80000000)
-		return -value;
-	else
-		return value;
+    unsigned char   *bytes;
+    double          value;
+    int32_t         mantissa, exp;
+    uint32_t        first, second;
+    
+    bytes   = base + offset;
+    first   = (((uint32_t) (bytes[0] & 0xFF) << 24) |
+               ((uint32_t) (bytes[1] & 0xFF) << 16) |
+               ((uint32_t) (bytes[2] & 0xFF) <<  8) |
+               ((uint32_t) (bytes[3] & 0xFF)));
+    second  = (((uint32_t) (bytes[4] & 0xFF) << 24) |
+               ((uint32_t) (bytes[5] & 0xFF) << 16) |
+               ((uint32_t) (bytes[6] & 0xFF) <<  8) |
+               ((uint32_t) (bytes[7] & 0xFF)));
+    
+    if(first == 0 && second == 0) {
+        value = 0.0;
+    } else {
+        exp = (first & 0x7FF00000) >> _WI_BYTEORDER_IEEE754_EXP_POSITION;
+        
+        if(exp == _WI_BYTEORDER_IEEE754_EXP_MAX) {    /* Infinity or NaN */
+            value = HUGE_VAL;    /* Map NaN's to infinity */
+        } else {
+            if(exp == 0) {    /* Denormalized number */
+                mantissa    = (first & 0x000FFFFF);
+                value       = ldexp((double) mantissa, exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION + 1);
+                value       += ldexp((double) second,  exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION + 1 - 32);
+            } else {    /* Normalized number */
+                mantissa    = (first & 0x000FFFFF) + 0x00100000;    /* Insert hidden bit */
+                value       = ldexp((double) mantissa, exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION);
+                value       += ldexp((double) second,  exp - _WI_BYTEORDER_IEEE754_EXP_OFFSET - _WI_BYTEORDER_IEEE754_EXP_POSITION - 32);
+            }
+        }
+    }
+    
+    if(first & 0x80000000)
+        return -value;
+    else
+        return value;
 }
 
 
 
 void wi_write_double_to_ieee754(void *base, uintptr_t offset, double value) {
-	unsigned char	*bytes;
-	double			fmantissa, fsmantissa;
-	int32_t			sign, exp, mantissa, shift;
-	uint32_t		first, second;
-	
-	bytes = base + offset;
-	
-	if(value < 0.0) {	/* Can't distinguish a negative zero */
-		sign	= 0x80000000;
-		value	*= -1;
-	} else {
-		sign	= 0;
-	}
-	
-	if(value == 0.0) {
-		first	= 0;
-		second	= 0;
-	} else {
-		fmantissa = frexp(value, &exp);
-		
-		if((exp > _WI_BYTEORDER_IEEE754_EXP_MAX - _WI_BYTEORDER_IEEE754_EXP_OFFSET + 1) || !(fmantissa < 1.0)) {
-			/* NaN's and infinities fail second test */
-			first = sign | 0x7FF00000;	/* +/- infinity */
-			second = 0;
-		} else {
-			if (exp < -(_WI_BYTEORDER_IEEE754_EXP_OFFSET - 2)) {	/* Smaller than normalized */
-				shift = (_WI_BYTEORDER_IEEE754_EXP_POSITION + 1) + (_WI_BYTEORDER_IEEE754_EXP_OFFSET - 2) + exp;
-				
-				if(shift < 0) {	/* Too small for something in the MS word */
-					first = sign;
-					shift += 32;
-					
-					if(shift < 0)	/* Way too small: flush to zero */
-						second = 0;
-					else			/* Pretty small demorn */
-						second = (uint32_t) floor(ldexp(fmantissa, shift));
-				} else {			/* Nonzero denormalized number */
-					fsmantissa	= ldexp(fmantissa, shift);
-					mantissa	= (int32_t) floor(fsmantissa);
-					first		= sign | mantissa;
-					second		= (uint32_t) floor(ldexp(fsmantissa - mantissa, 32));
-				}
-			} else {	/* Normalized number */
-				fsmantissa	= ldexp(fmantissa, _WI_BYTEORDER_IEEE754_EXP_POSITION + 1);
-				mantissa	= (int32_t) floor(fsmantissa);
-				mantissa	-= (1L << _WI_BYTEORDER_IEEE754_EXP_POSITION);	/* Hide MSB */
-				fsmantissa	-= (1L << _WI_BYTEORDER_IEEE754_EXP_POSITION);
-				first		= sign | ((int32_t) ((exp + _WI_BYTEORDER_IEEE754_EXP_OFFSET - 1)) << _WI_BYTEORDER_IEEE754_EXP_POSITION) | mantissa;
-				second		= (uint32_t) floor(ldexp(fsmantissa - mantissa, 32));
-			}
-		}
-	}
-	
-	bytes[0] = first >> 24;
-	bytes[1] = first >> 16;
-	bytes[2] = first >>  8;
-	bytes[3] = first;
-	bytes[4] = second >> 24;
-	bytes[5] = second >> 16;
-	bytes[6] = second >>  8;
-	bytes[7] = second;
+    unsigned char   *bytes;
+    double          fmantissa, fsmantissa;
+    int32_t         sign, exp, mantissa, shift;
+    uint32_t        first, second;
+    
+    bytes = base + offset;
+    
+    if(value < 0.0) {    /* Can't distinguish a negative zero */
+        sign    = 0x80000000;
+        value   *= -1;
+    } else {
+        sign    = 0;
+    }
+    
+    if(value == 0.0) {
+        first   = 0;
+        second  = 0;
+    } else {
+        fmantissa = frexp(value, &exp);
+        
+        if((exp > _WI_BYTEORDER_IEEE754_EXP_MAX - _WI_BYTEORDER_IEEE754_EXP_OFFSET + 1) || !(fmantissa < 1.0)) {
+            /* NaN's and infinities fail second test */
+            first = sign | 0x7FF00000;    /* +/- infinity */
+            second = 0;
+        } else {
+            if (exp < -(_WI_BYTEORDER_IEEE754_EXP_OFFSET - 2)) {    /* Smaller than normalized */
+                shift = (_WI_BYTEORDER_IEEE754_EXP_POSITION + 1) + (_WI_BYTEORDER_IEEE754_EXP_OFFSET - 2) + exp;
+                
+                if(shift < 0) {    /* Too small for something in the MS word */
+                    first = sign;
+                    shift += 32;
+                    
+                    if(shift < 0)    /* Way too small: flush to zero */
+                        second = 0;
+                    else            /* Pretty small demorn */
+                        second = (uint32_t) floor(ldexp(fmantissa, shift));
+                } else {            /* Nonzero denormalized number */
+                    fsmantissa  = ldexp(fmantissa, shift);
+                    mantissa    = (int32_t) floor(fsmantissa);
+                    first       = sign | mantissa;
+                    second      = (uint32_t) floor(ldexp(fsmantissa - mantissa, 32));
+                }
+            } else {    /* Normalized number */
+                fsmantissa      = ldexp(fmantissa, _WI_BYTEORDER_IEEE754_EXP_POSITION + 1);
+                mantissa        = (int32_t) floor(fsmantissa);
+                mantissa        -= (1L << _WI_BYTEORDER_IEEE754_EXP_POSITION);    /* Hide MSB */
+                fsmantissa      -= (1L << _WI_BYTEORDER_IEEE754_EXP_POSITION);
+                first           = sign | ((int32_t) ((exp + _WI_BYTEORDER_IEEE754_EXP_OFFSET - 1)) << _WI_BYTEORDER_IEEE754_EXP_POSITION) | mantissa;
+                second          = (uint32_t) floor(ldexp(fsmantissa - mantissa, 32));
+            }
+        }
+    }
+    
+    bytes[0] = first  >> 24;
+    bytes[1] = first  >> 16;
+    bytes[2] = first  >>  8;
+    bytes[3] = first;
+    bytes[4] = second >> 24;
+    bytes[5] = second >> 16;
+    bytes[6] = second >>  8;
+    bytes[7] = second;
 }

@@ -42,101 +42,101 @@
 #include <wired/wi-runtime.h>
 
 struct _wi_lock {
-	wi_runtime_base_t					base;
-	
+    wi_runtime_base_t                   base;
+    
 #ifdef WI_PTHREADS
-	pthread_mutex_t						mutex;
+    pthread_mutex_t                     mutex;
 #endif
 };
 
-static void								_wi_lock_dealloc(wi_runtime_instance_t *);
+static void                             _wi_lock_dealloc(wi_runtime_instance_t *);
 
-static wi_runtime_id_t					_wi_lock_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_lock_runtime_class = {
-	"wi_lock_t",
-	_wi_lock_dealloc,
-	NULL,
-	NULL,
-	NULL,
-	NULL
+static wi_runtime_id_t                  _wi_lock_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_lock_runtime_class = {
+    "wi_lock_t",
+    _wi_lock_dealloc,
+    NULL,
+    NULL,
+    NULL,
+    NULL
 };
 
 
 
 struct _wi_recursive_lock {
-	wi_runtime_base_t					base;
+    wi_runtime_base_t                   base;
 
 #ifdef WI_PTHREADS
-	pthread_mutex_t						mutex;
+    pthread_mutex_t                     mutex;
 #endif
 };
 
-static void								_wi_recursive_lock_dealloc(wi_runtime_instance_t *);
+static void                             _wi_recursive_lock_dealloc(wi_runtime_instance_t *);
 
-static wi_runtime_id_t					_wi_recursive_lock_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_recursive_lock_runtime_class = {
-	"wi_recursive_lock_t",
-	_wi_recursive_lock_dealloc,
-	NULL,
-	NULL,
-	NULL,
-	NULL
+static wi_runtime_id_t                  _wi_recursive_lock_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_recursive_lock_runtime_class = {
+    "wi_recursive_lock_t",
+    _wi_recursive_lock_dealloc,
+    NULL,
+    NULL,
+    NULL,
+    NULL
 };
 
 
 
 struct _wi_readwrite_lock {
-	wi_runtime_base_t					base;
-	
+    wi_runtime_base_t                   base;
+    
 #ifdef WI_PTHREADS
-	pthread_rwlock_t					rwlock;
+    pthread_rwlock_t                    rwlock;
 #endif
 };
 
-static void								_wi_readwrite_lock_dealloc(wi_runtime_instance_t *);
+static void                             _wi_readwrite_lock_dealloc(wi_runtime_instance_t *);
 
-static wi_runtime_id_t					_wi_readwrite_lock_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_readwrite_lock_runtime_class = {
-	"wi_readwrite_lock_t",
-	_wi_readwrite_lock_dealloc,
-	NULL,
-	NULL,
-	NULL,
-	NULL
+static wi_runtime_id_t                  _wi_readwrite_lock_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_readwrite_lock_runtime_class = {
+    "wi_readwrite_lock_t",
+    _wi_readwrite_lock_dealloc,
+    NULL,
+    NULL,
+    NULL,
+    NULL
 };
 
 
 
 struct _wi_condition_lock {
-	wi_runtime_base_t					base;
+    wi_runtime_base_t                   base;
 
 #ifdef WI_PTHREADS
-	pthread_mutex_t						mutex;
-	pthread_cond_t						cond;
+    pthread_mutex_t                     mutex;
+    pthread_cond_t                      cond;
 #endif
-	
-	int									condition;
+    
+    int                                 condition;
 };
 
-static void								_wi_condition_lock_dealloc(wi_runtime_instance_t *);
+static void                             _wi_condition_lock_dealloc(wi_runtime_instance_t *);
 
-static wi_runtime_id_t					_wi_condition_lock_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_condition_lock_runtime_class = {
-	"wi_condition_lock_t",
-	_wi_condition_lock_dealloc,
-	NULL,
-	NULL,
-	NULL,
-	NULL
+static wi_runtime_id_t                  _wi_condition_lock_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_condition_lock_runtime_class = {
+    "wi_condition_lock_t",
+    _wi_condition_lock_dealloc,
+    NULL,
+    NULL,
+    NULL,
+    NULL
 };
 
 
 
 void wi_lock_register(void) {
-	_wi_lock_runtime_id = wi_runtime_register_class(&_wi_lock_runtime_class);
-	_wi_recursive_lock_runtime_id = wi_runtime_register_class(&_wi_recursive_lock_runtime_class);
-	_wi_readwrite_lock_runtime_id = wi_runtime_register_class(&_wi_readwrite_lock_runtime_class);
-	_wi_condition_lock_runtime_id = wi_runtime_register_class(&_wi_condition_lock_runtime_class);
+    _wi_lock_runtime_id = wi_runtime_register_class(&_wi_lock_runtime_class);
+    _wi_recursive_lock_runtime_id = wi_runtime_register_class(&_wi_recursive_lock_runtime_class);
+    _wi_readwrite_lock_runtime_id = wi_runtime_register_class(&_wi_readwrite_lock_runtime_class);
+    _wi_condition_lock_runtime_id = wi_runtime_register_class(&_wi_condition_lock_runtime_class);
 }
 
 
@@ -149,7 +149,7 @@ void wi_lock_initialize(void) {
 #pragma mark -
 
 wi_runtime_id_t wi_lock_runtime_id(void) {
-	return _wi_lock_runtime_id;
+    return _wi_lock_runtime_id;
 }
 
 
@@ -157,30 +157,30 @@ wi_runtime_id_t wi_lock_runtime_id(void) {
 #pragma mark -
 
 wi_lock_t * wi_lock_alloc(void) {
-	return wi_runtime_create_instance(_wi_lock_runtime_id, sizeof(wi_lock_t));
+    return wi_runtime_create_instance(_wi_lock_runtime_id, sizeof(wi_lock_t));
 }
 
 
 
 wi_lock_t * wi_lock_init(wi_lock_t *lock) {
 #ifdef WI_PTHREADS
-	pthread_mutexattr_t		attr;
-	int						err;
-	
-	if((err = pthread_mutexattr_init(&attr)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_init: %s", strerror(err));
+    pthread_mutexattr_t     attr;
+    int                     err;
+    
+    if((err = pthread_mutexattr_init(&attr)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_init: %s", strerror(err));
 
-	if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_settype: %s", strerror(err));
+    if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_settype: %s", strerror(err));
 
-	if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
-		WI_ASSERT(0, "pthread_mutex_init: %s", strerror(err));
-	
-	if((err = pthread_mutexattr_destroy(&attr)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_destroy: %s", strerror(err));
+    if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
+        WI_ASSERT(0, "pthread_mutex_init: %s", strerror(err));
+    
+    if((err = pthread_mutexattr_destroy(&attr)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_destroy: %s", strerror(err));
 #endif
-	
-	return lock;
+    
+    return lock;
 }
 
 
@@ -189,11 +189,11 @@ wi_lock_t * wi_lock_init(wi_lock_t *lock) {
 
 static void _wi_lock_dealloc(wi_runtime_instance_t *instance) {
 #ifdef WI_PTHREADS
-	wi_lock_t		*lock = instance;
-	int				err;
+    wi_lock_t       *lock = instance;
+    int             err;
 
-	if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_destroy: %s", strerror(err));
+    if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_destroy: %s", strerror(err));
 #endif
 }
 
@@ -203,10 +203,10 @@ static void _wi_lock_dealloc(wi_runtime_instance_t *instance) {
 
 void wi_lock_lock(wi_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_mutex_lock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_mutex_lock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
 #endif
 }
 
@@ -214,9 +214,9 @@ void wi_lock_lock(wi_lock_t *lock) {
 
 wi_boolean_t wi_lock_try_lock(wi_lock_t *lock) {
 #ifdef WI_PTHREADS
-	return (pthread_mutex_trylock(&lock->mutex) == 0);
+    return (pthread_mutex_trylock(&lock->mutex) == 0);
 #else
-	return true;
+    return true;
 #endif
 }
 
@@ -224,10 +224,10 @@ wi_boolean_t wi_lock_try_lock(wi_lock_t *lock) {
 
 void wi_lock_unlock(wi_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
 #endif
 }
 
@@ -236,7 +236,7 @@ void wi_lock_unlock(wi_lock_t *lock) {
 #pragma mark -
 
 wi_runtime_id_t wi_recursive_lock_runtime_id(void) {
-	return _wi_recursive_lock_runtime_id;
+    return _wi_recursive_lock_runtime_id;
 }
 
 
@@ -244,30 +244,30 @@ wi_runtime_id_t wi_recursive_lock_runtime_id(void) {
 #pragma mark -
 
 wi_recursive_lock_t * wi_recursive_lock_alloc(void) {
-	return wi_runtime_create_instance(_wi_recursive_lock_runtime_id, sizeof(wi_recursive_lock_t));
+    return wi_runtime_create_instance(_wi_recursive_lock_runtime_id, sizeof(wi_recursive_lock_t));
 }
 
 
 
 wi_recursive_lock_t * wi_recursive_lock_init(wi_recursive_lock_t *lock) {
 #ifdef WI_PTHREADS
-	pthread_mutexattr_t		attr;
-	int						err;
-	
-	if((err = pthread_mutexattr_init(&attr)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_init: %s", strerror(err));
+    pthread_mutexattr_t     attr;
+    int                     err;
+    
+    if((err = pthread_mutexattr_init(&attr)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_init: %s", strerror(err));
 
-	if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_settype: %s", strerror(err));
-	
-	if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
-		WI_ASSERT(0, "pthread_mutex_init: %s", strerror(err));
+    if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_settype: %s", strerror(err));
+    
+    if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
+        WI_ASSERT(0, "pthread_mutex_init: %s", strerror(err));
 
-	if((err = pthread_mutexattr_destroy(&attr)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_destroy: %s", strerror(err));
+    if((err = pthread_mutexattr_destroy(&attr)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_destroy: %s", strerror(err));
 #endif
 
-	return lock;
+    return lock;
 }
 
 
@@ -276,11 +276,11 @@ wi_recursive_lock_t * wi_recursive_lock_init(wi_recursive_lock_t *lock) {
 
 static void _wi_recursive_lock_dealloc(wi_runtime_instance_t *instance) {
 #ifdef WI_PTHREADS
-	wi_recursive_lock_t		*lock = instance;
-	int						err;
+    wi_recursive_lock_t     *lock = instance;
+    int                     err;
 
-	if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_destroy: %s", strerror(err));
+    if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_destroy: %s", strerror(err));
 #endif
 }
 
@@ -290,10 +290,10 @@ static void _wi_recursive_lock_dealloc(wi_runtime_instance_t *instance) {
 
 void wi_recursive_lock_lock(wi_recursive_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_mutex_lock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_mutex_lock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
 #endif
 }
 
@@ -301,9 +301,9 @@ void wi_recursive_lock_lock(wi_recursive_lock_t *lock) {
 
 wi_boolean_t wi_recursive_lock_try_lock(wi_recursive_lock_t *lock) {
 #ifdef WI_PTHREADS
-	return (pthread_mutex_trylock(&lock->mutex) == 0);
+    return (pthread_mutex_trylock(&lock->mutex) == 0);
 #else
-	return true;
+    return true;
 #endif
 }
 
@@ -311,10 +311,10 @@ wi_boolean_t wi_recursive_lock_try_lock(wi_recursive_lock_t *lock) {
 
 void wi_recursive_lock_unlock(wi_recursive_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
 #endif
 }
 
@@ -323,7 +323,7 @@ void wi_recursive_lock_unlock(wi_recursive_lock_t *lock) {
 #pragma mark -
 
 wi_runtime_id_t wi_readwrite_lock_runtime_id(void) {
-	return _wi_readwrite_lock_runtime_id;
+    return _wi_readwrite_lock_runtime_id;
 }
 
 
@@ -331,20 +331,20 @@ wi_runtime_id_t wi_readwrite_lock_runtime_id(void) {
 #pragma mark -
 
 wi_readwrite_lock_t * wi_readwrite_lock_alloc(void) {
-	return wi_runtime_create_instance(_wi_readwrite_lock_runtime_id, sizeof(wi_readwrite_lock_t));
+    return wi_runtime_create_instance(_wi_readwrite_lock_runtime_id, sizeof(wi_readwrite_lock_t));
 }
 
 
 
 wi_readwrite_lock_t * wi_readwrite_lock_init(wi_readwrite_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int			err;
-	
-	if((err = pthread_rwlock_init(&lock->rwlock, NULL)) != 0)
-		WI_ASSERT(0, "pthread_rwlock_init: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_rwlock_init(&lock->rwlock, NULL)) != 0)
+        WI_ASSERT(0, "pthread_rwlock_init: %s", strerror(err));
 #endif
-	
-	return lock;
+    
+    return lock;
 }
 
 
@@ -353,11 +353,11 @@ wi_readwrite_lock_t * wi_readwrite_lock_init(wi_readwrite_lock_t *lock) {
 
 static void _wi_readwrite_lock_dealloc(wi_runtime_instance_t *instance) {
 #ifdef WI_PTHREADS
-	wi_readwrite_lock_t		*lock = instance;
-	int				err;
-	
-	if((err = pthread_rwlock_destroy(&lock->rwlock)) != 0)
-		WI_ASSERT(0, "pthread_rwlock_destroy: %s", strerror(err));
+    wi_readwrite_lock_t     *lock = instance;
+    int                     err;
+    
+    if((err = pthread_rwlock_destroy(&lock->rwlock)) != 0)
+        WI_ASSERT(0, "pthread_rwlock_destroy: %s", strerror(err));
 #endif
 }
 
@@ -367,10 +367,10 @@ static void _wi_readwrite_lock_dealloc(wi_runtime_instance_t *instance) {
 
 void wi_readwrite_lock_write_lock(wi_readwrite_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_rwlock_wrlock(&lock->rwlock)) != 0)
-		WI_ASSERT(0, "pthread_rwlock_wrlock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_rwlock_wrlock(&lock->rwlock)) != 0)
+        WI_ASSERT(0, "pthread_rwlock_wrlock: %s", strerror(err));
 #endif
 }
 
@@ -378,9 +378,9 @@ void wi_readwrite_lock_write_lock(wi_readwrite_lock_t *lock) {
 
 wi_boolean_t wi_readwrite_lock_try_write_lock(wi_readwrite_lock_t *lock) {
 #ifdef WI_PTHREADS
-	return (pthread_rwlock_trywrlock(&lock->rwlock) == 0);
+    return (pthread_rwlock_trywrlock(&lock->rwlock) == 0);
 #else
-	return true;
+    return true;
 #endif
 }
 
@@ -388,10 +388,10 @@ wi_boolean_t wi_readwrite_lock_try_write_lock(wi_readwrite_lock_t *lock) {
 
 void wi_readwrite_lock_read_lock(wi_readwrite_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_rwlock_rdlock(&lock->rwlock)) != 0)
-		WI_ASSERT(0, "pthread_rwlock_rdlock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_rwlock_rdlock(&lock->rwlock)) != 0)
+        WI_ASSERT(0, "pthread_rwlock_rdlock: %s", strerror(err));
 #endif
 }
 
@@ -399,9 +399,9 @@ void wi_readwrite_lock_read_lock(wi_readwrite_lock_t *lock) {
 
 wi_boolean_t wi_readwrite_lock_try_read_lock(wi_readwrite_lock_t *lock) {
 #ifdef WI_PTHREADS
-	return (pthread_rwlock_tryrdlock(&lock->rwlock) == 0);
+    return (pthread_rwlock_tryrdlock(&lock->rwlock) == 0);
 #else
-	return true;
+    return true;
 #endif
 }
 
@@ -409,10 +409,10 @@ wi_boolean_t wi_readwrite_lock_try_read_lock(wi_readwrite_lock_t *lock) {
 
 void wi_readwrite_lock_unlock(wi_readwrite_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_rwlock_unlock(&lock->rwlock)) != 0)
-		WI_ASSERT(0, "pthread_rwlock_unlock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_rwlock_unlock(&lock->rwlock)) != 0)
+        WI_ASSERT(0, "pthread_rwlock_unlock: %s", strerror(err));
 #endif
 }
 
@@ -421,7 +421,7 @@ void wi_readwrite_lock_unlock(wi_readwrite_lock_t *lock) {
 #pragma mark -
 
 wi_runtime_id_t wi_condition_lock_runtime_id(void) {
-	return _wi_condition_lock_runtime_id;
+    return _wi_condition_lock_runtime_id;
 }
 
 
@@ -429,38 +429,38 @@ wi_runtime_id_t wi_condition_lock_runtime_id(void) {
 #pragma mark -
 
 wi_condition_lock_t * wi_condition_lock_alloc(void) {
-	return wi_runtime_create_instance(_wi_condition_lock_runtime_id, sizeof(wi_condition_lock_t));
+    return wi_runtime_create_instance(_wi_condition_lock_runtime_id, sizeof(wi_condition_lock_t));
 }
 
 
 
 wi_condition_lock_t * wi_condition_lock_init(wi_condition_lock_t *lock) {
-	return wi_condition_lock_init_with_condition(lock, 0);
+    return wi_condition_lock_init_with_condition(lock, 0);
 }
 
 
 
 wi_condition_lock_t * wi_condition_lock_init_with_condition(wi_condition_lock_t *lock, int condition) {
 #ifdef WI_PTHREADS
-	pthread_mutexattr_t		attr;
-	int						err;
-	
-	if((err = pthread_mutexattr_init(&attr)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_init: %s", strerror(err));
-	if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_settype: %s", strerror(err));
-	if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
-		WI_ASSERT(0, "pthread_mutex_init: %s", strerror(err));
-	if((err = pthread_mutexattr_destroy(&attr)) != 0)
-		WI_ASSERT(0, "pthread_mutexattr_destroy: %s", strerror(err));
+    pthread_mutexattr_t     attr;
+    int                     err;
+    
+    if((err = pthread_mutexattr_init(&attr)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_init: %s", strerror(err));
+    if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_settype: %s", strerror(err));
+    if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
+        WI_ASSERT(0, "pthread_mutex_init: %s", strerror(err));
+    if((err = pthread_mutexattr_destroy(&attr)) != 0)
+        WI_ASSERT(0, "pthread_mutexattr_destroy: %s", strerror(err));
 
-	if((err = pthread_cond_init(&lock->cond, NULL)) != 0)
-		WI_ASSERT(0, "pthread_cond_init: %s", strerror(err));
+    if((err = pthread_cond_init(&lock->cond, NULL)) != 0)
+        WI_ASSERT(0, "pthread_cond_init: %s", strerror(err));
 #endif
-	
-	lock->condition = condition;
+    
+    lock->condition = condition;
 
-	return lock;
+    return lock;
 }
 
 
@@ -469,14 +469,14 @@ wi_condition_lock_t * wi_condition_lock_init_with_condition(wi_condition_lock_t 
 
 static void _wi_condition_lock_dealloc(wi_runtime_instance_t *instance) {
 #ifdef WI_PTHREADS
-	wi_condition_lock_t		*lock = instance;
-	int						err;
+    wi_condition_lock_t     *lock = instance;
+    int                     err;
 
-	if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_destroy: %s", strerror(err));
-	
-	if((err = pthread_cond_destroy(&lock->cond)) != 0)
-		WI_ASSERT(0, "pthread_cond_destroy: %s", strerror(err));
+    if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_destroy: %s", strerror(err));
+    
+    if((err = pthread_cond_destroy(&lock->cond)) != 0)
+        WI_ASSERT(0, "pthread_cond_destroy: %s", strerror(err));
 #endif
 }
 
@@ -486,10 +486,10 @@ static void _wi_condition_lock_dealloc(wi_runtime_instance_t *instance) {
 
 void wi_condition_lock_lock(wi_condition_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_mutex_lock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_mutex_lock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
 #endif
 }
 
@@ -497,40 +497,40 @@ void wi_condition_lock_lock(wi_condition_lock_t *lock) {
 
 wi_boolean_t wi_condition_lock_lock_when_condition(wi_condition_lock_t *lock, int condition, wi_time_interval_t time) {
 #ifdef WI_PTHREADS
-	struct timespec		ts;
-	int					err;
-	
-	if((err = pthread_mutex_lock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
-	
-	if(lock->condition != condition) {
-		if(time > 0.0) {
-			ts = wi_dtots(wi_time_interval() + time);
-			
-			do {
-				err = pthread_cond_timedwait(&lock->cond, &lock->mutex, &ts);
+    struct timespec     ts;
+    int                 err;
+    
+    if((err = pthread_mutex_lock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_lock: %s", strerror(err));
+    
+    if(lock->condition != condition) {
+        if(time > 0.0) {
+            ts = wi_dtots(wi_time_interval() + time);
+            
+            do {
+                err = pthread_cond_timedwait(&lock->cond, &lock->mutex, &ts);
 
-				if(err != 0 && err != ETIMEDOUT)
-					WI_ASSERT(0, "pthread_cond_timedwait: %s", strerror(err));
-			} while(lock->condition != condition && err != ETIMEDOUT);
+                if(err != 0 && err != ETIMEDOUT)
+                    WI_ASSERT(0, "pthread_cond_timedwait: %s", strerror(err));
+            } while(lock->condition != condition && err != ETIMEDOUT);
 
-			if(err == ETIMEDOUT) {
-				if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
-					WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
-				
-				return false;
-			}
-		} else {
-			do {
-				if((err = pthread_cond_wait(&lock->cond, &lock->mutex)) != 0)
-					WI_ASSERT(0, "pthread_cond_wait: %s", strerror(err));
-			} while(lock->condition != condition);
-		}
-	}
-	
-	return true;
+            if(err == ETIMEDOUT) {
+                if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
+                    WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
+                
+                return false;
+            }
+        } else {
+            do {
+                if((err = pthread_cond_wait(&lock->cond, &lock->mutex)) != 0)
+                    WI_ASSERT(0, "pthread_cond_wait: %s", strerror(err));
+            } while(lock->condition != condition);
+        }
+    }
+    
+    return true;
 #else
-	return false;
+    return false;
 #endif
 }
 
@@ -538,9 +538,9 @@ wi_boolean_t wi_condition_lock_lock_when_condition(wi_condition_lock_t *lock, in
 
 wi_boolean_t wi_condition_lock_try_lock(wi_condition_lock_t *lock) {
 #ifdef WI_PTHREADS
-	return (pthread_mutex_trylock(&lock->mutex) == 0);
+    return (pthread_mutex_trylock(&lock->mutex) == 0);
 #else
-	return true;
+    return true;
 #endif
 }
 
@@ -548,18 +548,18 @@ wi_boolean_t wi_condition_lock_try_lock(wi_condition_lock_t *lock) {
 
 wi_boolean_t wi_condition_lock_try_lock_when_condition(wi_condition_lock_t *lock, int condition) {
 #ifdef WI_PTHREADS
-	if(!wi_condition_lock_try_lock(lock))
-		return false;
-	
-	if(lock->condition == condition) {
-		return true;
-	} else {
-		wi_condition_lock_unlock(lock);
-		
-		return false;
-	}
+    if(!wi_condition_lock_try_lock(lock))
+        return false;
+    
+    if(lock->condition == condition) {
+        return true;
+    } else {
+        wi_condition_lock_unlock(lock);
+        
+        return false;
+    }
 #else
-	return true;
+    return true;
 #endif
 }
 
@@ -567,13 +567,13 @@ wi_boolean_t wi_condition_lock_try_lock_when_condition(wi_condition_lock_t *lock
 
 void wi_condition_lock_unlock(wi_condition_lock_t *lock) {
 #ifdef WI_PTHREADS
-	int		err;
-	
-	if((err = pthread_cond_broadcast(&lock->cond)) != 0)
-		WI_ASSERT(0, "pthread_cond_broadcast: %s", strerror(err));
+    int     err;
+    
+    if((err = pthread_cond_broadcast(&lock->cond)) != 0)
+        WI_ASSERT(0, "pthread_cond_broadcast: %s", strerror(err));
 
-	if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
+    if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
 #endif
 }
 
@@ -581,22 +581,22 @@ void wi_condition_lock_unlock(wi_condition_lock_t *lock) {
 
 void wi_condition_lock_unlock_with_condition(wi_condition_lock_t *lock, int condition) {
 #ifdef WI_PTHREADS
-	int		err;
+    int     err;
 #endif
-	
-	lock->condition = condition;
-	
+    
+    lock->condition = condition;
+    
 #ifdef WI_PTHREADS
-	if((err = pthread_cond_broadcast(&lock->cond)) != 0)
-		WI_ASSERT(0, "pthread_cond_broadcast: %s", strerror(err));
-	
-	if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
-		WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
+    if((err = pthread_cond_broadcast(&lock->cond)) != 0)
+        WI_ASSERT(0, "pthread_cond_broadcast: %s", strerror(err));
+    
+    if((err = pthread_mutex_unlock(&lock->mutex)) != 0)
+        WI_ASSERT(0, "pthread_mutex_unlock: %s", strerror(err));
 #endif
 }
 
 
 
 int wi_condition_lock_condition(wi_condition_lock_t *lock) {
-	return lock->condition;
+    return lock->condition;
 }

@@ -37,31 +37,31 @@
 #include <wired/wi-string.h>
 
 struct _wi_enumerator {
-	wi_runtime_base_t					base;
-	
-	wi_runtime_instance_t				*collection;
-	wi_enumerator_func_t				*func;
-	wi_enumerator_context_t				context;
+    wi_runtime_base_t                   base;
+    
+    wi_runtime_instance_t               *collection;
+    wi_enumerator_func_t                *func;
+    wi_enumerator_context_t             context;
 };
 
-static void								_wi_enumerator_dealloc(wi_runtime_instance_t *);
-static wi_string_t *					_wi_enumerator_description(wi_runtime_instance_t *);
+static void                             _wi_enumerator_dealloc(wi_runtime_instance_t *);
+static wi_string_t *                    _wi_enumerator_description(wi_runtime_instance_t *);
 
 
-static wi_runtime_id_t					_wi_enumerator_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_enumerator_runtime_class = {
-	"wi_enumerator_t",
-	_wi_enumerator_dealloc,
-	NULL,
-	NULL,
-	_wi_enumerator_description,
-	NULL
+static wi_runtime_id_t                  _wi_enumerator_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_enumerator_runtime_class = {
+    "wi_enumerator_t",
+    _wi_enumerator_dealloc,
+    NULL,
+    NULL,
+    _wi_enumerator_description,
+    NULL
 };
 
 
 
 void wi_enumerator_register(void) {
-	_wi_enumerator_runtime_id = wi_runtime_register_class(&_wi_enumerator_runtime_class);
+    _wi_enumerator_runtime_id = wi_runtime_register_class(&_wi_enumerator_runtime_class);
 }
 
 
@@ -74,7 +74,7 @@ void wi_enumerator_initialize(void) {
 #pragma mark -
 
 wi_runtime_id_t wi_enumerator_runtime_id(void) {
-	return _wi_enumerator_runtime_id;
+    return _wi_enumerator_runtime_id;
 }
 
 
@@ -82,35 +82,35 @@ wi_runtime_id_t wi_enumerator_runtime_id(void) {
 #pragma mark -
 
 wi_enumerator_t * wi_enumerator_alloc(void) {
-	return wi_runtime_create_instance(_wi_enumerator_runtime_id, sizeof(wi_enumerator_t));
+    return wi_runtime_create_instance(_wi_enumerator_runtime_id, sizeof(wi_enumerator_t));
 }
 
 
 
 wi_enumerator_t * wi_enumerator_init_with_collection(wi_enumerator_t *enumerator, wi_runtime_instance_t *collection, wi_enumerator_func_t *func) {
-	enumerator->collection	= wi_retain(collection);
-	enumerator->func		= func;
-	
-	return enumerator;
+    enumerator->collection  = wi_retain(collection);
+    enumerator->func        = func;
+    
+    return enumerator;
 }
 
 
 
 static void _wi_enumerator_dealloc(wi_runtime_instance_t *instance) {
-	wi_enumerator_t		*enumerator = instance;
-	
-	wi_release(enumerator->collection);
+    wi_enumerator_t     *enumerator = instance;
+    
+    wi_release(enumerator->collection);
 }
 
 
 
 static wi_string_t * _wi_enumerator_description(wi_runtime_instance_t *instance) {
-	wi_enumerator_t			*enumerator = instance;
+    wi_enumerator_t     *enumerator = instance;
 
-	return wi_string_with_format(WI_STR("<%@ %p>{collection = %@}"),
-		wi_runtime_class_name(enumerator),
-		enumerator,
-		enumerator->collection);
+    return wi_string_with_format(WI_STR("<%@ %p>{collection = %@}"),
+        wi_runtime_class_name(enumerator),
+        enumerator,
+        enumerator->collection);
 }
 
 
@@ -118,5 +118,5 @@ static wi_string_t * _wi_enumerator_description(wi_runtime_instance_t *instance)
 #pragma mark -
 
 void * wi_enumerator_next_data(wi_enumerator_t *enumerator) {
-	return (*enumerator->func)(enumerator->collection, &enumerator->context);
+    return (*enumerator->func)(enumerator->collection, &enumerator->context);
 }

@@ -26,7 +26,7 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_crypto_cipher(void);
+WI_TEST_EXPORT void                     wi_test_crypto_cipher(void);
 WI_TEST_EXPORT void						wi_test_crypto_rsa(void);
 
 #ifdef WI_CIPHERS
@@ -64,7 +64,7 @@ void wi_test_crypto_cipher(void) {
 #ifdef WI_CIPHERS
 
 static void _wi_test_crypto_cipher(wi_cipher_type_t type, wi_string_t *name, wi_uinteger_t bits, wi_data_t *key, wi_data_t *iv) {
-	wi_cipher_t		*cipher;
+	wi_cipher_t     *cipher;
 	
 	cipher = wi_autorelease(wi_cipher_init_with_key(wi_cipher_alloc(), type, key, iv));
 	
@@ -94,7 +94,7 @@ static void _wi_test_crypto_cipher(wi_cipher_type_t type, wi_string_t *name, wi_
 
 void wi_test_crypto_rsa(void) {
 #ifdef WI_RSA
-	wi_rsa_t		*rsa;
+	wi_rsa_t    *rsa;
 	
 	rsa = wi_autorelease(wi_rsa_init_with_private_key(wi_rsa_alloc(), wi_data_with_base64(WI_STR("MIIBOwIBAAJBANlpi/JRzsGFCHyHARWkjg6qLnNjvgo84Shha4aOKQlQVON6LjVUTKuTGodkp7yZK0W4gfoNF/5CNbXb1Qo4xcUCAwEAAQJAafHFAJBc8HCjcgtXu/Q0RXEosZIpSVPhZIwUmb0swhw9LULNarL244HT2WJ/pSSUu3uIx+sT6mpNL+OtunQJAQIhAPSgtPWiWbHE7Bf3F4GS87PuVD2uYj9nbHuGAqfkrTaLAiEA44Tzb52/2dKz56sOW/ga/4ydsQeIQAxVBmr3uHK9zu8CIQDzQviQp5CQUeYBcurCJHMKA79r0wTKTju3niz37lQ9PwIhANdjtv5UzhpNgalxY++nSw/gtCyy38capaekvo2seoqbAiBYCzlmjq02JpohH29ijG52ecfb88uS9eUufUVoOfTC/A=="))));
 

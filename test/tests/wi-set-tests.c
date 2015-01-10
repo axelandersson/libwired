@@ -30,7 +30,7 @@ WI_TEST_EXPORT void						wi_test_set(void);
 
 
 void wi_test_set(void) {
-	wi_mutable_set_t		*set;
+	wi_mutable_set_t    *set;
 	
 	set = wi_set_init(wi_mutable_set_alloc());
 	

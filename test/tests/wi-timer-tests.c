@@ -26,7 +26,7 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_timer(void);
+WI_TEST_EXPORT void                     wi_test_timer(void);
 
 
 #ifdef WI_PTHREADS

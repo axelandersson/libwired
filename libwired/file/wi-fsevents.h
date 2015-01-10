@@ -31,22 +31,22 @@
 #include <wired/wi-date.h>
 #include <wired/wi-runtime.h>
 
-typedef void							wi_fsevents_callback_t(wi_string_t *);
+typedef void                            wi_fsevents_callback_t(wi_string_t *);
 
-typedef struct _wi_fsevents				wi_fsevents_t;
+typedef struct _wi_fsevents             wi_fsevents_t;
 
 
-WI_EXPORT wi_runtime_id_t				wi_fsevents_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_fsevents_runtime_id(void);
 
-WI_EXPORT wi_fsevents_t *				wi_fsevents_alloc(void);
-WI_EXPORT wi_fsevents_t *				wi_fsevents_init(wi_fsevents_t *);
+WI_EXPORT wi_fsevents_t *               wi_fsevents_alloc(void);
+WI_EXPORT wi_fsevents_t *               wi_fsevents_init(wi_fsevents_t *);
 
-WI_EXPORT wi_boolean_t					wi_fsevents_run_with_timeout(wi_fsevents_t *, wi_time_interval_t);
+WI_EXPORT wi_boolean_t                  wi_fsevents_run_with_timeout(wi_fsevents_t *, wi_time_interval_t);
 
-WI_EXPORT void							wi_fsevents_set_callback(wi_fsevents_t *, wi_fsevents_callback_t *);
+WI_EXPORT void                          wi_fsevents_set_callback(wi_fsevents_t *, wi_fsevents_callback_t *);
 
-WI_EXPORT wi_boolean_t					wi_fsevents_add_path(wi_fsevents_t *, wi_string_t *);
-WI_EXPORT void							wi_fsevents_remove_path(wi_fsevents_t *, wi_string_t *);
-WI_EXPORT void							wi_fsevents_remove_all_paths(wi_fsevents_t *);
+WI_EXPORT wi_boolean_t                  wi_fsevents_add_path(wi_fsevents_t *, wi_string_t *);
+WI_EXPORT void                          wi_fsevents_remove_path(wi_fsevents_t *, wi_string_t *);
+WI_EXPORT void                          wi_fsevents_remove_all_paths(wi_fsevents_t *);
 
 #endif /* WI_FSEVENTS_H */

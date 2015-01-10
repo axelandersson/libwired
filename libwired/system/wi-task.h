@@ -30,22 +30,22 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_task					wi_task_t;
+typedef struct _wi_task                 wi_task_t;
 
 
-WI_EXPORT wi_runtime_id_t				wi_task_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_task_runtime_id(void);
 
-WI_EXPORT wi_task_t *					wi_task_launched_task_with_path(wi_string_t *, wi_array_t *);
+WI_EXPORT wi_task_t *                   wi_task_launched_task_with_path(wi_string_t *, wi_array_t *);
 
-WI_EXPORT wi_task_t *					wi_task_alloc(void);
-WI_EXPORT wi_task_t *					wi_task_init(wi_task_t *);
+WI_EXPORT wi_task_t *                   wi_task_alloc(void);
+WI_EXPORT wi_task_t *                   wi_task_init(wi_task_t *);
 
-WI_EXPORT void							wi_task_set_launch_path(wi_task_t *, wi_string_t *);
-WI_EXPORT wi_string_t *					wi_task_launch_path(wi_task_t *);
-WI_EXPORT void							wi_task_set_arguments(wi_task_t *, wi_array_t *);
-WI_EXPORT wi_array_t *					wi_task_arguments(wi_task_t *);
+WI_EXPORT void                          wi_task_set_launch_path(wi_task_t *, wi_string_t *);
+WI_EXPORT wi_string_t *                 wi_task_launch_path(wi_task_t *);
+WI_EXPORT void                          wi_task_set_arguments(wi_task_t *, wi_array_t *);
+WI_EXPORT wi_array_t *                  wi_task_arguments(wi_task_t *);
 
-WI_EXPORT wi_boolean_t					wi_task_launch(wi_task_t *);
-WI_EXPORT wi_integer_t					wi_task_wait_until_exit(wi_task_t *);
+WI_EXPORT wi_boolean_t                  wi_task_launch(wi_task_t *);
+WI_EXPORT wi_integer_t                  wi_task_wait_until_exit(wi_task_t *);
 
 #endif /* WI_TASK_H */

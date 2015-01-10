@@ -30,34 +30,34 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_url			wi_url_t;
-typedef struct _wi_url			wi_mutable_url_t;
+typedef struct _wi_url              wi_url_t;
+typedef struct _wi_url              wi_mutable_url_t;
 
 
-WI_EXPORT wi_runtime_id_t		wi_url_runtime_id(void);
+WI_EXPORT wi_runtime_id_t           wi_url_runtime_id(void);
 
-WI_EXPORT wi_url_t *			wi_url_with_string(wi_string_t *);
+WI_EXPORT wi_url_t *                wi_url_with_string(wi_string_t *);
 
-WI_EXPORT wi_url_t *			wi_url_alloc(void);
-WI_EXPORT wi_mutable_url_t *	wi_mutable_url_alloc(void);
-WI_EXPORT wi_url_t *			wi_url_init(wi_url_t *);
-WI_EXPORT wi_url_t *			wi_url_init_with_string(wi_url_t *, wi_string_t *);
+WI_EXPORT wi_url_t *                wi_url_alloc(void);
+WI_EXPORT wi_mutable_url_t *        wi_mutable_url_alloc(void);
+WI_EXPORT wi_url_t *                wi_url_init(wi_url_t *);
+WI_EXPORT wi_url_t *                wi_url_init_with_string(wi_url_t *, wi_string_t *);
 
-WI_EXPORT wi_string_t *			wi_url_scheme(wi_url_t *);
-WI_EXPORT wi_string_t *			wi_url_host(wi_url_t *);
-WI_EXPORT wi_uinteger_t			wi_url_port(wi_url_t *);
-WI_EXPORT wi_string_t *			wi_url_path(wi_url_t *);
-WI_EXPORT wi_string_t *			wi_url_user(wi_url_t *);
-WI_EXPORT wi_string_t *			wi_url_password(wi_url_t *);
+WI_EXPORT wi_string_t *             wi_url_scheme(wi_url_t *);
+WI_EXPORT wi_string_t *             wi_url_host(wi_url_t *);
+WI_EXPORT wi_uinteger_t             wi_url_port(wi_url_t *);
+WI_EXPORT wi_string_t *             wi_url_path(wi_url_t *);
+WI_EXPORT wi_string_t *             wi_url_user(wi_url_t *);
+WI_EXPORT wi_string_t *             wi_url_password(wi_url_t *);
 
-WI_EXPORT wi_boolean_t			wi_url_is_valid(wi_url_t *);
-WI_EXPORT wi_string_t *			wi_url_string(wi_url_t *);
+WI_EXPORT wi_boolean_t              wi_url_is_valid(wi_url_t *);
+WI_EXPORT wi_string_t *             wi_url_string(wi_url_t *);
 
-WI_EXPORT void					wi_mutable_url_set_scheme(wi_mutable_url_t *, wi_string_t *);
-WI_EXPORT void					wi_mutable_url_set_host(wi_mutable_url_t *, wi_string_t *);
-WI_EXPORT void					wi_mutable_url_set_port(wi_mutable_url_t *, wi_uinteger_t);
-WI_EXPORT void					wi_mutable_url_set_path(wi_mutable_url_t *, wi_string_t *);
-WI_EXPORT void					wi_mutable_url_set_user(wi_mutable_url_t *, wi_string_t *);
-WI_EXPORT void					wi_mutable_url_set_password(wi_mutable_url_t *, wi_string_t *);
+WI_EXPORT void                      wi_mutable_url_set_scheme(wi_mutable_url_t *, wi_string_t *);
+WI_EXPORT void                      wi_mutable_url_set_host(wi_mutable_url_t *, wi_string_t *);
+WI_EXPORT void                      wi_mutable_url_set_port(wi_mutable_url_t *, wi_uinteger_t);
+WI_EXPORT void                      wi_mutable_url_set_path(wi_mutable_url_t *, wi_string_t *);
+WI_EXPORT void                      wi_mutable_url_set_user(wi_mutable_url_t *, wi_string_t *);
+WI_EXPORT void                      wi_mutable_url_set_password(wi_mutable_url_t *, wi_string_t *);
 
 #endif /* WI_URL_H */

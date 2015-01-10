@@ -26,7 +26,7 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_number(void);
+WI_TEST_EXPORT void                     wi_test_number(void);
 
 
 void wi_test_number(void) {

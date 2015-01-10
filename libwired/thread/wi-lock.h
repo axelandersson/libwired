@@ -30,59 +30,59 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_lock					wi_lock_t;
+typedef struct _wi_lock                 wi_lock_t;
 
-typedef struct _wi_recursive_lock		wi_recursive_lock_t;
+typedef struct _wi_recursive_lock       wi_recursive_lock_t;
 
-typedef struct _wi_readwrite_lock		wi_readwrite_lock_t;
+typedef struct _wi_readwrite_lock       wi_readwrite_lock_t;
 
-typedef struct _wi_condition_lock		wi_condition_lock_t;
-
-
-WI_EXPORT wi_runtime_id_t				wi_lock_runtime_id(void);
-
-WI_EXPORT wi_lock_t *					wi_lock_alloc(void);
-WI_EXPORT wi_lock_t *					wi_lock_init(wi_lock_t *);
-
-WI_EXPORT void							wi_lock_lock(wi_lock_t *);
-WI_EXPORT wi_boolean_t					wi_lock_try_lock(wi_lock_t *);
-WI_EXPORT void							wi_lock_unlock(wi_lock_t *);
+typedef struct _wi_condition_lock       wi_condition_lock_t;
 
 
-WI_EXPORT wi_runtime_id_t				wi_recursive_lock_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_lock_runtime_id(void);
 
-WI_EXPORT wi_recursive_lock_t *			wi_recursive_lock_alloc(void);
-WI_EXPORT wi_recursive_lock_t *			wi_recursive_lock_init(wi_recursive_lock_t *);
+WI_EXPORT wi_lock_t *                   wi_lock_alloc(void);
+WI_EXPORT wi_lock_t *                   wi_lock_init(wi_lock_t *);
 
-WI_EXPORT void							wi_recursive_lock_lock(wi_recursive_lock_t *);
-WI_EXPORT wi_boolean_t					wi_recursive_lock_try_lock(wi_recursive_lock_t *);
-WI_EXPORT void							wi_recursive_lock_unlock(wi_recursive_lock_t *);
+WI_EXPORT void                          wi_lock_lock(wi_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_lock_try_lock(wi_lock_t *);
+WI_EXPORT void                          wi_lock_unlock(wi_lock_t *);
 
 
-WI_EXPORT wi_runtime_id_t				wi_readwrite_lock_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_recursive_lock_runtime_id(void);
+
+WI_EXPORT wi_recursive_lock_t *         wi_recursive_lock_alloc(void);
+WI_EXPORT wi_recursive_lock_t *         wi_recursive_lock_init(wi_recursive_lock_t *);
+
+WI_EXPORT void                          wi_recursive_lock_lock(wi_recursive_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_recursive_lock_try_lock(wi_recursive_lock_t *);
+WI_EXPORT void                          wi_recursive_lock_unlock(wi_recursive_lock_t *);
+
+
+WI_EXPORT wi_runtime_id_t               wi_readwrite_lock_runtime_id(void);
 
 WI_EXPORT wi_readwrite_lock_t *         wi_readwrite_lock_alloc(void);
 WI_EXPORT wi_readwrite_lock_t *         wi_readwrite_lock_init(wi_readwrite_lock_t *);
 
-WI_EXPORT void							wi_readwrite_lock_write_lock(wi_readwrite_lock_t *);
-WI_EXPORT wi_boolean_t					wi_readwrite_lock_try_write_lock(wi_readwrite_lock_t *);
-WI_EXPORT void							wi_readwrite_lock_read_lock(wi_readwrite_lock_t *);
-WI_EXPORT wi_boolean_t					wi_readwrite_lock_try_read_lock(wi_readwrite_lock_t *);
-WI_EXPORT void							wi_readwrite_lock_unlock(wi_readwrite_lock_t *);
+WI_EXPORT void                          wi_readwrite_lock_write_lock(wi_readwrite_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_readwrite_lock_try_write_lock(wi_readwrite_lock_t *);
+WI_EXPORT void                          wi_readwrite_lock_read_lock(wi_readwrite_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_readwrite_lock_try_read_lock(wi_readwrite_lock_t *);
+WI_EXPORT void                          wi_readwrite_lock_unlock(wi_readwrite_lock_t *);
 
 
-WI_EXPORT wi_runtime_id_t				wi_condition_lock_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_condition_lock_runtime_id(void);
 
-WI_EXPORT wi_condition_lock_t *			wi_condition_lock_alloc(void);
-WI_EXPORT wi_condition_lock_t *			wi_condition_lock_init(wi_condition_lock_t *);
-WI_EXPORT wi_condition_lock_t *			wi_condition_lock_init_with_condition(wi_condition_lock_t *, int);
+WI_EXPORT wi_condition_lock_t *         wi_condition_lock_alloc(void);
+WI_EXPORT wi_condition_lock_t *         wi_condition_lock_init(wi_condition_lock_t *);
+WI_EXPORT wi_condition_lock_t *         wi_condition_lock_init_with_condition(wi_condition_lock_t *, int);
 
-WI_EXPORT void							wi_condition_lock_lock(wi_condition_lock_t *);
-WI_EXPORT wi_boolean_t					wi_condition_lock_lock_when_condition(wi_condition_lock_t *, int, wi_time_interval_t);
-WI_EXPORT wi_boolean_t					wi_condition_lock_try_lock(wi_condition_lock_t *);
-WI_EXPORT wi_boolean_t					wi_condition_lock_try_lock_when_condition(wi_condition_lock_t *, int);
-WI_EXPORT void							wi_condition_lock_unlock(wi_condition_lock_t *);
-WI_EXPORT void							wi_condition_lock_unlock_with_condition(wi_condition_lock_t *, int);
-WI_EXPORT int							wi_condition_lock_condition(wi_condition_lock_t *);
+WI_EXPORT void                          wi_condition_lock_lock(wi_condition_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_condition_lock_lock_when_condition(wi_condition_lock_t *, int, wi_time_interval_t);
+WI_EXPORT wi_boolean_t                  wi_condition_lock_try_lock(wi_condition_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_condition_lock_try_lock_when_condition(wi_condition_lock_t *, int);
+WI_EXPORT void                          wi_condition_lock_unlock(wi_condition_lock_t *);
+WI_EXPORT void                          wi_condition_lock_unlock_with_condition(wi_condition_lock_t *, int);
+WI_EXPORT int                           wi_condition_lock_condition(wi_condition_lock_t *);
 
 #endif /* WI_LOCK_H */

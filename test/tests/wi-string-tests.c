@@ -26,7 +26,7 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_string_case(void);
+WI_TEST_EXPORT void                     wi_test_string_case(void);
 WI_TEST_EXPORT void						wi_test_string_constant(void);
 WI_TEST_EXPORT void						wi_test_string_compare(void);
 WI_TEST_EXPORT void						wi_test_string_digest(void);

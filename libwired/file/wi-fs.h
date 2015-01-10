@@ -33,67 +33,67 @@
 #include <wired/wi-fsenumerator.h>
 #include <wired/wi-runtime.h>
 
-#define WI_PATH_SIZE					MAXPATHLEN
+#define WI_PATH_SIZE                    MAXPATHLEN
 
 
 struct _wi_fs_stat {
-	uint32_t							dev;
-	uint64_t							ino;
-	uint32_t							mode;
-	uint32_t							nlink;
-	uint32_t							uid;
-	uint32_t							gid;
-	uint32_t							rdev;
-	uint32_t							atime;
-	uint32_t							mtime;
-	uint32_t							ctime;
-	uint32_t							birthtime;
-	uint64_t							size;
-	uint64_t							blocks;
-	uint32_t							blksize;
+    uint32_t                            dev;
+    uint64_t                            ino;
+    uint32_t                            mode;
+    uint32_t                            nlink;
+    uint32_t                            uid;
+    uint32_t                            gid;
+    uint32_t                            rdev;
+    uint32_t                            atime;
+    uint32_t                            mtime;
+    uint32_t                            ctime;
+    uint32_t                            birthtime;
+    uint64_t                            size;
+    uint64_t                            blocks;
+    uint32_t                            blksize;
 };
-typedef struct _wi_fs_stat				wi_fs_stat_t;
+typedef struct _wi_fs_stat              wi_fs_stat_t;
 
 struct _wi_fs_statfs {
-	uint32_t							bsize;
-	uint32_t							frsize;
-	uint64_t							blocks;
-	uint64_t							bfree;
-	uint64_t							bavail;
-	uint64_t							files;
-	uint64_t							ffree;
-	uint64_t							favail;
-	uint32_t							fsid;
-	uint64_t							flag;
-	uint64_t							namemax;
+    uint32_t                            bsize;
+    uint32_t                            frsize;
+    uint64_t                            blocks;
+    uint64_t                            bfree;
+    uint64_t                            bavail;
+    uint64_t                            files;
+    uint64_t                            ffree;
+    uint64_t                            favail;
+    uint32_t                            fsid;
+    uint64_t                            flag;
+    uint64_t                            namemax;
 };
-typedef struct _wi_fs_statfs			wi_fs_statfs_t;
+typedef struct _wi_fs_statfs            wi_fs_statfs_t;
 
-typedef void							wi_fs_delete_path_callback_t(wi_string_t *);
-typedef void							wi_fs_copy_path_callback_t(wi_string_t *, wi_string_t *);
+typedef void                            wi_fs_delete_path_callback_t(wi_string_t *);
+typedef void                            wi_fs_copy_path_callback_t(wi_string_t *, wi_string_t *);
 
 
-WI_EXPORT wi_string_t *					wi_fs_temporary_path_with_template(wi_string_t *);
+WI_EXPORT wi_string_t *                 wi_fs_temporary_path_with_template(wi_string_t *);
 
-WI_EXPORT wi_boolean_t					wi_fs_create_directory(wi_string_t *, uint32_t);
-WI_EXPORT wi_boolean_t					wi_fs_change_directory(wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_create_directory(wi_string_t *, uint32_t);
+WI_EXPORT wi_boolean_t                  wi_fs_change_directory(wi_string_t *);
 
-WI_EXPORT wi_boolean_t					wi_fs_delete_path(wi_string_t *);
-WI_EXPORT wi_boolean_t					wi_fs_delete_path_with_callback(wi_string_t *, wi_fs_delete_path_callback_t *);
-WI_EXPORT wi_boolean_t					wi_fs_clear_path(wi_string_t *);
-WI_EXPORT wi_boolean_t					wi_fs_rename_path(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t					wi_fs_symlink_path(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t					wi_fs_copy_path(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t					wi_fs_copy_path_with_callback(wi_string_t *, wi_string_t *, wi_fs_copy_path_callback_t);
-WI_EXPORT wi_boolean_t					wi_fs_set_mode_for_path(wi_string_t *, uint32_t);
+WI_EXPORT wi_boolean_t                  wi_fs_delete_path(wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_delete_path_with_callback(wi_string_t *, wi_fs_delete_path_callback_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_clear_path(wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_rename_path(wi_string_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_symlink_path(wi_string_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_copy_path(wi_string_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_copy_path_with_callback(wi_string_t *, wi_string_t *, wi_fs_copy_path_callback_t);
+WI_EXPORT wi_boolean_t                  wi_fs_set_mode_for_path(wi_string_t *, uint32_t);
 
-WI_EXPORT wi_boolean_t					wi_fs_stat_path(wi_string_t *, wi_fs_stat_t *);
-WI_EXPORT wi_boolean_t					wi_fs_lstat_path(wi_string_t *, wi_fs_stat_t *);
-WI_EXPORT wi_boolean_t					wi_fs_statfs_path(wi_string_t *, wi_fs_statfs_t *);
-WI_EXPORT wi_boolean_t					wi_fs_path_exists(wi_string_t *, wi_boolean_t *);
-WI_EXPORT wi_string_t *					wi_fs_real_path_for_path(wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_stat_path(wi_string_t *, wi_fs_stat_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_lstat_path(wi_string_t *, wi_fs_stat_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_statfs_path(wi_string_t *, wi_fs_statfs_t *);
+WI_EXPORT wi_boolean_t                  wi_fs_path_exists(wi_string_t *, wi_boolean_t *);
+WI_EXPORT wi_string_t *                 wi_fs_real_path_for_path(wi_string_t *);
 
-WI_EXPORT wi_array_t *					wi_fs_directory_contents_at_path(wi_string_t *);
-WI_EXPORT wi_fsenumerator_t *			wi_fs_enumerator_at_path(wi_string_t *);
+WI_EXPORT wi_array_t *                  wi_fs_directory_contents_at_path(wi_string_t *);
+WI_EXPORT wi_fsenumerator_t *           wi_fs_enumerator_at_path(wi_string_t *);
 
 #endif /* WI_FS_H */

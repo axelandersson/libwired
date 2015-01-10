@@ -31,46 +31,46 @@
 #include <wired/wi-data.h>
 #include <wired/wi-runtime.h>
 
-#define WI_MD5_DIGEST_LENGTH			16
-#define WI_SHA1_DIGEST_LENGTH			20
+#define WI_MD5_DIGEST_LENGTH            16
+#define WI_SHA1_DIGEST_LENGTH           20
 
-typedef struct _wi_md5					wi_md5_t;
-typedef struct _wi_sha1					wi_sha1_t;
-
-
-WI_EXPORT void							wi_md5_digest(const void *, wi_uinteger_t, unsigned char *);
-WI_EXPORT wi_string_t *					wi_md5_digest_string(wi_data_t *);
-
-WI_EXPORT wi_md5_t *					wi_md5(void);
-
-WI_EXPORT wi_md5_t *					wi_md5_alloc(void);
-WI_EXPORT wi_md5_t *					wi_md5_init(wi_md5_t *);
-
-WI_EXPORT void							wi_md5_update(wi_md5_t *, const void *, wi_uinteger_t);
-WI_EXPORT void							wi_md5_close(wi_md5_t *);
-
-WI_EXPORT void							wi_md5_get_data(wi_md5_t *, unsigned char *);
-WI_EXPORT wi_data_t *					wi_md5_data(wi_md5_t *);
-WI_EXPORT wi_string_t *					wi_md5_string(wi_md5_t *);
+typedef struct _wi_md5                  wi_md5_t;
+typedef struct _wi_sha1                 wi_sha1_t;
 
 
-WI_EXPORT void							wi_sha1_digest(const void *, wi_uinteger_t, unsigned char *);
-WI_EXPORT wi_string_t *					wi_sha1_digest_string(wi_data_t *);
+WI_EXPORT void                          wi_md5_digest(const void *, wi_uinteger_t, unsigned char *);
+WI_EXPORT wi_string_t *                 wi_md5_digest_string(wi_data_t *);
 
-WI_EXPORT wi_sha1_t *					wi_sha1(void);
+WI_EXPORT wi_md5_t *                    wi_md5(void);
 
-WI_EXPORT wi_sha1_t *					wi_sha1_alloc(void);
-WI_EXPORT wi_sha1_t *					wi_sha1_init(wi_sha1_t *);
+WI_EXPORT wi_md5_t *                    wi_md5_alloc(void);
+WI_EXPORT wi_md5_t *                    wi_md5_init(wi_md5_t *);
 
-WI_EXPORT void							wi_sha1_update(wi_sha1_t *, const void *, wi_uinteger_t);
-WI_EXPORT void							wi_sha1_close(wi_sha1_t *);
+WI_EXPORT void                          wi_md5_update(wi_md5_t *, const void *, wi_uinteger_t);
+WI_EXPORT void                          wi_md5_close(wi_md5_t *);
 
-WI_EXPORT void							wi_sha1_get_data(wi_sha1_t *, unsigned char *);
-WI_EXPORT wi_data_t *					wi_sha1_data(wi_sha1_t *);
-WI_EXPORT wi_string_t *					wi_sha1_string(wi_sha1_t *);
+WI_EXPORT void                          wi_md5_get_data(wi_md5_t *, unsigned char *);
+WI_EXPORT wi_data_t *                   wi_md5_data(wi_md5_t *);
+WI_EXPORT wi_string_t *                 wi_md5_string(wi_md5_t *);
 
 
-WI_EXPORT wi_string_t *					wi_base64_string_from_data(wi_data_t *);
-WI_EXPORT wi_data_t *					wi_data_from_base64_string(wi_string_t *);
+WI_EXPORT void                          wi_sha1_digest(const void *, wi_uinteger_t, unsigned char *);
+WI_EXPORT wi_string_t *                 wi_sha1_digest_string(wi_data_t *);
+
+WI_EXPORT wi_sha1_t *                   wi_sha1(void);
+
+WI_EXPORT wi_sha1_t *                   wi_sha1_alloc(void);
+WI_EXPORT wi_sha1_t *                   wi_sha1_init(wi_sha1_t *);
+
+WI_EXPORT void                          wi_sha1_update(wi_sha1_t *, const void *, wi_uinteger_t);
+WI_EXPORT void                          wi_sha1_close(wi_sha1_t *);
+
+WI_EXPORT void                          wi_sha1_get_data(wi_sha1_t *, unsigned char *);
+WI_EXPORT wi_data_t *                   wi_sha1_data(wi_sha1_t *);
+WI_EXPORT wi_string_t *                 wi_sha1_string(wi_sha1_t *);
+
+
+WI_EXPORT wi_string_t *                 wi_base64_string_from_data(wi_data_t *);
+WI_EXPORT wi_data_t *                   wi_data_from_base64_string(wi_string_t *);
 
 #endif /* WI_DIGEST_H */

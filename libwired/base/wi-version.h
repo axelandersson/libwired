@@ -29,6 +29,6 @@
 
 #include <wired/wi-base.h>
 
-WI_EXPORT wi_string_t				*wi_version_string;
+WI_EXPORT wi_string_t                   *wi_version_string;
 
 #endif /* WI_VERSION_H */

@@ -31,15 +31,15 @@
 #include <wired/wi-rsa.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_x509					wi_x509_t;
+typedef struct _wi_x509                 wi_x509_t;
 
 
-WI_EXPORT wi_runtime_id_t				wi_x509_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_x509_runtime_id(void);
 
-WI_EXPORT wi_x509_t *					wi_x509_alloc(void);
-WI_EXPORT wi_x509_t *					wi_x509_init_with_common_name(wi_x509_t *, wi_rsa_t *, wi_string_t *);
-WI_EXPORT wi_x509_t *					wi_x509_init_with_pem_file(wi_x509_t *, wi_string_t *);
+WI_EXPORT wi_x509_t *                   wi_x509_alloc(void);
+WI_EXPORT wi_x509_t *                   wi_x509_init_with_common_name(wi_x509_t *, wi_rsa_t *, wi_string_t *);
+WI_EXPORT wi_x509_t *                   wi_x509_init_with_pem_file(wi_x509_t *, wi_string_t *);
 
-WI_EXPORT void *						wi_x509_x509(wi_x509_t *);
+WI_EXPORT void *                        wi_x509_x509(wi_x509_t *);
 
 #endif /* WI_X509_H */

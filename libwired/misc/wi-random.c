@@ -39,15 +39,15 @@
 #include <wired/wi-random.h>
 
 #ifdef HAVE_SRANDOM
-#define _WI_DATA_SRANDOM(n)				srandom((n))
-#define _WI_DATA_RANDOM()				random()
+#define _WI_DATA_SRANDOM(n)             srandom((n))
+#define _WI_DATA_RANDOM()               random()
 #else
-#define _WI_DATA_SRANDOM(n)				srand(n)
-#define _WI_DATA_RANDOM()				rand()
+#define _WI_DATA_SRANDOM(n)             srand(n)
+#define _WI_DATA_RANDOM()               rand()
 #endif
 
 
-static int								_wi_data_random_fd;
+static int                              _wi_data_random_fd;
 
 
 void wi_random_register(void) {
@@ -56,20 +56,20 @@ void wi_random_register(void) {
 
 
 void wi_random_initialize(void) {
-	struct timeval		tv;
-	wi_uinteger_t		i;
-	
-	_wi_data_random_fd = open("/dev/urandom", O_RDONLY);
-	
-	if(_wi_data_random_fd < 0)
-		_wi_data_random_fd = open("/dev/random", O_RDONLY | O_NONBLOCK);
-	
-	gettimeofday(&tv, NULL);
-	
-	_WI_DATA_SRANDOM((getpid() << 16) ^ getuid() ^ tv.tv_sec ^ tv.tv_usec);
-	
-	for(i = (tv.tv_sec ^ tv.tv_usec) & 0x1F; i > 0; i--)
-		_WI_DATA_RANDOM();
+    struct timeval        tv;
+    wi_uinteger_t        i;
+    
+    _wi_data_random_fd = open("/dev/urandom", O_RDONLY);
+    
+    if(_wi_data_random_fd < 0)
+        _wi_data_random_fd = open("/dev/random", O_RDONLY | O_NONBLOCK);
+    
+    gettimeofday(&tv, NULL);
+    
+    _WI_DATA_SRANDOM((getpid() << 16) ^ getuid() ^ tv.tv_sec ^ tv.tv_usec);
+    
+    for(i = (tv.tv_sec ^ tv.tv_usec) & 0x1F; i > 0; i--)
+        _WI_DATA_RANDOM();
 }
 
 
@@ -78,19 +78,19 @@ void wi_random_initialize(void) {
 
 void wi_random_get_bytes(void *buffer, wi_uinteger_t length) {
 #ifndef HAVE_OPENSSL_SHA_H
-	unsigned char		*p;
-	uint32_t			i;
+    unsigned char        *p;
+    uint32_t            i;
 #endif
-	
+    
 #ifdef HAVE_OPENSSL_SHA_H
-	RAND_bytes(buffer, length);
+    RAND_bytes(buffer, length);
 #else
-	if(_wi_data_random_fd >= 0)
-		read(_wi_data_random_fd, buffer, length);
-	else
-		memset(buffer, 0, length);
-	
-	for(p = buffer, i = 0; i < length; i++)
-		*p++ ^= (_WI_DATA_RANDOM() >> 7) & 0xFF;
+    if(_wi_data_random_fd >= 0)
+        read(_wi_data_random_fd, buffer, length);
+    else
+        memset(buffer, 0, length);
+    
+    for(p = buffer, i = 0; i < length; i++)
+        *p++ ^= (_WI_DATA_RANDOM() >> 7) & 0xFF;
 #endif
 }

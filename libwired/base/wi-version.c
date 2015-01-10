@@ -29,7 +29,7 @@
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
 
-wi_string_t						*wi_version_string;
+wi_string_t                         *wi_version_string;
 
 
 
@@ -39,5 +39,5 @@ void wi_version_register(void) {
 
 
 void wi_version_initialize(void) {
-	wi_version_string = wi_string_init_with_cstring(wi_string_alloc(), WI_VERSION);
+    wi_version_string = wi_string_init_with_cstring(wi_string_alloc(), WI_VERSION);
 }

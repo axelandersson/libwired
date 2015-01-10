@@ -30,19 +30,19 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_host				wi_host_t;
+typedef struct _wi_host             wi_host_t;
 
 
-WI_EXPORT wi_runtime_id_t			wi_host_runtime_id(void);
+WI_EXPORT wi_runtime_id_t           wi_host_runtime_id(void);
 
-WI_EXPORT wi_host_t *				wi_host(void);
-WI_EXPORT wi_host_t *				wi_host_with_string(wi_string_t *);
+WI_EXPORT wi_host_t *               wi_host(void);
+WI_EXPORT wi_host_t *               wi_host_with_string(wi_string_t *);
 
-WI_EXPORT wi_host_t *				wi_host_alloc(void);
-WI_EXPORT wi_host_t *				wi_host_init(wi_host_t *);
-WI_EXPORT wi_host_t *				wi_host_init_with_string(wi_host_t *, wi_string_t *);
+WI_EXPORT wi_host_t *               wi_host_alloc(void);
+WI_EXPORT wi_host_t *               wi_host_init(wi_host_t *);
+WI_EXPORT wi_host_t *               wi_host_init_with_string(wi_host_t *, wi_string_t *);
 
-WI_EXPORT wi_address_t *			wi_host_address(wi_host_t *);
-WI_EXPORT wi_array_t *				wi_host_addresses(wi_host_t *);
+WI_EXPORT wi_address_t *            wi_host_address(wi_host_t *);
+WI_EXPORT wi_array_t *              wi_host_addresses(wi_host_t *);
 
 #endif /* WI_HOST_H */

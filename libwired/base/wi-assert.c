@@ -29,24 +29,24 @@
 #include <wired/wi-assert.h>
 #include <wired/wi-string.h>
 
-static void							wi_assert_default_handler(const char *, unsigned int, wi_string_t *, ...);
+static void                             wi_assert_default_handler(const char *, unsigned int, wi_string_t *, ...);
 
 
-wi_assert_handler_func_t			*wi_assert_handler = wi_assert_default_handler;
+wi_assert_handler_func_t                *wi_assert_handler = wi_assert_default_handler;
 
 
 
 static void wi_assert_default_handler(const char *file, unsigned int line, wi_string_t *fmt, ...) {
-	wi_string_t		*string;
-	va_list			ap;
-	
-	va_start(ap, fmt);
-	string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-	va_end(ap);
-	
-	wi_log_error(WI_STR("Assertion failed at %s:%u: %@"), file, line, string);
-	
-	wi_release(string);
-	
-	wi_crash();
+    wi_string_t        *string;
+    va_list            ap;
+    
+    va_start(ap, fmt);
+    string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
+    va_end(ap);
+    
+    wi_log_error(WI_STR("Assertion failed at %s:%u: %@"), file, line, string);
+    
+    wi_release(string);
+    
+    wi_crash();
 }

@@ -29,76 +29,76 @@
 
 #include <wired/wi-base.h>
 
-typedef void							wi_runtime_instance_t;
+typedef void                            wi_runtime_instance_t;
 
 enum {
-	WI_RUNTIME_ID_NULL					= 0
+    WI_RUNTIME_ID_NULL                  = 0
 };
-typedef uint16_t						wi_runtime_id_t;
+typedef uint16_t                        wi_runtime_id_t;
 
 enum {
-	WI_RUNTIME_OPTION_ZOMBIE			= (1 << 0),
-	WI_RUNTIME_OPTION_IMMUTABLE			= (1 << 1),
-	WI_RUNTIME_OPTION_MUTABLE			= (1 << 2)
+    WI_RUNTIME_OPTION_ZOMBIE            = (1 << 0),
+    WI_RUNTIME_OPTION_IMMUTABLE         = (1 << 1),
+    WI_RUNTIME_OPTION_MUTABLE           = (1 << 2)
 };
 
 
-typedef void							wi_dealloc_func_t(wi_runtime_instance_t *);
-typedef wi_runtime_instance_t *			wi_copy_func_t(wi_runtime_instance_t *);
-typedef wi_boolean_t					wi_is_equal_func_t(wi_runtime_instance_t *, wi_runtime_instance_t *);
-typedef wi_string_t *					wi_description_func_t(wi_runtime_instance_t *);
-typedef wi_hash_code_t					wi_hash_func_t(wi_runtime_instance_t *);
+typedef void                            wi_dealloc_func_t(wi_runtime_instance_t *);
+typedef wi_runtime_instance_t *         wi_copy_func_t(wi_runtime_instance_t *);
+typedef wi_boolean_t                    wi_is_equal_func_t(wi_runtime_instance_t *, wi_runtime_instance_t *);
+typedef wi_string_t *                   wi_description_func_t(wi_runtime_instance_t *);
+typedef wi_hash_code_t                  wi_hash_func_t(wi_runtime_instance_t *);
 
-typedef wi_runtime_instance_t *			wi_retain_func_t(wi_runtime_instance_t *);
-typedef void							wi_release_func_t(wi_runtime_instance_t *);
-typedef wi_integer_t					wi_compare_func_t(wi_runtime_instance_t *, wi_runtime_instance_t *);
+typedef wi_runtime_instance_t *         wi_retain_func_t(wi_runtime_instance_t *);
+typedef void                            wi_release_func_t(wi_runtime_instance_t *);
+typedef wi_integer_t                    wi_compare_func_t(wi_runtime_instance_t *, wi_runtime_instance_t *);
 
 struct _wi_runtime_class {
-	const char							*name;
-	wi_dealloc_func_t					*dealloc;
-	wi_copy_func_t						*copy;
-	wi_is_equal_func_t					*is_equal;
-	wi_description_func_t				*description;
-	wi_hash_func_t						*hash;
+    const char                          *name;
+    wi_dealloc_func_t                   *dealloc;
+    wi_copy_func_t                      *copy;
+    wi_is_equal_func_t                  *is_equal;
+    wi_description_func_t               *description;
+    wi_hash_func_t                      *hash;
 };
-typedef struct _wi_runtime_class		wi_runtime_class_t;
+typedef struct _wi_runtime_class        wi_runtime_class_t;
 
 
 struct _wi_runtime_base {
-	uint32_t							magic;
-	wi_runtime_id_t						id;
-	uint16_t							retain_count;
-	uint8_t								options;
+    uint32_t                            magic;
+    wi_runtime_id_t                     id;
+    uint16_t                            retain_count;
+    uint8_t                             options;
 };
-typedef struct _wi_runtime_base			wi_runtime_base_t;
+typedef struct _wi_runtime_base         wi_runtime_base_t;
 
 
-WI_EXPORT wi_runtime_id_t				wi_runtime_register_class(wi_runtime_class_t *);
-WI_EXPORT wi_runtime_instance_t *		wi_runtime_create_instance(wi_runtime_id_t, size_t);
-WI_EXPORT wi_runtime_instance_t *		wi_runtime_create_instance_with_options(wi_runtime_id_t, size_t, uint8_t);
+WI_EXPORT wi_runtime_id_t               wi_runtime_register_class(wi_runtime_class_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_runtime_create_instance(wi_runtime_id_t, size_t);
+WI_EXPORT wi_runtime_instance_t *       wi_runtime_create_instance_with_options(wi_runtime_id_t, size_t, uint8_t);
 
-WI_EXPORT wi_runtime_class_t *			wi_runtime_class_with_name(wi_string_t *);
-WI_EXPORT wi_runtime_class_t *			wi_runtime_class_with_id(wi_runtime_id_t);
-WI_EXPORT wi_runtime_id_t				wi_runtime_id_for_class(wi_runtime_class_t *);
+WI_EXPORT wi_runtime_class_t *          wi_runtime_class_with_name(wi_string_t *);
+WI_EXPORT wi_runtime_class_t *          wi_runtime_class_with_id(wi_runtime_id_t);
+WI_EXPORT wi_runtime_id_t               wi_runtime_id_for_class(wi_runtime_class_t *);
 
-WI_EXPORT wi_runtime_class_t *			wi_runtime_class(wi_runtime_instance_t *);
-WI_EXPORT wi_string_t *					wi_runtime_class_name(wi_runtime_instance_t *);
-WI_EXPORT wi_runtime_id_t				wi_runtime_id(wi_runtime_instance_t *);
-WI_EXPORT uint8_t						wi_runtime_options(wi_runtime_instance_t *);
+WI_EXPORT wi_runtime_class_t *          wi_runtime_class(wi_runtime_instance_t *);
+WI_EXPORT wi_string_t *                 wi_runtime_class_name(wi_runtime_instance_t *);
+WI_EXPORT wi_runtime_id_t               wi_runtime_id(wi_runtime_instance_t *);
+WI_EXPORT uint8_t                       wi_runtime_options(wi_runtime_instance_t *);
 
-WI_EXPORT wi_runtime_instance_t * 		wi_retain(wi_runtime_instance_t *);
-WI_EXPORT uint16_t						wi_retain_count(wi_runtime_instance_t *);
-WI_EXPORT void							wi_release(wi_runtime_instance_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_retain(wi_runtime_instance_t *);
+WI_EXPORT uint16_t                      wi_retain_count(wi_runtime_instance_t *);
+WI_EXPORT void                          wi_release(wi_runtime_instance_t *);
 
-WI_EXPORT wi_runtime_instance_t *		wi_copy(wi_runtime_instance_t *);
-WI_EXPORT wi_runtime_instance_t *		wi_mutable_copy(wi_runtime_instance_t *);
-WI_EXPORT wi_boolean_t					wi_is_equal(wi_runtime_instance_t *, wi_runtime_instance_t *);
-WI_EXPORT wi_string_t *					wi_description(wi_runtime_instance_t *);
-WI_EXPORT wi_hash_code_t				wi_hash(wi_runtime_instance_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_copy(wi_runtime_instance_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_mutable_copy(wi_runtime_instance_t *);
+WI_EXPORT wi_boolean_t                  wi_is_equal(wi_runtime_instance_t *, wi_runtime_instance_t *);
+WI_EXPORT wi_string_t *                 wi_description(wi_runtime_instance_t *);
+WI_EXPORT wi_hash_code_t                wi_hash(wi_runtime_instance_t *);
 
-WI_EXPORT void							wi_show(wi_runtime_instance_t *);
+WI_EXPORT void                          wi_show(wi_runtime_instance_t *);
 
 
-WI_EXPORT wi_boolean_t					wi_zombie_enabled;
+WI_EXPORT wi_boolean_t                  wi_zombie_enabled;
 
 #endif /* WI_RUNTIME_H */

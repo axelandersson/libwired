@@ -28,37 +28,37 @@
 #define WI_MACROS_H 1
 
 #ifndef INT8_MAX
-#define INT8_MAX		127
-#define INT16_MAX		32767
-#define INT32_MAX		2147483647
-#define INT64_MAX		9223372036854775807LL
-#define INT32_MIN		(-INT32_MAX-1)
-#define INT64_MIN		(-INT64_MAX-1)
-#define UINT8_MAX		255
-#define UINT16_MAX		65535
-#define UINT32_MAX		4294967295U
-#define UINT64_MAX		18446744073709551615ULL
+#define INT8_MAX        127
+#define INT16_MAX       32767
+#define INT32_MAX       2147483647
+#define INT64_MAX       9223372036854775807LL
+#define INT32_MIN       (-INT32_MAX-1)
+#define INT64_MIN       (-INT64_MAX-1)
+#define UINT8_MAX       255
+#define UINT16_MAX      65535
+#define UINT32_MAX      4294967295U
+#define UINT64_MAX      18446744073709551615ULL
 #endif
 
 #define WI_STMT_START \
-	do {
+    do {
 
 #define WI_STMT_END \
-	} while(0)
+    } while(0)
 
 #define WI_ARRAY_SIZE(array) \
-	(sizeof(array) / sizeof(*(array)))
+    (sizeof(array) / sizeof(*(array)))
 
 #define WI_MIN(x, y) \
-	((x) < (y) ? (x) : (y))
+    ((x) < (y) ? (x) : (y))
 
 #define WI_MAX(x, y) \
-	((x) > (y) ? (x) : (y))
+    ((x) > (y) ? (x) : (y))
 
 #define WI_ABS(x) \
-	((x) < 0 ? (-(x)) : (x))
+    ((x) < 0 ? (-(x)) : (x))
 
 #define WI_CLAMP(x, min, max) \
-	(((x) > (max)) ? (max) : (((x) < (min)) ? (min) : (x)))
+    (((x) > (max)) ? (max) : (((x) < (min)) ? (min) : (x)))
 
 #endif /* WI_MACROS_H */

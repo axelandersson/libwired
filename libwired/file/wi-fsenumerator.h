@@ -31,17 +31,17 @@
 #include <wired/wi-runtime.h>
 
 enum _wi_fsenumerator_status {
-	WI_FSENUMERATOR_EOF,
-	WI_FSENUMERATOR_ERROR,
-	WI_FSENUMERATOR_PATH
+    WI_FSENUMERATOR_EOF,
+    WI_FSENUMERATOR_ERROR,
+    WI_FSENUMERATOR_PATH
 };
-typedef enum _wi_fsenumerator_status		wi_fsenumerator_status_t;
+typedef enum _wi_fsenumerator_status        wi_fsenumerator_status_t;
 
-typedef struct _wi_fsenumerator				wi_fsenumerator_t;
+typedef struct _wi_fsenumerator             wi_fsenumerator_t;
 
 
-WI_EXPORT wi_fsenumerator_status_t			wi_fsenumerator_get_next_path(wi_fsenumerator_t *, wi_string_t **);
-WI_EXPORT void								wi_fsenumerator_skip_descendents(wi_fsenumerator_t *);
-WI_EXPORT wi_uinteger_t						wi_fsenumerator_level(wi_fsenumerator_t *);
+WI_EXPORT wi_fsenumerator_status_t          wi_fsenumerator_get_next_path(wi_fsenumerator_t *, wi_string_t **);
+WI_EXPORT void                              wi_fsenumerator_skip_descendents(wi_fsenumerator_t *);
+WI_EXPORT wi_uinteger_t                     wi_fsenumerator_level(wi_fsenumerator_t *);
 
 #endif /* WI_FSENUMERATOR_H */

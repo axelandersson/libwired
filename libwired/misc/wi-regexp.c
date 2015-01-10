@@ -39,39 +39,39 @@
 #include <wired/wi-string.h>
 
 struct _wi_regexp {
-	wi_runtime_base_t					base;
-	
-	wi_string_t							*string;
-	regex_t								regex;
-	wi_boolean_t						compiled;
-	
-	wi_hash_code_t						hash;
+    wi_runtime_base_t                   base;
+    
+    wi_string_t                         *string;
+    regex_t                             regex;
+    wi_boolean_t                        compiled;
+    
+    wi_hash_code_t                      hash;
 };
 
 
-static void								_wi_regexp_dealloc(wi_runtime_instance_t *);
-static wi_runtime_instance_t *			_wi_regexp_copy(wi_runtime_instance_t *);
-static wi_boolean_t						_wi_regexp_is_equal(wi_runtime_instance_t *, wi_runtime_instance_t *);
-static wi_string_t *					_wi_regexp_description(wi_runtime_instance_t *);
-static wi_hash_code_t					_wi_regexp_hash(wi_runtime_instance_t *);
+static void                             _wi_regexp_dealloc(wi_runtime_instance_t *);
+static wi_runtime_instance_t *          _wi_regexp_copy(wi_runtime_instance_t *);
+static wi_boolean_t                     _wi_regexp_is_equal(wi_runtime_instance_t *, wi_runtime_instance_t *);
+static wi_string_t *                    _wi_regexp_description(wi_runtime_instance_t *);
+static wi_hash_code_t                   _wi_regexp_hash(wi_runtime_instance_t *);
 
-static wi_boolean_t						_wi_regexp_compile(wi_regexp_t *);
+static wi_boolean_t                     _wi_regexp_compile(wi_regexp_t *);
 
 
-static wi_runtime_id_t					_wi_regexp_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_regexp_runtime_class = {
-	"wi_regexp_t",
-	_wi_regexp_dealloc,
-	_wi_regexp_copy,
-	_wi_regexp_is_equal,
-	_wi_regexp_description,
-	_wi_regexp_hash
+static wi_runtime_id_t                  _wi_regexp_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_regexp_runtime_class = {
+    "wi_regexp_t",
+    _wi_regexp_dealloc,
+    _wi_regexp_copy,
+    _wi_regexp_is_equal,
+    _wi_regexp_description,
+    _wi_regexp_hash
 };
 
 
 
 void wi_regexp_register(void) {
-	_wi_regexp_runtime_id = wi_runtime_register_class(&_wi_regexp_runtime_class);
+    _wi_regexp_runtime_id = wi_runtime_register_class(&_wi_regexp_runtime_class);
 }
 
 
@@ -84,7 +84,7 @@ void wi_regexp_initialize(void) {
 #pragma mark -
 
 wi_runtime_id_t wi_regexp_runtime_id(void) {
-	return _wi_regexp_runtime_id;
+    return _wi_regexp_runtime_id;
 }
 
 
@@ -92,7 +92,7 @@ wi_runtime_id_t wi_regexp_runtime_id(void) {
 #pragma mark -
 
 wi_regexp_t * wi_regexp_with_string(wi_string_t *string) {
-	return wi_autorelease(wi_regexp_init_with_string(wi_regexp_alloc(), string));
+    return wi_autorelease(wi_regexp_init_with_string(wi_regexp_alloc(), string));
 }
 
 
@@ -100,68 +100,68 @@ wi_regexp_t * wi_regexp_with_string(wi_string_t *string) {
 #pragma mark -
 
 wi_regexp_t * wi_regexp_alloc(void) {
-	return wi_runtime_create_instance(_wi_regexp_runtime_id, sizeof(wi_regexp_t));
+    return wi_runtime_create_instance(_wi_regexp_runtime_id, sizeof(wi_regexp_t));
 }
 
 
 
 wi_regexp_t * wi_regexp_init_with_string(wi_regexp_t *regexp, wi_string_t *string) {
-	regexp->string = wi_copy(string);
-	
-	if(!_wi_regexp_compile(regexp)) {
-		wi_release(regexp);
-		
-		return NULL;
-	}
-	
-	return regexp;
+    regexp->string = wi_copy(string);
+    
+    if(!_wi_regexp_compile(regexp)) {
+        wi_release(regexp);
+        
+        return NULL;
+    }
+    
+    return regexp;
 }
 
 
 
 static void _wi_regexp_dealloc(wi_runtime_instance_t *instance) {
-	wi_regexp_t		*regexp = instance;
-	
-	if(regexp->compiled)
-		regfree(&regexp->regex);
+    wi_regexp_t     *regexp = instance;
+    
+    if(regexp->compiled)
+        regfree(&regexp->regex);
 
-	wi_release(regexp->string);
+    wi_release(regexp->string);
 }
 
 
 
 static wi_runtime_instance_t * _wi_regexp_copy(wi_runtime_instance_t *instance) {
-	wi_regexp_t		*regexp = instance;
-	
-	return wi_regexp_init_with_string(wi_regexp_alloc(), regexp->string);
+    wi_regexp_t     *regexp = instance;
+    
+    return wi_regexp_init_with_string(wi_regexp_alloc(), regexp->string);
 }
 
 
 
 static wi_boolean_t _wi_regexp_is_equal(wi_runtime_instance_t *instance1, wi_runtime_instance_t *instance2) {
-	wi_regexp_t		*regexp1 = instance1;
-	wi_regexp_t		*regexp2 = instance2;
+    wi_regexp_t     *regexp1 = instance1;
+    wi_regexp_t     *regexp2 = instance2;
 
-	return wi_is_equal(regexp1->string, regexp2->string);
+    return wi_is_equal(regexp1->string, regexp2->string);
 }
 
 
 
 static wi_string_t * _wi_regexp_description(wi_runtime_instance_t *instance) {
-	wi_regexp_t		*regexp = instance;
-	
-	return regexp->string;
+    wi_regexp_t     *regexp = instance;
+    
+    return regexp->string;
 }
 
 
 
 static wi_hash_code_t _wi_regexp_hash(wi_runtime_instance_t *instance) {
-	wi_regexp_t		*regexp = instance;
-	
-	if(regexp->hash == 0)
-		regexp->hash = wi_hash(regexp->string);
-	
-	return regexp->hash;
+    wi_regexp_t     *regexp = instance;
+    
+    if(regexp->hash == 0)
+        regexp->hash = wi_hash(regexp->string);
+    
+    return regexp->hash;
 }
 
 
@@ -169,65 +169,65 @@ static wi_hash_code_t _wi_regexp_hash(wi_runtime_instance_t *instance) {
 #pragma mark -
 
 static wi_boolean_t _wi_regexp_compile(wi_regexp_t *regexp) {
-	const char		*cstring;
-	char			*p, *s = NULL, *ss;
-	int				options, err;
-	wi_boolean_t	result = false;
-	
-	cstring = wi_string_cstring(regexp->string);
+    const char      *cstring;
+    char            *p, *s = NULL, *ss;
+    int             options, err;
+    wi_boolean_t    result = false;
+    
+    cstring = wi_string_cstring(regexp->string);
 
-	if(cstring[0] != '/') {
-		wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
+    if(cstring[0] != '/') {
+        wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
 
-		goto end;
-	}
-	
-	s = ss = strdup(cstring);
-	ss++;
+        goto end;
+    }
+    
+    s = ss = strdup(cstring);
+    ss++;
 
-	if(!(p = strrchr(ss, '/'))) {
-		wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
+    if(!(p = strrchr(ss, '/'))) {
+        wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
 
-		goto end;
-	}
+        goto end;
+    }
 
-	*p = '\0';
-	options = REG_EXTENDED;
+    *p = '\0';
+    options = REG_EXTENDED;
 
-	while(*++p) {
-		switch(*p) {
-			case 'i':
-				options |= REG_ICASE;
-				break;
+    while(*++p) {
+        switch(*p) {
+            case 'i':
+                options |= REG_ICASE;
+                break;
 
-			case 'm':
-				options |= REG_NEWLINE;
-				break;
+            case 'm':
+                options |= REG_NEWLINE;
+                break;
 
-			default:
-				wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_INVALIDOPTION);
+            default:
+                wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_INVALIDOPTION);
 
-				goto end;
-				break;
-		}
-	}
+                goto end;
+                break;
+        }
+    }
 
-	err = regcomp(&regexp->regex, ss, options);
+    err = regcomp(&regexp->regex, ss, options);
 
-	if(err != 0) {
-		wi_error_set_regex_error(&regexp->regex, err);
-		
-		goto end;
-	}
+    if(err != 0) {
+        wi_error_set_regex_error(&regexp->regex, err);
+        
+        goto end;
+    }
 
-	result = true;
-	regexp->compiled = true;
+    result = true;
+    regexp->compiled = true;
 
 end:
-	if(s)
-		free(s);
+    if(s)
+        free(s);
 
-	return result;
+    return result;
 }
 
 
@@ -235,7 +235,7 @@ end:
 #pragma mark -
 
 wi_string_t * wi_regexp_string(wi_regexp_t *regexp) {
-	return regexp->string;
+    return regexp->string;
 }
 
 
@@ -243,28 +243,28 @@ wi_string_t * wi_regexp_string(wi_regexp_t *regexp) {
 #pragma mark -
 
 wi_boolean_t wi_regexp_matches_string(wi_regexp_t *regexp, wi_string_t *string) {
-	return wi_regexp_matches_cstring(regexp, wi_string_cstring(string));
+    return wi_regexp_matches_cstring(regexp, wi_string_cstring(string));
 }
 
 
 
 wi_boolean_t wi_regexp_matches_cstring(wi_regexp_t *regexp, const char *cstring) {
-	return (regexec(&regexp->regex, cstring, 0, NULL, 0) == 0);
+    return (regexec(&regexp->regex, cstring, 0, NULL, 0) == 0);
 }
 
 
 
 wi_string_t * wi_regexp_string_by_matching_string(wi_regexp_t *regexp, wi_string_t *string, wi_uinteger_t index) {
-	regmatch_t		matches[32];
+    regmatch_t  matches[32];
 
-	if(index >= 32)
-		return NULL;
+    if(index >= 32)
+        return NULL;
 
-	memset(matches, 0, sizeof(matches));
+    memset(matches, 0, sizeof(matches));
 
-	if(regexec(&regexp->regex, wi_string_cstring(string), 32, matches, 0) != 0)
-		return NULL;
+    if(regexec(&regexp->regex, wi_string_cstring(string), 32, matches, 0) != 0)
+        return NULL;
 
-	return wi_string_substring_with_range(string,
-		wi_make_range(matches[index].rm_so, matches[index].rm_eo - matches[index].rm_so));
+    return wi_string_substring_with_range(string,
+        wi_make_range(matches[index].rm_so, matches[index].rm_eo - matches[index].rm_so));
 }

@@ -30,10 +30,10 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-WI_EXPORT wi_runtime_instance_t *		wi_plist_read_instance_from_file(wi_string_t *);
-WI_EXPORT wi_runtime_instance_t *		wi_plist_instance_for_string(wi_string_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_plist_read_instance_from_file(wi_string_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_plist_instance_for_string(wi_string_t *);
 
-WI_EXPORT wi_boolean_t					wi_plist_write_instance_to_file(wi_runtime_instance_t *, wi_string_t *);
-WI_EXPORT wi_string_t *					wi_plist_string_for_instance(wi_runtime_instance_t *);
+WI_EXPORT wi_boolean_t                  wi_plist_write_instance_to_file(wi_runtime_instance_t *, wi_string_t *);
+WI_EXPORT wi_string_t *                 wi_plist_string_for_instance(wi_runtime_instance_t *);
 
 #endif /* WI_PLIST_H */

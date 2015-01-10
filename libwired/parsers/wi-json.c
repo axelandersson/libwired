@@ -55,20 +55,20 @@ static wi_string_t *                _wi_json_string_for_null(wi_null_t *);
 
 wi_runtime_instance_t * wi_json_read_instance_from_file(wi_string_t *path) {
     wi_string_t     *string;
-	
+    
     string = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), path));
-	
-	return wi_json_instance_for_string(string);
+    
+    return wi_json_instance_for_string(string);
 }
 
 
 
 wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
-	wi_runtime_instance_t       *top_container, *current_container, *current_underlying_container, *container, *current_value;
-    wi_string_t                 *substring, *current_key;
-    wi_uinteger_t               i, characters;
-    wi_boolean_t                isfloat;
-    char                        ch;
+    wi_runtime_instance_t   *top_container, *current_container, *current_underlying_container, *container, *current_value;
+    wi_string_t             *substring, *current_key;
+    wi_uinteger_t           i, characters;
+    wi_boolean_t            isfloat;
+    char                    ch;
     
     top_container = NULL;
     current_underlying_container = NULL;
@@ -249,7 +249,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
         }
     }
     
-	return top_container;
+    return top_container;
 }
 
 
@@ -257,14 +257,14 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
 #pragma mark -
 
 wi_boolean_t wi_json_write_instance_to_file(wi_runtime_instance_t *instance, wi_string_t *path) {
-	wi_string_t		*string;
-	
-	string = wi_json_string_for_instance(instance);
-	
-	if(!string)
-		return false;
-	
-	return wi_string_write_to_file(string, path);
+    wi_string_t     *string;
+    
+    string = wi_json_string_for_instance(instance);
+    
+    if(!string)
+        return false;
+    
+    return wi_string_write_to_file(string, path);
 }
 
 
@@ -338,9 +338,9 @@ static wi_string_t * _wi_json_quoted_string_for_string(wi_string_t *string, wi_u
 
 
 static wi_string_t * _wi_json_number_string_for_string(wi_string_t *string, wi_boolean_t *isfloat) {
-    wi_uinteger_t       i;
-    wi_range_t          range;
-    char                ch;
+    wi_uinteger_t   i;
+    wi_range_t      range;
+    char            ch;
     
     *isfloat = false;
     
@@ -365,7 +365,7 @@ static wi_string_t * _wi_json_number_string_for_string(wi_string_t *string, wi_b
 
 
 static wi_string_t * _wi_json_boolean_or_null_string_for_string(wi_string_t *string) {
-    wi_range_t          range;
+    wi_range_t  range;
     
     range.location = 0;
     

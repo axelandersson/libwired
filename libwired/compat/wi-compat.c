@@ -73,32 +73,32 @@
  */
 
 char * wi_strsep(char **stringp, const char *delim) {
-	char		*s;
-	const char	*spanp;
-	int			c, sc;
-	char		*tok;
+    char        *s;
+    const char  *spanp;
+    int         c, sc;
+    char        *tok;
 
-	if((s = *stringp) == NULL)
-		return NULL;
+    if((s = *stringp) == NULL)
+        return NULL;
 
-	for(tok = s;;) {
-		c		= *s++;
-		spanp	= delim;
+    for(tok = s;;) {
+        c       = *s++;
+        spanp   = delim;
 
-		do {
-			if((sc = *spanp++) == c) {
-				if(c == 0)
-					s = NULL;
-				else
-					s[-1] = 0;
+        do {
+            if((sc = *spanp++) == c) {
+                if(c == 0)
+                    s = NULL;
+                else
+                    s[-1] = 0;
 
-				*stringp = s;
+                *stringp = s;
 
-				return tok;
-			}
-		} while(sc != 0);
-	}
-	/* NOTREACHED */
+                return tok;
+            }
+        } while(sc != 0);
+    }
+    /* NOTREACHED */
 }
 
 
@@ -106,7 +106,7 @@ char * wi_strsep(char **stringp, const char *delim) {
 /*-
  * Copyright (c) 2001 Mike Barcroft <mike@FreeBSD.org>
  * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *    The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -121,8 +121,8 @@ char * wi_strsep(char **stringp, const char *delim) {
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
+ *    This product includes software developed by the University of
+ *    California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -141,32 +141,32 @@ char * wi_strsep(char **stringp, const char *delim) {
  */
 
 char * wi_strnstr(const char *s, const char *find, size_t slen) {
-	char	c, sc;
-	size_t	len;
+    char    c, sc;
+    size_t  len;
 
-	if((c = *find++) != '\0') {
-		len = strlen(find);
-		
-		do {
-			do {
-				if(slen-- < 1 || (sc = *s++) == '\0')
-					return NULL;
-			} while(sc != c);
-			
-			if(len > slen)
-				return NULL;
-		} while(strncmp(s, find, len) != 0);
+    if((c = *find++) != '\0') {
+        len = strlen(find);
+        
+        do {
+            do {
+                if(slen-- < 1 || (sc = *s++) == '\0')
+                    return NULL;
+            } while(sc != c);
+            
+            if(len > slen)
+                return NULL;
+        } while(strncmp(s, find, len) != 0);
 
-		s--; 
-	}
-	return (char *) s;
+        s--; 
+    }
+    return (char *) s;
 }
 
 
 
 /*-
  * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *    The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -181,8 +181,8 @@ char * wi_strnstr(const char *s, const char *find, size_t slen) {
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
+ *    This product includes software developed by the University of
+ *    California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -201,87 +201,87 @@ char * wi_strnstr(const char *s, const char *find, size_t slen) {
  */
 
 char * wi_strcasestr(const char *s, const char *find) {
-	char	c, sc;
-	size_t	len;
+    char    c, sc;
+    size_t  len;
 
-	if((c = *find++) != '\0') {
-		c	= tolower((unsigned char) c);
-		len	= strlen(find);
+    if((c = *find++) != '\0') {
+        c       = tolower((unsigned char) c);
+        len     = strlen(find);
 
-		do {
-			do {
-				if((sc = *s++) == '\0')
-					return NULL;
-			} while((char) tolower((unsigned char) sc) != c);
-		} while(strncasecmp(s, find, len) != 0);
+        do {
+            do {
+                if((sc = *s++) == '\0')
+                    return NULL;
+            } while((char) tolower((unsigned char) sc) != c);
+        } while(strncasecmp(s, find, len) != 0);
 
-		s--;
-	}
+        s--;
+    }
 
-	return (char *) s;
+    return (char *) s;
 }
 
 
 
 char * wi_strncasestr(const char *s, const char *find, size_t slen) {
-	char	c, sc;
-	size_t	len;
+    char    c, sc;
+    size_t  len;
 
-	if((c = *find++) != '\0') {
-		c	= tolower((unsigned char) c);
-		len	= strlen(find);
+    if((c = *find++) != '\0') {
+        c       = tolower((unsigned char) c);
+        len     = strlen(find);
 
-		do {
-			do {
-				if(slen-- < 1 || (sc = *s++) == '\0')
-					return NULL;
-			} while((char) tolower((unsigned char) sc) != c);
+        do {
+            do {
+                if(slen-- < 1 || (sc = *s++) == '\0')
+                    return NULL;
+            } while((char) tolower((unsigned char) sc) != c);
 
-			if(len > slen)
-				return NULL;
-		} while(strncasecmp(s, find, len) != 0);
+            if(len > slen)
+                return NULL;
+        } while(strncasecmp(s, find, len) != 0);
 
-		s--;
-	}
+        s--;
+    }
 
-	return (char *) s;
+    return (char *) s;
 }
 
 
 
 char * wi_strrnstr(const char *s, const char *find, size_t slen) {
-	const char	*p;
-	size_t		len;
+    const char  *p;
+    size_t      len;
 
-	len = strlen(find);
+    len = strlen(find);
 
-	for(p = s + slen - 1; p >= s; --p) {
-		if(strncmp(p, find, len) == 0)
-			return (char *) p;
-	}
+    for(p = s + slen - 1; p >= s; --p) {
+        if(strncmp(p, find, len) == 0)
+            return (char *) p;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 
 
 char * wi_strrncasestr(const char *s, const char *find, size_t slen) {
-	const char	*p;
-	size_t		len;
+    const char  *p;
+    size_t      len;
 
-	len = strlen(find);
+    len = strlen(find);
 
-	for(p = s + slen - 1; p >= s; --p) {
-		if(strncmp(p, find, len) == 0)
-			return (char *) p;
-	}
+    for(p = s + slen - 1; p >= s; --p) {
+        if(strncmp(p, find, len) == 0)
+            return (char *) p;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 
 
-/*	$OpenBSD: strlcat.c,v 1.11 2003/06/17 21:56:24 millert Exp $	*/
+/*    $OpenBSD: strlcat.c,v 1.11 2003/06/17 21:56:24 millert Exp $    */
 
 /*
  * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -300,36 +300,37 @@ char * wi_strrncasestr(const char *s, const char *find, size_t slen) {
  */
 
 size_t wi_strlcat(char *dst, const char *src, size_t siz) {
-	register char *d		= dst;
-	register const char *s	= src;
-	register size_t n		= siz;
-	size_t					dlen;
+    register char           *d = dst;
+    register const char     *s = src;
+    register size_t         n = siz;
+    size_t                  dlen;
 
-	while(n-- != 0 && *d != '\0')
-		d++;
+    while(n-- != 0 && *d != '\0')
+        d++;
 
-	dlen	= d - dst;
-	n		= siz - dlen;
+    dlen    = d - dst;
+    n       = siz - dlen;
 
-	if(n == 0)
-		return (dlen + strlen(s));
+    if(n == 0)
+        return (dlen + strlen(s));
 
-	while(*s != '\0') {
-		if(n != 1) {
-			*d++ = *s;
-			n--;
-		}
-		s++;
-	}
+    while(*s != '\0') {
+        if(n != 1) {
+            *d++ = *s;
+            n--;
+        }
+        
+        s++;
+    }
 
-	*d = '\0';
+    *d = '\0';
 
-	return (dlen + (s - src));
+    return (dlen + (s - src));
 }
 
 
 
-/*	$OpenBSD: strlcpy.c,v 1.7 2003/04/12 21:56:39 millert Exp $	*/
+/*    $OpenBSD: strlcpy.c,v 1.7 2003/04/12 21:56:39 millert Exp $    */
 
 /*
  * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -348,73 +349,73 @@ size_t wi_strlcat(char *dst, const char *src, size_t siz) {
  */
 
 size_t wi_strlcpy(char *dst, const char *src, size_t siz) {
-	register char		*d = dst;
-	register const char	*s = src;
-	register size_t		n = siz;
+    register char           *d = dst;
+    register const char     *s = src;
+    register size_t         n = siz;
 
-	if(n != 0 && --n != 0) {
-		do {
-			if((*d++ = *s++) == 0)
-				break;
-		} while (--n != 0);
-	}
+    if(n != 0 && --n != 0) {
+        do {
+            if((*d++ = *s++) == 0)
+                break;
+        } while (--n != 0);
+    }
 
-	if(n == 0) {
-		if(siz != 0)
-			*d = '\0';
-		while(*s++)
-			;
-	}
+    if(n == 0) {
+        if(siz != 0)
+            *d = '\0';
+        while(*s++)
+            ;
+    }
 
-	return s - src - 1;
+    return s - src - 1;
 }
 
 
 
 int wi_asprintf(char **buffer, const char *fmt, ...) {
-	va_list		ap;
-	int			result;
+    va_list     ap;
+    int         result;
 
-	va_start(ap, fmt);
-	result = wi_vasprintf(buffer, fmt, ap);
-	va_end(ap);
+    va_start(ap, fmt);
+    result = wi_vasprintf(buffer, fmt, ap);
+    va_end(ap);
 
-	return result;
+    return result;
 }
 
 
 
 int wi_vasprintf(char **buffer, const char *fmt, va_list ap) {
 #ifdef HAVE_VASPRINTF
-	return vasprintf(buffer, fmt, ap);
+    return vasprintf(buffer, fmt, ap);
 #else 
-	FILE    	*tmp;
-	char    	*string;
-	int    		bytes;
+    FILE    *tmp;
+    char    *string;
+    int     bytes;
 
-	tmp = wi_tmpfile();
+    tmp = wi_tmpfile();
 
-	if(!tmp)
-		return -1;
+    if(!tmp)
+        return -1;
 
-	bytes = vfprintf(tmp, fmt, ap);
+    bytes = vfprintf(tmp, fmt, ap);
 
-	if(bytes < 0) {
-		fclose(tmp);
+    if(bytes < 0) {
+        fclose(tmp);
 
-		return -1;
-	}
+        return -1;
+    }
 
-	string = wi_malloc(bytes + 1);
+    string = wi_malloc(bytes + 1);
 
-	fseek(tmp, 0, SEEK_SET);
-	fread(string, 1, bytes, tmp);
-	fclose(tmp);
+    fseek(tmp, 0, SEEK_SET);
+    fread(string, 1, bytes, tmp);
+    fclose(tmp);
 
-	string[bytes] = '\0';
-	*buffer = string;
+    string[bytes] = '\0';
+    *buffer = string;
 
-	return bytes;
+    return bytes;
 #endif
 }
 
@@ -423,20 +424,20 @@ int wi_vasprintf(char **buffer, const char *fmt, va_list ap) {
 #pragma mark -
 
 FILE * wi_tmpfile(void) {
-	char		path[WI_PATH_SIZE];
-	int			fd;
+    char    path[WI_PATH_SIZE];
+    int     fd;
 
 #ifdef _PATH_TMP
-	snprintf(path, sizeof(path), "%s/%s", _PATH_TMP, "tmp.XXXXXXXXXX");
+    snprintf(path, sizeof(path), "%s/%s", _PATH_TMP, "tmp.XXXXXXXXXX");
 #else
-	snprintf(path, sizeof(path), "/tmp/%s", "tmp.XXXXXXXXXX");
+    snprintf(path, sizeof(path), "/tmp/%s", "tmp.XXXXXXXXXX");
 #endif
 
-	fd = mkstemp(path);
+    fd = mkstemp(path);
 
-	unlink(path);
+    unlink(path);
 
-	return (fd < 0) ? NULL : fdopen(fd, "w+");
+    return (fd < 0) ? NULL : fdopen(fd, "w+");
 }
 
 
@@ -445,13 +446,13 @@ FILE * wi_tmpfile(void) {
 
 int wi_dirfd(DIR *dir) {
 #if defined(HAVE_DIRFD) || defined(dirfd)
-	return dirfd(dir);
+    return dirfd(dir);
 #elif defined(HAVE_DIR_DD_FD)
-	return dir->dd_fd;
+    return dir->dd_fd;
 #elif defined(HAVE_DIR_D_FD)
-	return dir->d_fd;
+    return dir->d_fd;
 #else
-	return 0;
+    return 0;
 #endif
 }
 
@@ -461,26 +462,26 @@ int wi_dirfd(DIR *dir) {
 
 time_t wi_timegm(struct tm *tm) {
 #ifdef HAVE_TIMEGM
-	return timegm(tm);
+    return timegm(tm);
 #else
-	time_t		clock;
-	char		*tz;
-	
-	tz = getenv("TZ");
-	
-	setenv("TZ", "UTC", 1);
-	
-	tzset();
-	
-	clock = mktime(tm);
-	
-	if(tz)
-		setenv("TZ", tz, 1);
-	else
-		unsetenv("TZ");
-	
-	tzset();
-	
-	return clock;
+    time_t  clock;
+    char    *tz;
+    
+    tz = getenv("TZ");
+    
+    setenv("TZ", "UTC", 1);
+    
+    tzset();
+    
+    clock = mktime(tm);
+    
+    if(tz)
+        setenv("TZ", tz, 1);
+    else
+        unsetenv("TZ");
+    
+    tzset();
+    
+    return clock;
 #endif
 }

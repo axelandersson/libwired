@@ -30,22 +30,22 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_process			wi_process_t;
+typedef struct _wi_process          wi_process_t;
 
 
-WI_EXPORT wi_runtime_id_t			wi_process_runtime_id(void);
+WI_EXPORT wi_runtime_id_t           wi_process_runtime_id(void);
 
-WI_EXPORT wi_process_t *			wi_process(void);
+WI_EXPORT wi_process_t *            wi_process(void);
 
-WI_EXPORT void						wi_process_set_name(wi_process_t *, wi_string_t *);
-WI_EXPORT wi_string_t *				wi_process_name(wi_process_t *);
-WI_EXPORT wi_string_t *				wi_process_path(wi_process_t *);
-WI_EXPORT wi_array_t *				wi_process_arguments(wi_process_t *);
-WI_EXPORT wi_boolean_t				wi_process_set_hostname(wi_process_t *, wi_string_t *);
-WI_EXPORT wi_string_t *				wi_process_hostname(wi_process_t *);
+WI_EXPORT void                      wi_process_set_name(wi_process_t *, wi_string_t *);
+WI_EXPORT wi_string_t *             wi_process_name(wi_process_t *);
+WI_EXPORT wi_string_t *             wi_process_path(wi_process_t *);
+WI_EXPORT wi_array_t *              wi_process_arguments(wi_process_t *);
+WI_EXPORT wi_boolean_t              wi_process_set_hostname(wi_process_t *, wi_string_t *);
+WI_EXPORT wi_string_t *             wi_process_hostname(wi_process_t *);
 
-WI_EXPORT wi_string_t *				wi_process_os_name(wi_process_t *);
-WI_EXPORT wi_string_t *				wi_process_os_release(wi_process_t *);
-WI_EXPORT wi_string_t *				wi_process_os_arch(wi_process_t *);
+WI_EXPORT wi_string_t *             wi_process_os_name(wi_process_t *);
+WI_EXPORT wi_string_t *             wi_process_os_release(wi_process_t *);
+WI_EXPORT wi_string_t *             wi_process_os_arch(wi_process_t *);
 
 #endif /* WI_PROCESS_H */

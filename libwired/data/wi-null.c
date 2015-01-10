@@ -28,35 +28,35 @@
 #include <wired/wi-private.h>
 
 struct _wi_null {
-	wi_runtime_base_t					base;
+    wi_runtime_base_t                   base;
 };
 
 
-static wi_runtime_instance_t *			_wi_null_copy(wi_runtime_instance_t *);
+static wi_runtime_instance_t *          _wi_null_copy(wi_runtime_instance_t *);
 
 
-static wi_null_t						*_wi_null;
+static wi_null_t                        *_wi_null;
 
-static wi_runtime_id_t					_wi_null_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_null_runtime_class = {
-	"wi_null_t",
-	NULL,
-	_wi_null_copy,
-	NULL,
-	NULL,
-	NULL
+static wi_runtime_id_t                  _wi_null_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_null_runtime_class = {
+    "wi_null_t",
+    NULL,
+    _wi_null_copy,
+    NULL,
+    NULL,
+    NULL
 };
 
 
 
 void wi_null_register(void) {
-	_wi_null_runtime_id = wi_runtime_register_class(&_wi_null_runtime_class);
+    _wi_null_runtime_id = wi_runtime_register_class(&_wi_null_runtime_class);
 }
 
 
 
 void wi_null_initialize(void) {
-	_wi_null = wi_runtime_create_instance(_wi_null_runtime_id, sizeof(wi_null_t));
+    _wi_null = wi_runtime_create_instance(_wi_null_runtime_id, sizeof(wi_null_t));
 }
 
 
@@ -64,7 +64,7 @@ void wi_null_initialize(void) {
 #pragma mark -
 
 wi_runtime_id_t wi_null_runtime_id(void) {
-	return _wi_null_runtime_id;
+    return _wi_null_runtime_id;
 }
 
 
@@ -72,7 +72,7 @@ wi_runtime_id_t wi_null_runtime_id(void) {
 #pragma mark -
 
 wi_runtime_instance_t * wi_null(void) {
-	return _wi_null;
+    return _wi_null;
 }
 
 
@@ -80,5 +80,5 @@ wi_runtime_instance_t * wi_null(void) {
 #pragma mark -
 
 static wi_runtime_instance_t * _wi_null_copy(wi_runtime_instance_t *instance) {
-	return wi_retain(_wi_null);
+    return wi_retain(_wi_null);
 }

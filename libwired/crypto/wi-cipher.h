@@ -32,34 +32,34 @@
 #include <wired/wi-runtime.h>
 
 enum _wi_cipher_type {
-	WI_CIPHER_AES128,
-	WI_CIPHER_AES192,
-	WI_CIPHER_AES256,
-	WI_CIPHER_BF128,
-	WI_CIPHER_3DES192,
+    WI_CIPHER_AES128,
+    WI_CIPHER_AES192,
+    WI_CIPHER_AES256,
+    WI_CIPHER_BF128,
+    WI_CIPHER_3DES192,
 };
-typedef enum _wi_cipher_type			wi_cipher_type_t;
+typedef enum _wi_cipher_type            wi_cipher_type_t;
 
 
-typedef struct _wi_cipher				wi_cipher_t;
+typedef struct _wi_cipher               wi_cipher_t;
 
 
-WI_EXPORT wi_runtime_id_t				wi_cipher_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_cipher_runtime_id(void);
 
-WI_EXPORT wi_cipher_t *					wi_cipher_alloc(void);
-WI_EXPORT wi_cipher_t *					wi_cipher_init_with_key(wi_cipher_t *, wi_cipher_type_t, wi_data_t *, wi_data_t *);
-WI_EXPORT wi_cipher_t *					wi_cipher_init_with_random_key(wi_cipher_t *, wi_cipher_type_t);
+WI_EXPORT wi_cipher_t *                 wi_cipher_alloc(void);
+WI_EXPORT wi_cipher_t *                 wi_cipher_init_with_key(wi_cipher_t *, wi_cipher_type_t, wi_data_t *, wi_data_t *);
+WI_EXPORT wi_cipher_t *                 wi_cipher_init_with_random_key(wi_cipher_t *, wi_cipher_type_t);
 
-WI_EXPORT wi_data_t *					wi_cipher_key(wi_cipher_t *);
-WI_EXPORT wi_data_t *					wi_cipher_iv(wi_cipher_t *);
-WI_EXPORT wi_cipher_type_t				wi_cipher_type(wi_cipher_t *);
-WI_EXPORT wi_string_t *					wi_cipher_name(wi_cipher_t *);
-WI_EXPORT wi_uinteger_t					wi_cipher_bits(wi_cipher_t *);
-WI_EXPORT wi_uinteger_t					wi_cipher_block_size(wi_cipher_t *);
+WI_EXPORT wi_data_t *                   wi_cipher_key(wi_cipher_t *);
+WI_EXPORT wi_data_t *                   wi_cipher_iv(wi_cipher_t *);
+WI_EXPORT wi_cipher_type_t              wi_cipher_type(wi_cipher_t *);
+WI_EXPORT wi_string_t *                 wi_cipher_name(wi_cipher_t *);
+WI_EXPORT wi_uinteger_t                 wi_cipher_bits(wi_cipher_t *);
+WI_EXPORT wi_uinteger_t                 wi_cipher_block_size(wi_cipher_t *);
 
-WI_EXPORT wi_data_t *					wi_cipher_encrypt(wi_cipher_t *, wi_data_t *);
-WI_EXPORT wi_integer_t					wi_cipher_encrypt_bytes(wi_cipher_t *, const void *, wi_uinteger_t, void *);
-WI_EXPORT wi_data_t *					wi_cipher_decrypt(wi_cipher_t *, wi_data_t *);
-WI_EXPORT wi_integer_t					wi_cipher_decrypt_bytes(wi_cipher_t *, const void *, wi_uinteger_t, void *);
+WI_EXPORT wi_data_t *                   wi_cipher_encrypt(wi_cipher_t *, wi_data_t *);
+WI_EXPORT wi_integer_t                  wi_cipher_encrypt_bytes(wi_cipher_t *, const void *, wi_uinteger_t, void *);
+WI_EXPORT wi_data_t *                   wi_cipher_decrypt(wi_cipher_t *, wi_data_t *);
+WI_EXPORT wi_integer_t                  wi_cipher_decrypt_bytes(wi_cipher_t *, const void *, wi_uinteger_t, void *);
 
 #endif /* WI_CIPHER_H */

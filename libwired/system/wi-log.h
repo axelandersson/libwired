@@ -30,17 +30,17 @@
 #include <wired/wi-base.h>
 
 #define WI_LOG_INSTANCE(object) \
-	wi_log_info(WI_STR("%s = %@"), #object, (object))
+    wi_log_info(WI_STR("%s = %@"), #object, (object))
 
 
 enum _wi_log_level {
-	WI_LOG_FATAL					= 0,
-	WI_LOG_ERROR,
-	WI_LOG_WARN,
-	WI_LOG_INFO,
-	WI_LOG_DEBUG
+    WI_LOG_FATAL                    = 0,
+    WI_LOG_ERROR,
+    WI_LOG_WARN,
+    WI_LOG_INFO,
+    WI_LOG_DEBUG
 };
-typedef enum _wi_log_level			wi_log_level_t;
+typedef enum _wi_log_level          wi_log_level_t;
 
 enum _wi_log_style {
     WI_LOG_DAEMON,
@@ -49,7 +49,7 @@ enum _wi_log_style {
 typedef enum _wi_log_style          wi_log_style_t;
 
 
-typedef void						wi_log_callback_func_t(wi_log_level_t, wi_string_t *);
+typedef void                        wi_log_callback_func_t(wi_log_level_t, wi_string_t *);
 
 
 WI_EXPORT void                      wi_log_set_level(wi_log_level_t);
@@ -60,12 +60,12 @@ WI_EXPORT void                      wi_log_add_file_logger(wi_string_t *, wi_uin
 WI_EXPORT void                      wi_log_add_syslog_logger(int);
 WI_EXPORT void                      wi_log_add_callback_logger(wi_log_callback_func_t);
 
-WI_EXPORT int						wi_log_syslog_facility_with_name(wi_string_t *);
+WI_EXPORT int                       wi_log_syslog_facility_with_name(wi_string_t *);
 
-WI_EXPORT void						wi_log_debug(wi_string_t *, ...);
-WI_EXPORT void						wi_log_info(wi_string_t *, ...);
-WI_EXPORT void						wi_log_warn(wi_string_t *, ...);
-WI_EXPORT void						wi_log_error(wi_string_t *, ...);
-WI_EXPORT void						wi_log_fatal(wi_string_t *, ...);
+WI_EXPORT void                      wi_log_debug(wi_string_t *, ...);
+WI_EXPORT void                      wi_log_info(wi_string_t *, ...);
+WI_EXPORT void                      wi_log_warn(wi_string_t *, ...);
+WI_EXPORT void                      wi_log_error(wi_string_t *, ...);
+WI_EXPORT void                      wi_log_fatal(wi_string_t *, ...);
 
 #endif /* WI_LOG_H */

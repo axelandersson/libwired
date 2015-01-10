@@ -33,26 +33,26 @@
 #include <grp.h>
 #include <wired/wi-base.h>
 
-WI_EXPORT void					wi_switch_user(uid_t, gid_t);
-WI_EXPORT wi_uinteger_t			wi_user_id(void);
-WI_EXPORT wi_string_t *			wi_user_name(void);
-WI_EXPORT wi_string_t *			wi_user_home(void);
-WI_EXPORT wi_uinteger_t			wi_group_id(void);
-WI_EXPORT wi_string_t *			wi_group_name(void);
+WI_EXPORT void                  wi_switch_user(uid_t, gid_t);
+WI_EXPORT wi_uinteger_t         wi_user_id(void);
+WI_EXPORT wi_string_t *         wi_user_name(void);
+WI_EXPORT wi_string_t *         wi_user_home(void);
+WI_EXPORT wi_uinteger_t         wi_group_id(void);
+WI_EXPORT wi_string_t *         wi_group_name(void);
 
-WI_EXPORT wi_uinteger_t			wi_page_size(void);
+WI_EXPORT wi_uinteger_t         wi_page_size(void);
 
-WI_EXPORT pid_t					wi_fork(void);
-WI_EXPORT wi_boolean_t			wi_execv(wi_string_t *, wi_array_t *);
+WI_EXPORT pid_t                 wi_fork(void);
+WI_EXPORT wi_boolean_t          wi_execv(wi_string_t *, wi_array_t *);
 
-WI_EXPORT void *				wi_malloc(size_t);
-WI_EXPORT void *				wi_realloc(void *, size_t);
-WI_EXPORT void					wi_free(void *);
+WI_EXPORT void *                wi_malloc(size_t);
+WI_EXPORT void *                wi_realloc(void *, size_t);
+WI_EXPORT void                  wi_free(void *);
 
-WI_EXPORT wi_array_t *			wi_backtrace(void);
+WI_EXPORT wi_array_t *          wi_backtrace(void);
 
-WI_EXPORT wi_string_t *			wi_getenv(wi_string_t *);
+WI_EXPORT wi_string_t *         wi_getenv(wi_string_t *);
 
-WI_EXPORT void					wi_getopt_reset(void);
+WI_EXPORT void                  wi_getopt_reset(void);
 
 #endif /* WI_SYSTEM_H */

@@ -31,22 +31,22 @@
 #include <wired/wi-dictionary.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_thread				wi_thread_t;
+typedef struct _wi_thread               wi_thread_t;
 
-typedef void							wi_thread_func_t(wi_runtime_instance_t *);
+typedef void                            wi_thread_func_t(wi_runtime_instance_t *);
 
 
-WI_EXPORT wi_boolean_t					wi_thread_create_thread(wi_thread_func_t *, wi_runtime_instance_t *);
-WI_EXPORT wi_boolean_t					wi_thread_create_thread_with_priority(wi_thread_func_t *, wi_runtime_instance_t *, double);
+WI_EXPORT wi_boolean_t                  wi_thread_create_thread(wi_thread_func_t *, wi_runtime_instance_t *);
+WI_EXPORT wi_boolean_t                  wi_thread_create_thread_with_priority(wi_thread_func_t *, wi_runtime_instance_t *, double);
 
-WI_EXPORT void							wi_thread_enter_thread(void);
-WI_EXPORT void							wi_thread_exit_thread(void);
+WI_EXPORT void                          wi_thread_enter_thread(void);
+WI_EXPORT void                          wi_thread_exit_thread(void);
 
-WI_EXPORT wi_thread_t *					wi_thread_current_thread(void);
-WI_EXPORT wi_mutable_dictionary_t *		wi_thread_dictionary(void);
+WI_EXPORT wi_thread_t *                 wi_thread_current_thread(void);
+WI_EXPORT wi_mutable_dictionary_t *     wi_thread_dictionary(void);
 
-WI_EXPORT void							wi_thread_sleep(wi_time_interval_t);
-WI_EXPORT void							wi_thread_block_signals(int, ...);
-WI_EXPORT int							wi_thread_wait_for_signals(int, ...);
+WI_EXPORT void                          wi_thread_sleep(wi_time_interval_t);
+WI_EXPORT void                          wi_thread_block_signals(int, ...);
+WI_EXPORT int                           wi_thread_wait_for_signals(int, ...);
 
 #endif /* WI_THREAD_H */

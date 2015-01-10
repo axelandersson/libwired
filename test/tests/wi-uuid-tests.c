@@ -26,12 +26,12 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_uuid(void);
+WI_TEST_EXPORT void                     wi_test_uuid(void);
 
 
 void wi_test_uuid(void) {
-	wi_uuid_t		*uuid;
-	char			bytes[WI_UUID_BUFFER_SIZE];
+	wi_uuid_t   *uuid;
+	char        bytes[WI_UUID_BUFFER_SIZE];
 	
 	uuid = wi_uuid();
 

@@ -33,29 +33,29 @@
 #include <wired/wi-string.h>
 
 struct _wi_fsenumerator {
-	wi_runtime_base_t					base;
+    wi_runtime_base_t                   base;
 
-	WI_FTS								*fts;
-	WI_FTSENT							*ftsent;
+    WI_FTS                              *fts;
+    WI_FTSENT                           *ftsent;
 };
 
 
-static void								_wi_fsenumerator_dealloc(wi_runtime_instance_t *);
+static void                             _wi_fsenumerator_dealloc(wi_runtime_instance_t *);
 
 
-static wi_runtime_id_t					_wi_fsenumerator_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t				_wi_fsenumerator_runtime_class = {
-	"wi_fsenumerator_t",
-	_wi_fsenumerator_dealloc,
-	NULL,
-	NULL,
-	NULL,
-	NULL
+static wi_runtime_id_t                  _wi_fsenumerator_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_fsenumerator_runtime_class = {
+    "wi_fsenumerator_t",
+    _wi_fsenumerator_dealloc,
+    NULL,
+    NULL,
+    NULL,
+    NULL
 };
 
 
 void wi_fsenumerator_register(void) {
-	_wi_fsenumerator_runtime_id = wi_runtime_register_class(&_wi_fsenumerator_runtime_class);
+    _wi_fsenumerator_runtime_id = wi_runtime_register_class(&_wi_fsenumerator_runtime_class);
 }
 
 
@@ -68,37 +68,37 @@ void wi_fsenumerator_initialize(void) {
 #pragma mark -
 
 wi_fsenumerator_t * wi_fsenumerator_alloc(void) {
-	return wi_runtime_create_instance(_wi_fsenumerator_runtime_id, sizeof(wi_fsenumerator_t));
+    return wi_runtime_create_instance(_wi_fsenumerator_runtime_id, sizeof(wi_fsenumerator_t));
 }
 
 
 
 wi_fsenumerator_t * wi_fsenumerator_init_with_path(wi_fsenumerator_t *fsenumerator, wi_string_t *path) {
-	char	*paths[2];
+    char    *paths[2];
 
-	paths[0] = (char *) wi_string_cstring(path);
-	paths[1] = NULL;
+    paths[0] = (char *) wi_string_cstring(path);
+    paths[1] = NULL;
 
-	errno = 0;
-	fsenumerator->fts = wi_fts_open(paths, WI_FTS_NOSTAT | WI_FTS_LOGICAL, NULL);
-	
-	if(!fsenumerator->fts || errno != 0) {
-		wi_error_set_errno(errno);
-		wi_release(fsenumerator);
+    errno = 0;
+    fsenumerator->fts = wi_fts_open(paths, WI_FTS_NOSTAT | WI_FTS_LOGICAL, NULL);
+    
+    if(!fsenumerator->fts || errno != 0) {
+        wi_error_set_errno(errno);
+        wi_release(fsenumerator);
 
-		return NULL;
-	}
+        return NULL;
+    }
 
-	return fsenumerator;
+    return fsenumerator;
 }
 
 
 
 static void _wi_fsenumerator_dealloc(wi_runtime_instance_t *instance) {
-	wi_fsenumerator_t		*fsenumerator = instance;
+    wi_fsenumerator_t   *fsenumerator = instance;
 
-	if(fsenumerator->fts)
-		wi_fts_close(fsenumerator->fts);
+    if(fsenumerator->fts)
+        wi_fts_close(fsenumerator->fts);
 }
 
 
@@ -106,56 +106,56 @@ static void _wi_fsenumerator_dealloc(wi_runtime_instance_t *instance) {
 #pragma mark -
 
 wi_fsenumerator_status_t wi_fsenumerator_get_next_path(wi_fsenumerator_t *fsenumerator, wi_string_t **path) {
-	while((fsenumerator->ftsent = wi_fts_read(fsenumerator->fts))) {
-		if(fsenumerator->ftsent->fts_level == 0)
-			continue;
+    while((fsenumerator->ftsent = wi_fts_read(fsenumerator->fts))) {
+        if(fsenumerator->ftsent->fts_level == 0)
+            continue;
 
-		if(fsenumerator->ftsent->fts_name[0] == '.') {
-			wi_fts_set(fsenumerator->fts, fsenumerator->ftsent, WI_FTS_SKIP);
-			
-			continue;
-		}
-		
-		switch(fsenumerator->ftsent->fts_info) {
-			case WI_FTS_DC:
-				*path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
-				wi_error_set_errno(ELOOP);
+        if(fsenumerator->ftsent->fts_name[0] == '.') {
+            wi_fts_set(fsenumerator->fts, fsenumerator->ftsent, WI_FTS_SKIP);
+            
+            continue;
+        }
+        
+        switch(fsenumerator->ftsent->fts_info) {
+            case WI_FTS_DC:
+                *path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
+                wi_error_set_errno(ELOOP);
 
-				return WI_FSENUMERATOR_ERROR;
-				break;
+                return WI_FSENUMERATOR_ERROR;
+                break;
 
-			case WI_FTS_DNR:
-			case WI_FTS_ERR:
-				*path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
-				wi_error_set_errno(fsenumerator->ftsent->fts_errno);
+            case WI_FTS_DNR:
+            case WI_FTS_ERR:
+                *path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
+                wi_error_set_errno(fsenumerator->ftsent->fts_errno);
 
-				return WI_FSENUMERATOR_ERROR;
-				break;
+                return WI_FSENUMERATOR_ERROR;
+                break;
 
-			case WI_FTS_DP:
-				continue;
-				break;
+            case WI_FTS_DP:
+                continue;
+                break;
 
-			default:
-				*path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
+            default:
+                *path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
 
-				return WI_FSENUMERATOR_PATH;
-				break;
-		}
-	}
+                return WI_FSENUMERATOR_PATH;
+                break;
+        }
+    }
 
-	return WI_FSENUMERATOR_EOF;
+    return WI_FSENUMERATOR_EOF;
 }
 
 
 
 void wi_fsenumerator_skip_descendents(wi_fsenumerator_t *fsenumerator) {
-	if(fsenumerator->ftsent)
-		wi_fts_set(fsenumerator->fts, fsenumerator->ftsent, WI_FTS_SKIP);
+    if(fsenumerator->ftsent)
+        wi_fts_set(fsenumerator->fts, fsenumerator->ftsent, WI_FTS_SKIP);
 }
 
 
 
 wi_uinteger_t wi_fsenumerator_level(wi_fsenumerator_t *fsenumerator) {
-	return fsenumerator->ftsent ? fsenumerator->ftsent->fts_level : 0;
+    return fsenumerator->ftsent ? fsenumerator->ftsent->fts_level : 0;
 }

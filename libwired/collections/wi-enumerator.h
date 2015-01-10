@@ -30,11 +30,11 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_enumerator				wi_enumerator_t;
+typedef struct _wi_enumerator               wi_enumerator_t;
 
 
-WI_EXPORT wi_runtime_id_t					wi_enumerator_runtime_id(void);
+WI_EXPORT wi_runtime_id_t                   wi_enumerator_runtime_id(void);
 
-WI_EXPORT void *							wi_enumerator_next_data(wi_enumerator_t *);
+WI_EXPORT void *                            wi_enumerator_next_data(wi_enumerator_t *);
 
 #endif /* WI_ENUMERATOR_H */

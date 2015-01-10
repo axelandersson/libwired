@@ -30,15 +30,15 @@
 #include <wired/wi-base.h>
 
 enum _wi_ip_version {
-	WI_IP_NULL					= 0,
-	WI_IP_IPV4					= 4,
-	WI_IP_IPV6					= 6
+    WI_IP_NULL                      = 0,
+    WI_IP_IPV4                      = 4,
+    WI_IP_IPV6                      = 6
 };
-typedef enum _wi_ip_version		wi_ip_version_t;
+typedef enum _wi_ip_version         wi_ip_version_t;
 
 
-WI_EXPORT wi_ip_version_t		wi_ip_version(wi_string_t *);
+WI_EXPORT wi_ip_version_t           wi_ip_version(wi_string_t *);
 
-WI_EXPORT wi_boolean_t			wi_ip_matches_string(wi_string_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t              wi_ip_matches_string(wi_string_t *, wi_string_t *);
 
 #endif /* WI_IP_H */

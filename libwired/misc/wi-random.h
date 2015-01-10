@@ -30,6 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-WI_EXPORT void					wi_random_get_bytes(void *, wi_uinteger_t);
+WI_EXPORT void                  wi_random_get_bytes(void *, wi_uinteger_t);
 
 #endif /* WI_RANDOM_H */

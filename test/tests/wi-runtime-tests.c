@@ -26,8 +26,9 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_runtime_initialize(void);
+WI_TEST_EXPORT void                     wi_test_runtime_initialize(void);
 
+WI_TEST_EXPORT void						wi_test_runtime_invalid(void);
 WI_TEST_EXPORT void						wi_test_runtime_info(void);
 WI_TEST_EXPORT void						wi_test_runtime_functions(void);
 WI_TEST_EXPORT void						wi_test_runtime_pool(void);
@@ -95,7 +96,7 @@ static void _wi_runtimetest_dealloc(wi_runtime_instance_t *instance) {
 
 
 static wi_runtime_instance_t * _wi_runtimetest_copy(wi_runtime_instance_t *instance) {
-	_wi_runtimetest_t	*runtimetest = instance;
+	_wi_runtimetest_t   *runtimetest = instance;
 	
 	return _wi_runtimetest_init_with_value(_wi_runtimetest_alloc(), runtimetest->value);
 }
@@ -129,17 +130,41 @@ static wi_string_t * _wi_runtimetest_description(wi_runtime_instance_t *instance
 
 #pragma mark -
 
+void wi_test_runtime_invalid(void) {
+    WI_TEST_ASSERT_NULL(wi_runtime_class_with_name(WI_STR("foo")), "");
+    WI_TEST_ASSERT_NULL(wi_runtime_class_with_id(1337), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id_for_class(NULL), WI_RUNTIME_ID_NULL, "");
+    
+    WI_TEST_ASSERT_NULL(wi_runtime_class("foo"), "");
+    WI_TEST_ASSERT_NULL(wi_runtime_class_name("foo"), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id("foo"), WI_RUNTIME_ID_NULL, "");
+
+    WI_TEST_ASSERT_NULL(wi_retain(NULL), "");
+    WI_TEST_ASSERT_EQUALS(wi_retain_count(NULL), 0U, "");
+    WI_TEST_ASSERT_NULL(wi_copy(NULL), "");
+    WI_TEST_ASSERT_NULL(wi_mutable_copy(NULL), "");
+    WI_TEST_ASSERT_TRUE(wi_is_equal(NULL, NULL), "");
+    WI_TEST_ASSERT_FALSE(wi_is_equal(NULL, "foo"), "");
+    WI_TEST_ASSERT_FALSE(wi_is_equal(wi_array(), wi_dictionary()), "");
+    WI_TEST_ASSERT_NULL(wi_description(NULL), "");
+    WI_TEST_ASSERT_EQUALS(wi_hash(NULL), 0U, "");
+}
+
+
+
 void wi_test_runtime_info(void) {
-	_wi_runtimetest_t		*runtimetest;
+	_wi_runtimetest_t   *runtimetest;
 	
 	WI_TEST_ASSERT_EQUALS(wi_runtime_class_with_name(WI_STR("_wi_runtimetest_t")), &_wi_runtimetest_runtime_class, "");
 	WI_TEST_ASSERT_EQUALS(wi_runtime_class_with_id(_wi_runtimetest_runtime_id), &_wi_runtimetest_runtime_class, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id_for_class(&_wi_runtimetest_runtime_class), _wi_runtimetest_runtime_id, "");
 	
 	runtimetest = _wi_runtimetest_init_with_value(_wi_runtimetest_alloc(), 42);
-	
-	WI_TEST_ASSERT_EQUALS(wi_runtime_id(runtimetest), _wi_runtimetest_runtime_id, "");
+    
 	WI_TEST_ASSERT_EQUALS(wi_runtime_class(runtimetest), &_wi_runtimetest_runtime_class, "");
 	WI_TEST_ASSERT_EQUAL_INSTANCES(wi_runtime_class_name(runtimetest), wi_string_with_cstring(_wi_runtimetest_runtime_class.name), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(runtimetest), _wi_runtimetest_runtime_id, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_options(runtimetest), WI_RUNTIME_OPTION_IMMUTABLE, "");
 	
 	wi_release(runtimetest);
 }
@@ -148,7 +173,7 @@ void wi_test_runtime_info(void) {
 
 void wi_test_runtime_functions(void) {
 	_wi_runtimetest_t			*runtimetest1, *runtimetest2;
-	_wi_mutable_runtimetest_t	*runtimetest3;
+	_wi_mutable_runtimetest_t   *runtimetest3;
 	
 	_wi_runtimetest_deallocs = 0;
 	
@@ -182,7 +207,7 @@ void wi_test_runtime_functions(void) {
 
 void wi_test_runtime_pool(void) {
 	wi_pool_t			*pool, *pool2;
-	_wi_runtimetest_t	*runtimetest, *runtimetest2;
+	_wi_runtimetest_t   *runtimetest, *runtimetest2;
 	
 	_wi_runtimetest_deallocs = 0;
 	
@@ -214,7 +239,7 @@ void wi_test_runtime_pool(void) {
 
 
 void wi_test_runtime_retain(void) {
-	_wi_runtimetest_t		*runtimetest, *runtimetest2;
+	_wi_runtimetest_t   *runtimetest, *runtimetest2;
 	
 	_wi_runtimetest_deallocs = 0;
 

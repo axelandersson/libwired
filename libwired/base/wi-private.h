@@ -39,154 +39,154 @@
 #include <wired/wi-set.h>
 #include <wired/wi-thread.h>
 
-#define WI_RUNTIME_MAGIC				0xAC1DFEED
+#define WI_RUNTIME_MAGIC                0xAC1DFEED
 
-#define WI_RUNTIME_BASE(instance)											\
-	((wi_runtime_base_t *) instance)
+#define WI_RUNTIME_BASE(instance)                                           \
+    ((wi_runtime_base_t *) instance)
 
-#define WI_RUNTIME_ASSERT_MUTABLE(instance)									\
-	WI_ASSERT(wi_runtime_options((instance)) & WI_RUNTIME_OPTION_MUTABLE,	\
-		"%@ is not mutable", (instance))
+#define WI_RUNTIME_ASSERT_MUTABLE(instance)                                 \
+    WI_ASSERT(wi_runtime_options((instance)) & WI_RUNTIME_OPTION_MUTABLE,   \
+        "%@ is not mutable", (instance))
 
 
 struct _wi_enumerator_context {
-	wi_uinteger_t						index;
-	void								*bucket;
+    wi_uinteger_t                       index;
+    void                                *bucket;
 };
-typedef struct _wi_enumerator_context	wi_enumerator_context_t;
+typedef struct _wi_enumerator_context   wi_enumerator_context_t;
 
 
-typedef void *							wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *);
+typedef void *                          wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *);
 
 
-WI_EXPORT void							wi_address_register(void);
-WI_EXPORT void							wi_array_register(void);
-WI_EXPORT void							wi_cipher_register(void);
-WI_EXPORT void							wi_data_register(void);
-WI_EXPORT void							wi_date_register(void);
-WI_EXPORT void							wi_dictionary_register(void);
-WI_EXPORT void							wi_digest_register(void);
-WI_EXPORT void							wi_enumerator_register(void);
-WI_EXPORT void							wi_error_register(void);
-WI_EXPORT void							wi_file_register(void);
-WI_EXPORT void							wi_fsenumerator_register(void);
-WI_EXPORT void							wi_fsevents_register(void);
-WI_EXPORT void							wi_host_register(void);
-WI_EXPORT void							wi_lock_register(void);
-WI_EXPORT void							wi_log_register(void);
-WI_EXPORT void							wi_null_register(void);
-WI_EXPORT void							wi_number_register(void);
-WI_EXPORT void							wi_pool_register(void);
-WI_EXPORT void							wi_process_register(void);
-WI_EXPORT void							wi_random_register(void);
-WI_EXPORT void							wi_regexp_register(void);
-WI_EXPORT void							wi_rsa_register(void);
-WI_EXPORT void							wi_runtime_register(void);
-WI_EXPORT void							wi_set_register(void);
-WI_EXPORT void							wi_socket_register(void);
-WI_EXPORT void							wi_string_register(void);
-WI_EXPORT void							wi_task_register(void);
-WI_EXPORT void							wi_test_register(void);
-WI_EXPORT void							wi_timer_register(void);
-WI_EXPORT void							wi_thread_register(void);
-WI_EXPORT void							wi_url_register(void);
-WI_EXPORT void							wi_uuid_register(void);
-WI_EXPORT void							wi_version_register(void);
-WI_EXPORT void							wi_x509_register(void);
+WI_EXPORT void                          wi_address_register(void);
+WI_EXPORT void                          wi_array_register(void);
+WI_EXPORT void                          wi_cipher_register(void);
+WI_EXPORT void                          wi_data_register(void);
+WI_EXPORT void                          wi_date_register(void);
+WI_EXPORT void                          wi_dictionary_register(void);
+WI_EXPORT void                          wi_digest_register(void);
+WI_EXPORT void                          wi_enumerator_register(void);
+WI_EXPORT void                          wi_error_register(void);
+WI_EXPORT void                          wi_file_register(void);
+WI_EXPORT void                          wi_fsenumerator_register(void);
+WI_EXPORT void                          wi_fsevents_register(void);
+WI_EXPORT void                          wi_host_register(void);
+WI_EXPORT void                          wi_lock_register(void);
+WI_EXPORT void                          wi_log_register(void);
+WI_EXPORT void                          wi_null_register(void);
+WI_EXPORT void                          wi_number_register(void);
+WI_EXPORT void                          wi_pool_register(void);
+WI_EXPORT void                          wi_process_register(void);
+WI_EXPORT void                          wi_random_register(void);
+WI_EXPORT void                          wi_regexp_register(void);
+WI_EXPORT void                          wi_rsa_register(void);
+WI_EXPORT void                          wi_runtime_register(void);
+WI_EXPORT void                          wi_set_register(void);
+WI_EXPORT void                          wi_socket_register(void);
+WI_EXPORT void                          wi_string_register(void);
+WI_EXPORT void                          wi_task_register(void);
+WI_EXPORT void                          wi_test_register(void);
+WI_EXPORT void                          wi_timer_register(void);
+WI_EXPORT void                          wi_thread_register(void);
+WI_EXPORT void                          wi_url_register(void);
+WI_EXPORT void                          wi_uuid_register(void);
+WI_EXPORT void                          wi_version_register(void);
+WI_EXPORT void                          wi_x509_register(void);
 
-WI_EXPORT void							wi_address_initialize(void);
-WI_EXPORT void							wi_array_initialize(void);
-WI_EXPORT void							wi_cipher_initialize(void);
-WI_EXPORT void							wi_data_initialize(void);
-WI_EXPORT void							wi_date_initialize(void);
-WI_EXPORT void							wi_dictionary_initialize(void);
-WI_EXPORT void							wi_digest_initialize(void);
-WI_EXPORT void							wi_enumerator_initialize(void);
-WI_EXPORT void							wi_error_initialize(void);
-WI_EXPORT void							wi_file_initialize(void);
-WI_EXPORT void							wi_fsenumerator_initialize(void);
-WI_EXPORT void							wi_fsevents_initialize(void);
-WI_EXPORT void							wi_host_initialize(void);
-WI_EXPORT void							wi_lock_initialize(void);
-WI_EXPORT void							wi_log_initialize(void);
-WI_EXPORT void							wi_null_initialize(void);
-WI_EXPORT void							wi_number_initialize(void);
-WI_EXPORT void							wi_pool_initialize(void);
-WI_EXPORT void							wi_process_initialize(void);
-WI_EXPORT void							wi_random_initialize(void);
-WI_EXPORT void							wi_regexp_initialize(void);
-WI_EXPORT void							wi_rsa_initialize(void);
-WI_EXPORT void							wi_runtime_initialize(void);
-WI_EXPORT void							wi_set_initialize(void);
-WI_EXPORT void							wi_socket_initialize(void);
-WI_EXPORT void							wi_string_initialize(void);
-WI_EXPORT void							wi_task_initialize(void);
-WI_EXPORT void							wi_test_initialize(void);
-WI_EXPORT void							wi_timer_initialize(void);
-WI_EXPORT void							wi_thread_initialize(void);
-WI_EXPORT void							wi_url_initialize(void);
-WI_EXPORT void							wi_uuid_initialize(void);
-WI_EXPORT void							wi_version_initialize(void);
-WI_EXPORT void							wi_x509_initialize(void);
+WI_EXPORT void                          wi_address_initialize(void);
+WI_EXPORT void                          wi_array_initialize(void);
+WI_EXPORT void                          wi_cipher_initialize(void);
+WI_EXPORT void                          wi_data_initialize(void);
+WI_EXPORT void                          wi_date_initialize(void);
+WI_EXPORT void                          wi_dictionary_initialize(void);
+WI_EXPORT void                          wi_digest_initialize(void);
+WI_EXPORT void                          wi_enumerator_initialize(void);
+WI_EXPORT void                          wi_error_initialize(void);
+WI_EXPORT void                          wi_file_initialize(void);
+WI_EXPORT void                          wi_fsenumerator_initialize(void);
+WI_EXPORT void                          wi_fsevents_initialize(void);
+WI_EXPORT void                          wi_host_initialize(void);
+WI_EXPORT void                          wi_lock_initialize(void);
+WI_EXPORT void                          wi_log_initialize(void);
+WI_EXPORT void                          wi_null_initialize(void);
+WI_EXPORT void                          wi_number_initialize(void);
+WI_EXPORT void                          wi_pool_initialize(void);
+WI_EXPORT void                          wi_process_initialize(void);
+WI_EXPORT void                          wi_random_initialize(void);
+WI_EXPORT void                          wi_regexp_initialize(void);
+WI_EXPORT void                          wi_rsa_initialize(void);
+WI_EXPORT void                          wi_runtime_initialize(void);
+WI_EXPORT void                          wi_set_initialize(void);
+WI_EXPORT void                          wi_socket_initialize(void);
+WI_EXPORT void                          wi_string_initialize(void);
+WI_EXPORT void                          wi_task_initialize(void);
+WI_EXPORT void                          wi_test_initialize(void);
+WI_EXPORT void                          wi_timer_initialize(void);
+WI_EXPORT void                          wi_thread_initialize(void);
+WI_EXPORT void                          wi_url_initialize(void);
+WI_EXPORT void                          wi_uuid_initialize(void);
+WI_EXPORT void                          wi_version_initialize(void);
+WI_EXPORT void                          wi_x509_initialize(void);
 
-WI_EXPORT void							wi_process_load(int, const char **);
+WI_EXPORT void                          wi_process_load(int, const char **);
 
-WI_EXPORT wi_hash_code_t				wi_hash_cstring(const char *, wi_uinteger_t);
-WI_EXPORT wi_hash_code_t				wi_hash_pointer(const void *);
-WI_EXPORT wi_hash_code_t				wi_hash_int(int);
-WI_EXPORT wi_hash_code_t				wi_hash_double(double);
-WI_EXPORT wi_hash_code_t				wi_hash_data(const unsigned char *, wi_uinteger_t);
+WI_EXPORT wi_hash_code_t                wi_hash_cstring(const char *, wi_uinteger_t);
+WI_EXPORT wi_hash_code_t                wi_hash_pointer(const void *);
+WI_EXPORT wi_hash_code_t                wi_hash_int(int);
+WI_EXPORT wi_hash_code_t                wi_hash_double(double);
+WI_EXPORT wi_hash_code_t                wi_hash_data(const unsigned char *, wi_uinteger_t);
 
-WI_EXPORT wi_enumerator_t *				wi_enumerator_alloc(void);
-WI_EXPORT wi_enumerator_t *				wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
+WI_EXPORT wi_enumerator_t *             wi_enumerator_alloc(void);
+WI_EXPORT wi_enumerator_t *             wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
 
-WI_EXPORT void *						wi_enumerator_array_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *						wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *						wi_enumerator_hash_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *						wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *						wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *						wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *						wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_array_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_hash_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                        wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
 
-WI_EXPORT void							wi_error_enter_thread(void);
-WI_EXPORT void							wi_error_set_error(wi_error_domain_t, int);
-WI_EXPORT void							wi_error_set_error_with_string(wi_error_domain_t, int, wi_string_t *);
-WI_EXPORT void							wi_error_set_errno(int);
+WI_EXPORT void                          wi_error_enter_thread(void);
+WI_EXPORT void                          wi_error_set_error(wi_error_domain_t, int);
+WI_EXPORT void                          wi_error_set_error_with_string(wi_error_domain_t, int, wi_string_t *);
+WI_EXPORT void                          wi_error_set_errno(int);
 
 #ifdef HAVE_OPENSSL_SHA_H
-WI_EXPORT void							wi_error_set_openssl_error(void);
+WI_EXPORT void                          wi_error_set_openssl_error(void);
 #endif
 
 #ifdef HAVE_OPENSSL_SSL_H
-WI_EXPORT void							wi_error_set_openssl_ssl_error_with_result(void *, int);
+WI_EXPORT void                          wi_error_set_openssl_ssl_error_with_result(void *, int);
 #endif
 
 #ifdef HAVE_COMMONCRYPTO_COMMONCRYPTOR_H
-WI_EXPORT void							wi_error_set_commoncrypto_error(int);
+WI_EXPORT void                          wi_error_set_commoncrypto_error(int);
 #endif
 
 #ifdef WI_LIBXML2
-WI_EXPORT void							wi_error_set_libxml2_error(void);
+WI_EXPORT void                          wi_error_set_libxml2_error(void);
 #endif
 
-WI_EXPORT void							wi_error_set_regex_error(regex_t *, int);
+WI_EXPORT void                          wi_error_set_regex_error(regex_t *, int);
 
 #ifdef WI_ZLIB
-WI_EXPORT void							wi_error_set_zlib_error(int);
+WI_EXPORT void                          wi_error_set_zlib_error(int);
 #endif
 
-WI_EXPORT void							wi_error_set_libwired_error(int);
-WI_EXPORT void							wi_error_set_libwired_error_with_string(int, wi_string_t *);
-WI_EXPORT void							wi_error_set_libwired_error_with_format(int, wi_string_t *, ...);
+WI_EXPORT void                          wi_error_set_libwired_error(int);
+WI_EXPORT void                          wi_error_set_libwired_error_with_string(int, wi_string_t *);
+WI_EXPORT void                          wi_error_set_libwired_error_with_format(int, wi_string_t *, ...);
 
-WI_EXPORT wi_fsenumerator_t *			wi_fsenumerator_alloc(void);
-WI_EXPORT wi_fsenumerator_t *			wi_fsenumerator_init_with_path(wi_fsenumerator_t *, wi_string_t *);
+WI_EXPORT wi_fsenumerator_t *           wi_fsenumerator_alloc(void);
+WI_EXPORT wi_fsenumerator_t *           wi_fsenumerator_init_with_path(wi_fsenumerator_t *, wi_string_t *);
 
-WI_EXPORT void							wi_runtime_make_immutable(wi_runtime_instance_t *);
+WI_EXPORT void                          wi_runtime_make_immutable(wi_runtime_instance_t *);
 
-WI_EXPORT void							wi_socket_exit_thread(void);
+WI_EXPORT void                          wi_socket_exit_thread(void);
 
-WI_EXPORT void							wi_thread_set_poolstack(wi_thread_t *, void *);
-WI_EXPORT void *						wi_thread_poolstack(wi_thread_t *);
+WI_EXPORT void                          wi_thread_set_poolstack(wi_thread_t *, void *);
+WI_EXPORT void *                        wi_thread_poolstack(wi_thread_t *);
 
 #endif /* WI_PRIVATE_H */

@@ -34,21 +34,21 @@
 #include <time.h>
 #include <wired/wi-base.h>
 
-WI_EXPORT char *					wi_strsep(char **, const char *);
-WI_EXPORT char *					wi_strnstr(const char *, const char *, size_t);
-WI_EXPORT char *					wi_strcasestr(const char *, const char *);
-WI_EXPORT char *					wi_strncasestr(const char *, const char *, size_t);
-WI_EXPORT char *					wi_strrnstr(const char *, const char *, size_t);
-WI_EXPORT char *					wi_strrncasestr(const char *, const char *, size_t);
-WI_EXPORT size_t					wi_strlcat(char *, const char *, size_t);
-WI_EXPORT size_t					wi_strlcpy(char *, const char *, size_t);
-WI_EXPORT int						wi_asprintf(char **, const char *, ...);
-WI_EXPORT int						wi_vasprintf(char **, const char *, va_list);
+WI_EXPORT char *                    wi_strsep(char **, const char *);
+WI_EXPORT char *                    wi_strnstr(const char *, const char *, size_t);
+WI_EXPORT char *                    wi_strcasestr(const char *, const char *);
+WI_EXPORT char *                    wi_strncasestr(const char *, const char *, size_t);
+WI_EXPORT char *                    wi_strrnstr(const char *, const char *, size_t);
+WI_EXPORT char *                    wi_strrncasestr(const char *, const char *, size_t);
+WI_EXPORT size_t                    wi_strlcat(char *, const char *, size_t);
+WI_EXPORT size_t                    wi_strlcpy(char *, const char *, size_t);
+WI_EXPORT int                       wi_asprintf(char **, const char *, ...);
+WI_EXPORT int                       wi_vasprintf(char **, const char *, va_list);
 
-WI_EXPORT FILE *					wi_tmpfile(void);
+WI_EXPORT FILE *                    wi_tmpfile(void);
 
-WI_EXPORT int						wi_dirfd(DIR *);
+WI_EXPORT int                       wi_dirfd(DIR *);
 
-WI_EXPORT time_t					wi_timegm(struct tm *);
+WI_EXPORT time_t                    wi_timegm(struct tm *);
 
 #endif /* WI_COMPAT_H */

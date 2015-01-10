@@ -27,11 +27,11 @@
 #include <wired/wired.h>
 #include "test/testlist.h"
 
-wi_string_t				*wi_test_fixture_path;
+wi_string_t                 *wi_test_fixture_path;
 
 
 int main(int argc, const char **argv) {
-	wi_pool_t		*pool;
+	wi_pool_t   *pool;
 	
 	wi_initialize();
 	wi_load(argc, argv);

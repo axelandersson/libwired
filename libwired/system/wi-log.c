@@ -51,32 +51,32 @@
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 
-#define _WI_LOG_DATE_SIZE		32
+#define _WI_LOG_DATE_SIZE           32
 
 
-static void						_wi_log_vlog(wi_log_level_t, wi_string_t *, va_list);
-static void						_wi_log_get_date(char *);
-static void						_wi_log_truncate_file(const char *);
+static void                         _wi_log_vlog(wi_log_level_t, wi_string_t *, va_list);
+static void                         _wi_log_get_date(char *);
+static void                         _wi_log_truncate_file(const char *);
 
 
-static wi_log_level_t           _wi_log_level = WI_LOG_INFO;
+static wi_log_level_t               _wi_log_level = WI_LOG_INFO;
 
-static wi_boolean_t             _wi_log_stdout_enabled;
-static wi_log_style_t           _wi_log_stdout_style;
+static wi_boolean_t                 _wi_log_stdout_enabled;
+static wi_log_style_t               _wi_log_stdout_style;
 
-static wi_boolean_t             _wi_log_file_enabled;
-static wi_string_t              *_wi_log_file_path;
-static wi_uinteger_t            _wi_log_file_limit;
+static wi_boolean_t                 _wi_log_file_enabled;
+static wi_string_t                  *_wi_log_file_path;
+static wi_uinteger_t                _wi_log_file_limit;
 
-static wi_boolean_t             _wi_log_syslog_enabled;
-static int                      _wi_log_syslog_facility;
+static wi_boolean_t                 _wi_log_syslog_enabled;
+static int                          _wi_log_syslog_facility;
 
-static wi_boolean_t             _wi_log_callback_enabled;
-wi_log_callback_func_t			*_wi_log_callback_function;
+static wi_boolean_t                 _wi_log_callback_enabled;
+wi_log_callback_func_t              *_wi_log_callback_function;
 
-static wi_uinteger_t            _wi_log_file_lines;
-static wi_recursive_lock_t		*_wi_log_file_lock;
-static wi_boolean_t				_wi_log_in_callback;
+static wi_uinteger_t                _wi_log_file_lines;
+static wi_recursive_lock_t          *_wi_log_file_lock;
+static wi_boolean_t                 _wi_log_in_callback;
 
 
 
@@ -86,7 +86,7 @@ void wi_log_register(void) {
 
 
 void wi_log_initialize(void) {
-	_wi_log_file_lock = wi_recursive_lock_init(wi_recursive_lock_alloc());
+    _wi_log_file_lock = wi_recursive_lock_init(wi_recursive_lock_alloc());
 }
 
 
@@ -142,27 +142,27 @@ void wi_log_add_callback_logger(wi_log_callback_func_t function) {
 
 int wi_log_syslog_facility_with_name(wi_string_t *name) {
 #if HAVE_SYSLOG_FACILITYNAMES
-	const char		*cstring;
-	int				i;
-	
-	cstring = wi_string_cstring(name);
-	
-	for(i = 0; facilitynames[i].c_name != NULL; i++) {
-		if(strcmp(cstring, facilitynames[i].c_name) == 0)
-			break;
-	}
+    const char  *cstring;
+    int         i;
+    
+    cstring = wi_string_cstring(name);
+    
+    for(i = 0; facilitynames[i].c_name != NULL; i++) {
+        if(strcmp(cstring, facilitynames[i].c_name) == 0)
+            break;
+    }
 
-	if(!facilitynames[i].c_name) {
-		wi_error_set_libwired_error(WI_ERROR_LOG_NOSUCHFACILITY);
-		
-		return -1;
-	}
+    if(!facilitynames[i].c_name) {
+        wi_error_set_libwired_error(WI_ERROR_LOG_NOSUCHFACILITY);
+        
+        return -1;
+    }
 
-	return facilitynames[i].c_val;
+    return facilitynames[i].c_val;
 #else
-	wi_error_set_errno(ENOTSUP);
-	
-	return -1;
+    wi_error_set_errno(ENOTSUP);
+    
+    return -1;
 #endif
 }
 
@@ -171,48 +171,48 @@ int wi_log_syslog_facility_with_name(wi_string_t *name) {
 #pragma mark -
 
 static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
-	wi_string_t		*string;
-	FILE			*fp = NULL;
-	const char		*cstring, *name, *path, *prefix;
-	char			date[_WI_LOG_DATE_SIZE];
-	int				priority;
-	
-	if(_wi_log_in_callback)
-		return;
-	
-	string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-	cstring = wi_string_cstring(string);
-	name = wi_string_cstring(wi_process_name(wi_process()));
-	
-	_wi_log_get_date(date);
-	
-	switch(level) {
-		default:
-		case WI_LOG_INFO:
-			priority = LOG_INFO;
-			prefix = "Info";
-			break;
-			
-		case WI_LOG_WARN:
-			priority = LOG_WARNING;
-			prefix = "Warning";
-			break;
-			
-		case WI_LOG_ERROR:
-			priority = LOG_ERR;
-			prefix = "Error";
-			break;
-			
-		case WI_LOG_FATAL:
-			priority = LOG_CRIT;
-			prefix = "Fatal";
-			break;
-			
-		case WI_LOG_DEBUG:
-			priority = LOG_DEBUG;
-			prefix = "Debug";
-			break;
-	}
+    wi_string_t     *string;
+    FILE            *fp = NULL;
+    const char      *cstring, *name, *path, *prefix;
+    char            date[_WI_LOG_DATE_SIZE];
+    int             priority;
+    
+    if(_wi_log_in_callback)
+        return;
+    
+    string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
+    cstring = wi_string_cstring(string);
+    name = wi_string_cstring(wi_process_name(wi_process()));
+    
+    _wi_log_get_date(date);
+    
+    switch(level) {
+        default:
+        case WI_LOG_INFO:
+            priority = LOG_INFO;
+            prefix = "Info";
+            break;
+            
+        case WI_LOG_WARN:
+            priority = LOG_WARNING;
+            prefix = "Warning";
+            break;
+            
+        case WI_LOG_ERROR:
+            priority = LOG_ERR;
+            prefix = "Error";
+            break;
+            
+        case WI_LOG_FATAL:
+            priority = LOG_CRIT;
+            prefix = "Fatal";
+            break;
+            
+        case WI_LOG_DEBUG:
+            priority = LOG_DEBUG;
+            prefix = "Debug";
+            break;
+    }
     
     if(_wi_log_stdout_enabled) {
         switch(_wi_log_stdout_style) {
@@ -228,122 +228,122 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
         fflush(stdout);
     }
 
-	if(_wi_log_syslog_enabled)
-		syslog(priority, "%s", cstring);
+    if(_wi_log_syslog_enabled)
+        syslog(priority, "%s", cstring);
 
-	if(_wi_log_file_enabled) {
-		wi_recursive_lock_lock(_wi_log_file_lock);
+    if(_wi_log_file_enabled) {
+        wi_recursive_lock_lock(_wi_log_file_lock);
 
-		path = wi_string_cstring(_wi_log_file_path);
+        path = wi_string_cstring(_wi_log_file_path);
 
-		fp = fopen(path, "a");
+        fp = fopen(path, "a");
 
-		if(fp) {
-			fprintf(fp, "%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
-			fclose(fp);
-			
-			if(_wi_log_file_lines > 0 && _wi_log_file_limit > 0) {
-				if(_wi_log_file_lines % (int) ((float) _wi_log_file_limit / 10.0f) == 0) {
-					_wi_log_truncate_file(path);
-					
-					_wi_log_file_lines = _wi_log_file_limit;
-				}
-			}
-			
-			_wi_log_file_lines++;
-		} else {
-			fprintf(stderr, "%s: %s: %s\n", name, path, strerror(errno));
-		}
+        if(fp) {
+            fprintf(fp, "%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
+            fclose(fp);
+            
+            if(_wi_log_file_lines > 0 && _wi_log_file_limit > 0) {
+                if(_wi_log_file_lines % (int) ((float) _wi_log_file_limit / 10.0f) == 0) {
+                    _wi_log_truncate_file(path);
+                    
+                    _wi_log_file_lines = _wi_log_file_limit;
+                }
+            }
+            
+            _wi_log_file_lines++;
+        } else {
+            fprintf(stderr, "%s: %s: %s\n", name, path, strerror(errno));
+        }
 
-		wi_recursive_lock_unlock(_wi_log_file_lock);
-	}
+        wi_recursive_lock_unlock(_wi_log_file_lock);
+    }
 
-	if(_wi_log_callback_enabled) {
-		_wi_log_in_callback = true;
-		(*_wi_log_callback_function)(level, string);
-		_wi_log_in_callback = false;
-	}
-	
-	if(level == WI_LOG_FATAL)
-		exit(1);
+    if(_wi_log_callback_enabled) {
+        _wi_log_in_callback = true;
+        (*_wi_log_callback_function)(level, string);
+        _wi_log_in_callback = false;
+    }
+    
+    if(level == WI_LOG_FATAL)
+        exit(1);
 
-	wi_release(string);
+    wi_release(string);
 }
 
 
 
 static void _wi_log_get_date(char *string) {
     struct tm   tm;
-	time_t      now;
+    time_t      now;
 
-	now = time(NULL);
-	localtime_r(&now, &tm);
-	strftime(string, _WI_LOG_DATE_SIZE, "%b %e %H:%M:%S", &tm);
+    now = time(NULL);
+    localtime_r(&now, &tm);
+    strftime(string, _WI_LOG_DATE_SIZE, "%b %e %H:%M:%S", &tm);
 }
 
 
 
 static void _wi_log_truncate_file(const char *path) {
-	wi_file_t		*file = NULL;
-	FILE			*fp = NULL, *tmp = NULL;
-	struct stat		sb;
-	char			buffer[BUFSIZ];
-	wi_integer_t	position, lines;
-	int				n, ch = EOF;
+    wi_file_t       *file = NULL;
+    FILE            *fp = NULL, *tmp = NULL;
+    struct stat     sb;
+    char            buffer[BUFSIZ];
+    wi_integer_t    position, lines;
+    int             n, ch = EOF;
 
-	if(stat(path, &sb) < 0 || sb.st_size == 0)
-		return;
+    if(stat(path, &sb) < 0 || sb.st_size == 0)
+        return;
 
-	fp = fopen(path, "r");
+    fp = fopen(path, "r");
 
-	if(!fp)
-		goto end;
+    if(!fp)
+        goto end;
 
-	file = wi_file_init_temporary_file(wi_file_alloc());
-	
-	if(!file)
-		goto end;
-	
-	tmp = fdopen(wi_file_descriptor(file), "w+");
+    file = wi_file_init_temporary_file(wi_file_alloc());
+    
+    if(!file)
+        goto end;
+    
+    tmp = fdopen(wi_file_descriptor(file), "w+");
 
-	if(!tmp)
-		goto end;
+    if(!tmp)
+        goto end;
 
-	lines = _wi_log_file_limit;
+    lines = _wi_log_file_limit;
 
-	for(position = sb.st_size - 2; lines > 0 && position >= 0; position--) {
-		if(fseeko(fp, position, SEEK_SET) < 0)
-			goto end;
+    for(position = sb.st_size - 2; lines > 0 && position >= 0; position--) {
+        if(fseeko(fp, position, SEEK_SET) < 0)
+            goto end;
 
-		ch = fgetc(fp);
+        ch = fgetc(fp);
 
-		if(ch == '\n')
-			lines--;
-		else if(ch == EOF && ferror(fp))
-			goto end;
-	}
+        if(ch == '\n')
+            lines--;
+        else if(ch == EOF && ferror(fp))
+            goto end;
+    }
 
-	if(position < 0 && lines > 0 && ch != EOF)
-		ungetc(ch, fp);
+    if(position < 0 && lines > 0 && ch != EOF)
+        ungetc(ch, fp);
 
-	while((n = fread(buffer, 1, sizeof(buffer), fp)))
-		fwrite(buffer, 1, n, tmp);
+    while((n = fread(buffer, 1, sizeof(buffer), fp)))
+        fwrite(buffer, 1, n, tmp);
 
-	fp = freopen(path, "w", fp);
+    fp = freopen(path, "w", fp);
 
-	if(!fp)
-		goto end;
+    if(!fp)
+        goto end;
 
-	rewind(tmp);
+    rewind(tmp);
 
-	while((n = fread(buffer, 1, sizeof(buffer), tmp)))
-		fwrite(buffer, 1, n, fp);
+    while((n = fread(buffer, 1, sizeof(buffer), tmp)))
+        fwrite(buffer, 1, n, fp);
 
 end:
-	if(fp)
-		fclose(fp);
+    if(fp)
+        fclose(fp);
 
-	wi_release(file);
+    wi_release(file);
 }
 
 
@@ -351,57 +351,57 @@ end:
 #pragma mark -
 
 void wi_log_debug(wi_string_t *fmt, ...) {
-	va_list     ap;
+    va_list     ap;
 
-	if(_wi_log_level >= WI_LOG_DEBUG) {
-		va_start(ap, fmt);
-		_wi_log_vlog(WI_LOG_DEBUG, fmt, ap);
-		va_end(ap);
-	}
+    if(_wi_log_level >= WI_LOG_DEBUG) {
+        va_start(ap, fmt);
+        _wi_log_vlog(WI_LOG_DEBUG, fmt, ap);
+        va_end(ap);
+    }
 }
 
 
 
 void wi_log_info(wi_string_t *fmt, ...) {
-	va_list     ap;
+    va_list     ap;
 
-	if(_wi_log_level >= WI_LOG_INFO) {
-		va_start(ap, fmt);
-		_wi_log_vlog(WI_LOG_INFO, fmt, ap);
-		va_end(ap);
-	}
+    if(_wi_log_level >= WI_LOG_INFO) {
+        va_start(ap, fmt);
+        _wi_log_vlog(WI_LOG_INFO, fmt, ap);
+        va_end(ap);
+    }
 }
 
 
 
 void wi_log_warn(wi_string_t *fmt, ...) {
-	va_list     ap;
+    va_list     ap;
 
-	if(_wi_log_level >= WI_LOG_WARN) {
-		va_start(ap, fmt);
-		_wi_log_vlog(WI_LOG_WARN, fmt, ap);
-		va_end(ap);
-	}
+    if(_wi_log_level >= WI_LOG_WARN) {
+        va_start(ap, fmt);
+        _wi_log_vlog(WI_LOG_WARN, fmt, ap);
+        va_end(ap);
+    }
 }
 
 
 
 void wi_log_error(wi_string_t *fmt, ...) {
-	va_list     ap;
+    va_list     ap;
 
-	if(_wi_log_level >= WI_LOG_ERROR) {
-		va_start(ap, fmt);
-		_wi_log_vlog(WI_LOG_ERROR, fmt, ap);
-		va_end(ap);
-	}
+    if(_wi_log_level >= WI_LOG_ERROR) {
+        va_start(ap, fmt);
+        _wi_log_vlog(WI_LOG_ERROR, fmt, ap);
+        va_end(ap);
+    }
 }
 
 
 
 void wi_log_fatal(wi_string_t *fmt, ...) {
-	va_list     ap;
+    va_list     ap;
 
-	va_start(ap, fmt);
-	_wi_log_vlog(WI_LOG_FATAL, fmt, ap);
-	va_end(ap);
+    va_start(ap, fmt);
+    _wi_log_vlog(WI_LOG_FATAL, fmt, ap);
+    va_end(ap);
 }

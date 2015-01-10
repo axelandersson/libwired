@@ -26,12 +26,12 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_url(void);
+WI_TEST_EXPORT void                     wi_test_url(void);
 
 
 void wi_test_url(void) {
 	wi_url_t			*url1;
-	wi_mutable_url_t	*url2;
+	wi_mutable_url_t    *url2;
 	
 	url1 = wi_url_init_with_string(wi_url_alloc(), WI_STR("wired://user:pass@localhost:2000/file.txt"));
 	

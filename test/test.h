@@ -26,4 +26,4 @@
 
 #include <wired/wired.h>
 
-WI_EXPORT wi_string_t				*wi_test_fixture_path;
+WI_EXPORT wi_string_t               *wi_test_fixture_path;

@@ -30,7 +30,7 @@ WI_TEST_EXPORT void						wi_test_fsevents(void);
 
 
 #ifdef WI_PTHREADS
-static void								wi_test_fsevents_thread(wi_runtime_instance_t *);
+static void                             wi_test_fsevents_thread(wi_runtime_instance_t *);
 static void								wi_test_fsevents_callback(wi_string_t *);
 
 
@@ -42,7 +42,7 @@ static wi_fsevents_t					*wi_test_fsevents_path;
 
 void wi_test_fsevents(void) {
 #ifdef WI_PTHREADS
-	wi_string_t			*directory;
+	wi_string_t     *directory;
 	
 	wi_test_fsevents_fsevents = wi_fsevents_init(wi_fsevents_alloc());
 	
@@ -98,7 +98,7 @@ void wi_test_fsevents(void) {
 #ifdef WI_PTHREADS
 
 static void wi_test_fsevents_thread(wi_runtime_instance_t *instance) {
-	wi_pool_t		*pool;
+	wi_pool_t   *pool;
 	
 	pool = wi_pool_init(wi_pool_alloc());
 	

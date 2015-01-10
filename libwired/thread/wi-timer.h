@@ -30,22 +30,22 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_timer		wi_timer_t;
+typedef struct _wi_timer        wi_timer_t;
 
-typedef void					wi_timer_func_t(wi_timer_t *);
+typedef void                    wi_timer_func_t(wi_timer_t *);
 
 
-WI_EXPORT wi_runtime_id_t		wi_timer_runtime_id(void);
+WI_EXPORT wi_runtime_id_t       wi_timer_runtime_id(void);
 
-WI_EXPORT wi_timer_t *			wi_timer_alloc(void);
-WI_EXPORT wi_timer_t *			wi_timer_init_with_function(wi_timer_t *, wi_timer_func_t *, wi_time_interval_t, wi_boolean_t);
+WI_EXPORT wi_timer_t *          wi_timer_alloc(void);
+WI_EXPORT wi_timer_t *          wi_timer_init_with_function(wi_timer_t *, wi_timer_func_t *, wi_time_interval_t, wi_boolean_t);
 
-WI_EXPORT void					wi_timer_schedule(wi_timer_t *);
-WI_EXPORT void					wi_timer_reschedule(wi_timer_t *, wi_time_interval_t);
-WI_EXPORT void					wi_timer_fire(wi_timer_t *);
-WI_EXPORT void					wi_timer_invalidate(wi_timer_t *);
+WI_EXPORT void                  wi_timer_schedule(wi_timer_t *);
+WI_EXPORT void                  wi_timer_reschedule(wi_timer_t *, wi_time_interval_t);
+WI_EXPORT void                  wi_timer_fire(wi_timer_t *);
+WI_EXPORT void                  wi_timer_invalidate(wi_timer_t *);
 
-WI_EXPORT void					wi_timer_set_data(wi_timer_t *, void *);
-WI_EXPORT void *				wi_timer_data(wi_timer_t *);
+WI_EXPORT void                  wi_timer_set_data(wi_timer_t *, void *);
+WI_EXPORT void *                wi_timer_data(wi_timer_t *);
 
 #endif /* WI_TIMER_H */

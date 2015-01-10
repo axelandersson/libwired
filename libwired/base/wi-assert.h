@@ -31,18 +31,18 @@
 #include <wired/wi-macros.h>
 #include <wired/wi-log.h>
 
-#define WI_ASSERT(exp, fmt, ...)								\
-	WI_STMT_START												\
-		if(!(exp)) {											\
-			(*wi_assert_handler)(__FILE__, __LINE__,			\
-				WI_STR(fmt), ## __VA_ARGS__);					\
-		}														\
-	WI_STMT_END
+#define WI_ASSERT(exp, fmt, ...)                                \
+    WI_STMT_START                                               \
+        if(!(exp)) {                                            \
+            (*wi_assert_handler)(__FILE__, __LINE__,            \
+                WI_STR(fmt), ## __VA_ARGS__);                   \
+        }                                                       \
+    WI_STMT_END
 
 
-typedef void							wi_assert_handler_func_t(const char *, unsigned int, wi_string_t *, ...);
+typedef void                                wi_assert_handler_func_t(const char *, unsigned int, wi_string_t *, ...);
 
 
-WI_EXPORT wi_assert_handler_func_t		*wi_assert_handler;
+WI_EXPORT wi_assert_handler_func_t          *wi_assert_handler;
 
 #endif /* WI_ASSERT_H */

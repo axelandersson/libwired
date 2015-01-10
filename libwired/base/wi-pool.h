@@ -30,26 +30,26 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-#define wi_autorelease(instance)	_wi_autorelease((instance), __FILE__, __LINE__)
+#define wi_autorelease(instance)    _wi_autorelease((instance), __FILE__, __LINE__)
 
 
-typedef struct _wi_pool				wi_pool_t;
+typedef struct _wi_pool             wi_pool_t;
 
 
-WI_EXPORT wi_runtime_id_t			wi_pool_runtime_id(void);
+WI_EXPORT wi_runtime_id_t           wi_pool_runtime_id(void);
 
-WI_EXPORT wi_pool_t *				wi_pool_alloc(void);
-WI_EXPORT wi_pool_t *				wi_pool_init(wi_pool_t *);
-WI_EXPORT wi_pool_t *				wi_pool_init_with_debug(wi_pool_t *, wi_boolean_t);
+WI_EXPORT wi_pool_t *               wi_pool_alloc(void);
+WI_EXPORT wi_pool_t *               wi_pool_init(wi_pool_t *);
+WI_EXPORT wi_pool_t *               wi_pool_init_with_debug(wi_pool_t *, wi_boolean_t);
 
-WI_EXPORT void						wi_pool_drain(wi_pool_t *);
-WI_EXPORT wi_uinteger_t				wi_pool_count(wi_pool_t *);
+WI_EXPORT void                      wi_pool_drain(wi_pool_t *);
+WI_EXPORT wi_uinteger_t             wi_pool_count(wi_pool_t *);
 
-WI_EXPORT void						wi_pool_set_context(wi_pool_t *, wi_string_t *);
+WI_EXPORT void                      wi_pool_set_context(wi_pool_t *, wi_string_t *);
 
-WI_EXPORT wi_runtime_instance_t *	_wi_autorelease(wi_runtime_instance_t *, const char *, wi_uinteger_t);
+WI_EXPORT wi_runtime_instance_t *   _wi_autorelease(wi_runtime_instance_t *, const char *, wi_uinteger_t);
 
 
-WI_EXPORT wi_boolean_t				wi_pool_debug;
+WI_EXPORT wi_boolean_t              wi_pool_debug;
 
 #endif /* WI_POOL_H */

@@ -33,18 +33,18 @@
 #include <inttypes.h>
 
 #ifdef __cplusplus
-#define WI_EXPORT					extern "C"
+#define WI_EXPORT                   extern "C"
 #else
-#define WI_EXPORT					extern
+#define WI_EXPORT                   extern
 #endif
 
-#define WI_INLINE					inline
-#define WI_STATIC_INLINE			static inline
+#define WI_INLINE                   inline
+#define WI_STATIC_INLINE            static inline
 
 #ifdef __GNUC__
-#define WI_DEPRECATED				__attribute__ ((deprecated))
-#define WI_PRINTF_FORMAT(x, y)		__attribute__ ((format (printf, x, y)))
-#define WI_STRFTIME_FORMAT(x)		__attribute__ ((format (strftime, x, 0)))
+#define WI_DEPRECATED               __attribute__ ((deprecated))
+#define WI_PRINTF_FORMAT(x, y)      __attribute__ ((format (printf, x, y)))
+#define WI_STRFTIME_FORMAT(x)       __attribute__ ((format (strftime, x, 0)))
 #else
 #define WI_DEPRECATED
 #define WI_PRINTF_FORMAT(x, y)
@@ -52,153 +52,153 @@
 #endif
 
 #if __GNUC__ == 4 || __GNUC__ > 4
-#define WI_SENTINEL					__attribute__ ((sentinel))
+#define WI_SENTINEL                 __attribute__ ((sentinel))
 #else
 #define WI_SENTINEL
 #endif
 
 #if __LP64__
-#define WI_64						1
+#define WI_64                       1
 
-typedef int64_t						wi_integer_t;
-typedef uint64_t					wi_uinteger_t;
+typedef int64_t                     wi_integer_t;
+typedef uint64_t                    wi_uinteger_t;
 
-#define WI_INTEGER_MAX				9223372036854775807LL
-#define WI_UINTEGER_MAX				18446744073709551615ULL
-#define WI_INTEGER_MIN				(-WI_INTEGER_MAX-1)
+#define WI_INTEGER_MAX              9223372036854775807LL
+#define WI_UINTEGER_MAX             18446744073709551615ULL
+#define WI_INTEGER_MIN              (-WI_INTEGER_MAX-1)
 #else
-#define WI_32						1
+#define WI_32                       1
 
-typedef int32_t						wi_integer_t;
-typedef uint32_t					wi_uinteger_t;
+typedef int32_t                     wi_integer_t;
+typedef uint32_t                    wi_uinteger_t;
 
-#define WI_INTEGER_MAX				2147483647
-#define WI_UINTEGER_MAX				4294967295U
-#define WI_INTEGER_MIN				(-WI_INTEGER_MAX-1)
+#define WI_INTEGER_MAX              2147483647
+#define WI_UINTEGER_MAX             4294967295U
+#define WI_INTEGER_MIN              (-WI_INTEGER_MAX-1)
 #endif
 
 
 enum {
-	WI_NOT_FOUND					= WI_INTEGER_MAX
+    WI_NOT_FOUND                    = WI_INTEGER_MAX
 };
 
 
 struct _wi_range {
-	wi_uinteger_t					location;
-	wi_uinteger_t					length;
+    wi_uinteger_t                   location;
+    wi_uinteger_t                   length;
 };
-typedef struct _wi_range			wi_range_t;
+typedef struct _wi_range            wi_range_t;
 
 
 WI_STATIC_INLINE wi_range_t wi_make_range(wi_uinteger_t location, wi_uinteger_t length) {
-	wi_range_t		range = { location, length };
-	
-	return range;
+    wi_range_t        range = { location, length };
+    
+    return range;
 }
 
 
 
 struct _wi_size {
-	wi_uinteger_t					width;
-	wi_uinteger_t					height;
+    wi_uinteger_t                   width;
+    wi_uinteger_t                   height;
 };
-typedef struct _wi_size				wi_size_t;
+typedef struct _wi_size             wi_size_t;
 
 
 WI_STATIC_INLINE wi_size_t wi_make_size(wi_uinteger_t width, wi_uinteger_t height) {
-	wi_size_t		size = { width, height };
-	
-	return size;
+    wi_size_t        size = { width, height };
+    
+    return size;
 }
 
 
 
 struct _wi_point {
-	wi_uinteger_t					x;
-	wi_uinteger_t					y;
+    wi_uinteger_t                   x;
+    wi_uinteger_t                   y;
 };
-typedef struct _wi_point			wi_point_t;
+typedef struct _wi_point            wi_point_t;
 
 
 WI_STATIC_INLINE wi_point_t wi_make_point(wi_uinteger_t x, wi_uinteger_t y) {
-	wi_point_t		point = { x, y };
-	
-	return point;
+    wi_point_t        point = { x, y };
+    
+    return point;
 }
 
 
 
 WI_STATIC_INLINE struct timeval wi_dtotv(double d) {
-	struct timeval	tv;
+    struct timeval    tv;
 
-	tv.tv_sec = (time_t) floor(d);
-	tv.tv_usec = (suseconds_t) ((d - tv.tv_sec) * 1000000.0);
+    tv.tv_sec = (time_t) floor(d);
+    tv.tv_usec = (suseconds_t) ((d - tv.tv_sec) * 1000000.0);
 
-	return tv;
+    return tv;
 }
 
 
 
 WI_STATIC_INLINE double wi_tvtod(struct timeval tv) {
-	return tv.tv_sec + ((double) tv.tv_usec / 1000000.0);
+    return tv.tv_sec + ((double) tv.tv_usec / 1000000.0);
 }
 
 
 
 WI_STATIC_INLINE struct timespec wi_dtots(double d) {
-	struct timespec	ts;
+    struct timespec    ts;
 
-	ts.tv_sec = (time_t) floor(d);
-	ts.tv_nsec = (long) ((d - ts.tv_sec) * 1000000000.0);
+    ts.tv_sec = (time_t) floor(d);
+    ts.tv_nsec = (long) ((d - ts.tv_sec) * 1000000000.0);
 
-	return ts;
+    return ts;
 }
 
 
 
 WI_STATIC_INLINE double wi_tstod(struct timespec ts) {
-	return ts.tv_sec + ((double) ts.tv_nsec / 1000000000.0);
+    return ts.tv_sec + ((double) ts.tv_nsec / 1000000000.0);
 }
 
 
 
 WI_STATIC_INLINE wi_uinteger_t wi_log2(wi_uinteger_t n) {
-	return n < 2 ? 0 : wi_log2(n >> 1) + 1;
+    return n < 2 ? 0 : wi_log2(n >> 1) + 1;
 }
 
 
 
 WI_STATIC_INLINE wi_uinteger_t wi_exp2m1(wi_uinteger_t n) {
-	return (1 << n) - 1;
+    return (1 << n) - 1;
 }
 
-	
-typedef int32_t						wi_boolean_t;
+    
+typedef int32_t                         wi_boolean_t;
 
 #ifndef true
-#define true						1
+#define true                            1
 #endif
 
 #ifndef false
-#define false						0
+#define false                           0
 #endif
 
 
-typedef wi_uinteger_t				wi_hash_code_t;
+typedef wi_uinteger_t                   wi_hash_code_t;
 
-typedef double						wi_time_interval_t;
+typedef double                          wi_time_interval_t;
 
-typedef struct _wi_address			wi_address_t;
-typedef struct _wi_array			wi_array_t;
-typedef struct _wi_array			wi_mutable_array_t;
-typedef struct _wi_string			wi_string_t;
-typedef struct _wi_string			wi_mutable_string_t;
+typedef struct _wi_address              wi_address_t;
+typedef struct _wi_array                wi_array_t;
+typedef struct _wi_array                wi_mutable_array_t;
+typedef struct _wi_string               wi_string_t;
+typedef struct _wi_string               wi_mutable_string_t;
 
 
-WI_EXPORT void						wi_initialize(void);
-WI_EXPORT void						wi_load(int, const char **);
+WI_EXPORT void                          wi_initialize(void);
+WI_EXPORT void                          wi_load(int, const char **);
 
-WI_EXPORT void						wi_abort(void);
-WI_EXPORT void						wi_crash(void);
+WI_EXPORT void                          wi_abort(void);
+WI_EXPORT void                          wi_crash(void);
 
 #endif /* WI_BASE_H */

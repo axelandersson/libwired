@@ -27,13 +27,13 @@
 #include <wired/wired.h>
 #include "test.h"
 
-WI_TEST_EXPORT void						wi_test_plist(void);
+WI_TEST_EXPORT void                     wi_test_plist(void);
 
 
 void wi_test_plist(void) {
 #ifdef WI_PLIST
 	wi_string_t			*string1, *string2;
-	wi_dictionary_t		*dictionary1, *dictionary2;
+	wi_dictionary_t     *dictionary1, *dictionary2;
 	
 	string1 = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-plist-tests-1.plist"))));
 
