@@ -26,13 +26,91 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_set(void);
+WI_TEST_EXPORT void						wi_test_set_creation(void);
+WI_TEST_EXPORT void						wi_test_set_copying(void);
+WI_TEST_EXPORT void						wi_test_set_enumeration(void);
+WI_TEST_EXPORT void						wi_test_set_mutation(void);
 
 
-void wi_test_set(void) {
+void wi_test_set_creation(void) {
+    wi_array_t  *array;
+    wi_set_t    *set;
+    
+    set = wi_set();
+
+    WI_TEST_ASSERT_NOT_NULL(set, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 0U, "");
+    
+    set = wi_set_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
+
+    WI_TEST_ASSERT_NOT_NULL(set, "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
+    
+    set = wi_autorelease(wi_set_init_with_data(wi_set_alloc(), WI_STR("foo"), WI_STR("bar"), NULL));
+    
+    WI_TEST_ASSERT_NOT_NULL(set, "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
+    
+    array = wi_array_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
+    set = wi_autorelease(wi_set_init_with_array(wi_set_alloc(), array));
+    
+    WI_TEST_ASSERT_NOT_NULL(set, "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_set_all_data(set), array, "");
+}
+
+
+
+void wi_test_set_copying(void) {
+    wi_set_t            *set1;
+    wi_mutable_set_t    *set2;
+    
+    set1 = wi_set_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
+    set2 = wi_mutable_copy(set1);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(set1, set2, "");
+    
+    wi_mutable_set_remove_data(set2, WI_STR("bar"));
+    wi_mutable_set_add_data(set2, WI_STR("baz"));
+    
+    WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(set1, set2, "");
+}
+
+
+
+void wi_test_set_enumeration(void) {
+    wi_set_t            *set;
+    wi_enumerator_t     *enumerator;
+    wi_string_t         *string;
+    wi_uinteger_t       i = 0;
+    
+    set = wi_set_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
+    enumerator = wi_set_data_enumerator(set);
+    
+    while((string = wi_enumerator_next_data(enumerator))) {
+        if(i == 0)
+            WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("foo"), "");
+        else if(i == 0)
+            WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("bar"), "");
+        
+        i++;
+    }
+}
+
+
+
+void wi_test_set_mutation(void) {
 	wi_mutable_set_t    *set;
+    wi_array_t          *array;
 	
-	set = wi_set_init(wi_mutable_set_alloc());
+	set = wi_mutable_set();
 	
 	WI_TEST_ASSERT_NOT_NULL(set, "");
 	
@@ -42,9 +120,7 @@ void wi_test_set(void) {
 	WI_TEST_ASSERT_FALSE(wi_set_contains_data(set, WI_STR("bar")), "");
 	WI_TEST_ASSERT_EQUALS(wi_set_count_for_data(set, WI_STR("foo")), 1U, "");
 	
-	wi_release(set);
-
-	set = wi_set_init_with_capacity(wi_mutable_set_alloc(), 0, true);
+	set = wi_autorelease(wi_set_init_with_capacity(wi_mutable_set_alloc(), 0, true));
 
 	WI_TEST_ASSERT_NOT_NULL(set, "");
 	
@@ -64,6 +140,17 @@ void wi_test_set(void) {
 	
 	WI_TEST_ASSERT_FALSE(wi_set_contains_data(set, WI_STR("foo")), "");
 	WI_TEST_ASSERT_EQUALS(wi_set_count_for_data(set, WI_STR("foo")), 0U, "");
-	
-	wi_release(set);
+
+    array = wi_array_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
+    
+    wi_mutable_set_add_data_from_array(set, array);
+
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+
+    wi_mutable_set_set_set(set, wi_set_with_data(WI_STR("1"), NULL));
+    
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("1")), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 1U, "");
 }

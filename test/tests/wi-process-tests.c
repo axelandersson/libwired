@@ -34,5 +34,5 @@ void wi_test_process(void) {
 	
 	process = wi_process();
 
-	WI_TEST_ASSERT_EQUAL_INSTANCES(wi_process_name(process), WI_STR("test"), "");
+	WI_TEST_ASSERT_NOT_NULL(wi_process_name(process), "");
 }

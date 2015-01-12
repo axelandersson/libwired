@@ -67,6 +67,16 @@
                   i1, i2, ## __VA_ARGS__);                              \
     WI_STMT_END
 
+#define WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(a1, a2, fmt, ...)            \
+    WI_STMT_START                                                       \
+        wi_runtime_instance_t    *i1 = (a1);                            \
+        wi_runtime_instance_t    *i2 = (a2);                            \
+                                                                        \
+        WI_ASSERT(!wi_is_equal(i1, i2),                                 \
+                  "'%@' should not be equal to '%@': " fmt,             \
+                  i1, i2, ## __VA_ARGS__);                              \
+    WI_STMT_END
+
 #define WI_TEST_ASSERT_NULL(a1, fmt, ...)                               \
     WI_ASSERT((a1) == NULL, "'%s' should be NULL: " fmt, #a1, ## __VA_ARGS__);
 
