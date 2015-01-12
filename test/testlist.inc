@@ -16,6 +16,7 @@ wi_tests_run_test("wi_test_set_creation", wi_test_set_creation);
 wi_tests_run_test("wi_test_set_copying", wi_test_set_copying);
 wi_tests_run_test("wi_test_set_enumeration", wi_test_set_enumeration);
 wi_tests_run_test("wi_test_set_mutation", wi_test_set_mutation);
+wi_tests_run_test("wi_test_set_scalars", wi_test_set_scalars);
 wi_tests_run_test("wi_test_string_case", wi_test_string_case);
 wi_tests_run_test("wi_test_string_constant", wi_test_string_constant);
 wi_tests_run_test("wi_test_string_compare", wi_test_string_compare);

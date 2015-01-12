@@ -30,6 +30,7 @@ WI_TEST_EXPORT void						wi_test_set_creation(void);
 WI_TEST_EXPORT void						wi_test_set_copying(void);
 WI_TEST_EXPORT void						wi_test_set_enumeration(void);
 WI_TEST_EXPORT void						wi_test_set_mutation(void);
+WI_TEST_EXPORT void						wi_test_set_scalars(void);
 
 
 void wi_test_set_creation(void) {
@@ -48,6 +49,7 @@ void wi_test_set_creation(void) {
     WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
     WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
     WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
+    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(set), WI_STR("foo"), 0) != WI_NOT_FOUND, "");
     
     set = wi_autorelease(wi_set_init_with_data(wi_set_alloc(), WI_STR("foo"), WI_STR("bar"), NULL));
     
@@ -75,6 +77,7 @@ void wi_test_set_copying(void) {
     set1 = wi_set_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
     set2 = wi_mutable_copy(set1);
     
+    WI_TEST_ASSERT_EQUALS(wi_hash(set1), wi_hash(set2), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(set1, set2, "");
     
     wi_mutable_set_remove_data(set2, WI_STR("bar"));
@@ -153,4 +156,40 @@ void wi_test_set_mutation(void) {
     
     WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("1")), "");
     WI_TEST_ASSERT_EQUALS(wi_set_count(set), 1U, "");
+}
+
+
+
+void wi_test_set_scalars(void) {
+    wi_mutable_set_t    *set;
+    wi_enumerator_t     *enumerator;
+    wi_uinteger_t       i;
+    wi_boolean_t        bools[10000];
+    
+    set = wi_set_init_with_capacity_and_callbacks(wi_mutable_set_alloc(), 0, false, wi_set_null_callbacks);
+    
+    WI_TEST_ASSERT_NOT_NULL(set, "");
+    
+    for(i = 1; i <= 10000; i++) {
+        wi_mutable_set_add_data(set, (void *) i);
+        
+        bools[i - 1] = false;
+    }
+    
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 10000U, "");
+    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(set), WI_STR("0x1234"), 0) != WI_NOT_FOUND, "");
+    
+    enumerator = wi_set_data_enumerator(set);
+    
+    while((i = (wi_uinteger_t) wi_enumerator_next_data(enumerator)))
+        bools[i - 1] = true;
+
+    for(i = 1; i <= 10000; i++) {
+        WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, (void *) i), "");
+        WI_TEST_ASSERT_TRUE(bools[i - 1], "");
+    }
+    
+    wi_mutable_set_remove_all_data(set);
+
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 0U, "");
 }

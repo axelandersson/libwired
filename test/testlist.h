@@ -16,6 +16,7 @@ WI_TEST_EXPORT void						wi_test_set_creation(void);
 WI_TEST_EXPORT void						wi_test_set_copying(void);
 WI_TEST_EXPORT void						wi_test_set_enumeration(void);
 WI_TEST_EXPORT void						wi_test_set_mutation(void);
+WI_TEST_EXPORT void						wi_test_set_scalars(void);
 WI_TEST_EXPORT void                     wi_test_string_case(void);
 WI_TEST_EXPORT void						wi_test_string_constant(void);
 WI_TEST_EXPORT void						wi_test_string_compare(void);
