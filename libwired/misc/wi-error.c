@@ -53,10 +53,6 @@
 #include <sqlite3.h>
 #endif
 
-#ifdef WI_ZLIB
-#include <zlib.h>
-#endif
-
 #include <wired/wi-assert.h>
 #include <wired/wi-dictionary.h>
 #include <wired/wi-error.h>
@@ -437,19 +433,6 @@ void wi_error_set_regex_error(regex_t *regex, int code) {
 
 
 
-#ifdef WI_ZLIB
-
-void wi_error_set_zlib_error(int code) {
-    if(code == Z_ERRNO)
-        wi_error_set_error(WI_ERROR_DOMAIN_ERRNO, errno);
-    else
-        wi_error_set_error(WI_ERROR_DOMAIN_ZLIB, code);
-}
-
-#endif
-
-
-
 void wi_error_set_libwired_error(int code) {
     wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, code);
 }
@@ -510,12 +493,6 @@ wi_string_t * wi_error_string(void) {
             case WI_ERROR_DOMAIN_OPENSSL_SSL:
             case WI_ERROR_DOMAIN_COMMONCRYPTO:
             case WI_ERROR_DOMAIN_LIBXML2:
-                break;
-            
-            case WI_ERROR_DOMAIN_ZLIB:
-#ifdef WI_ZLIB
-                error->string = wi_string_init_with_format(wi_string_alloc(), WI_STR("zlib: %s"), zError(error->code));
-#endif
                 break;
             
             case WI_ERROR_DOMAIN_LIBWIRED:

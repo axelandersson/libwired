@@ -171,10 +171,6 @@ WI_EXPORT void                          wi_error_set_libxml2_error(void);
 
 WI_EXPORT void                          wi_error_set_regex_error(regex_t *, int);
 
-#ifdef WI_ZLIB
-WI_EXPORT void                          wi_error_set_zlib_error(int);
-#endif
-
 WI_EXPORT void                          wi_error_set_libwired_error(int);
 WI_EXPORT void                          wi_error_set_libwired_error_with_string(int, wi_string_t *);
 WI_EXPORT void                          wi_error_set_libwired_error_with_format(int, wi_string_t *, ...);
