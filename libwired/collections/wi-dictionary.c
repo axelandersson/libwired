@@ -903,7 +903,7 @@ void wi_mutable_dictionary_set_data_for_key(wi_mutable_dictionary_t *dictionary,
             dictionary);
     }
 
-    if(dictionary->key_callbacks.retain == wi_retain) {
+    if(dictionary->key_callbacks.retain == wi_copy) {
         WI_ASSERT(key != NULL,
             "attempt to insert NULL key in %@",
             dictionary);
