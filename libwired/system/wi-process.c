@@ -131,8 +131,9 @@ static wi_process_t * _wi_process_alloc(void) {
 
 
 static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc, const char **argv) {
-    wi_array_t          *array;
+    wi_mutable_array_t  *array;
     wi_string_t         *string;
+    wi_uinteger_t       i;
     struct utsname      name;
 #if defined(HAVE_NXGETLOCALARCHINFO)
     const NXArchInfo    *archinfo;
@@ -141,9 +142,11 @@ static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc
 #elif defined(HAVE_SYSINFO) && defined(SI_ARCHITECTURE)
     char                buffer[SYS_NMLN];
 #endif
-
     
-    array = wi_array_init_with_argv(wi_array_alloc(), argc, argv);
+    array = wi_mutable_array();
+    
+    for(i = 0; i < argc; i++)
+        wi_mutable_array_add_data(array, wi_string_with_cstring(argv[i]));
     
     string = wi_array_first_data(array);
     
@@ -159,8 +162,6 @@ static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc
         process->arguments = wi_array_init(wi_array_alloc());
     else
         process->arguments = wi_retain(wi_array_subarray_with_range(array, wi_make_range(1, wi_array_count(array) - 1)));
-    
-    wi_release(array);
     
     uname(&name);
     

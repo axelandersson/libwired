@@ -42,7 +42,7 @@ int main(int argc, const char **argv) {
 	pool = wi_pool_init(wi_pool_alloc());
 
 	wi_tests_start();
-	
+    
 	wi_test_fixture_path = wi_string_by_appending_path_component(WI_STR(WI_TEST_ROOT), WI_STR("fixture"));
 	
 #include "test/testlist.inc"

@@ -27,6 +27,7 @@
 #include "config.h"
 
 #include <setjmp.h>
+#include <stdlib.h>
 
 #include <wired/wi-assert.h>
 #include <wired/wi-date.h>
@@ -65,6 +66,7 @@ static wi_runtime_class_t               _wi_test_runtime_class = {
 
 static wi_test_t                        *_wi_tests_current_test;
 static wi_date_t                        *_wi_tests_start_date;
+static wi_string_t                      *_wi_tests_name;
 static jmp_buf                          _wi_tests_jmp_buf;
 
 
@@ -80,6 +82,15 @@ void wi_test_register(void) {
 
 
 void wi_test_initialize(void) {
+    char    *env;
+    
+    env = getenv("wi_test_name");
+    
+    if(env) {
+        _wi_tests_name = wi_string_init_with_cstring(wi_string_alloc(), env);
+        
+        printf("*** wi_test_initialize(): wi_test_name = %s\n", env);
+    }
 }
 
 
@@ -121,6 +132,11 @@ void wi_tests_run_test(const char *name, wi_run_test_func_t *function) {
     wi_pool_t                   *pool;
     wi_assert_handler_func_t    *handler;
     wi_time_interval_t          interval;
+    
+    if(_wi_tests_name) {
+        if(wi_string_index_of_string(wi_string_with_cstring(name), _wi_tests_name, 0) == WI_NOT_FOUND)
+            return;
+    }
     
     if(wi_string_has_suffix(wi_string_with_cstring(name), WI_STR("initialize"))) {
         (*function)();

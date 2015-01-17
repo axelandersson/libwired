@@ -81,11 +81,6 @@
         "index %ld out of range (count %lu) in %@",                     \
         (index), (array)->data_count, (array))
 
-#define _WI_ARRAY_ASSERT_INSERT_DATA_NOT_NULL(array, data)              \
-    WI_ASSERT((data) != NULL,                                           \
-        "attempt to insert NULL in %@",                                 \
-        (array))
-
 
 struct _wi_array_item {
     void                                *data;
@@ -223,12 +218,6 @@ wi_array_t * wi_array_with_data(void *data0, ...) {
 
 
 
-wi_array_t * wi_array_with_arguments(va_list ap) {
-    return wi_autorelease(wi_array_init_with_arguments(wi_array_alloc(), ap));
-}
-
-
-
 #ifdef WI_PLIST
 
 wi_array_t * wi_array_with_plist_file(wi_string_t *path) {
@@ -308,117 +297,6 @@ wi_array_t * wi_array_init_with_data_and_count(wi_array_t *array, void **data, w
 
     for(i = 0; i < count; i++)
         _wi_array_add_data(array, data[i]);
-    
-    return array;
-}
-
-
-
-wi_array_t * wi_array_init_with_argv(wi_array_t *array, int argc, const char **argv) {
-    wi_string_t     *string;
-    int             i;
-    
-    array = wi_array_init_with_capacity(array, argc);
-    
-    for(i = 0; i < argc; i++) {
-        string = wi_string_init_with_cstring(wi_string_alloc(), argv[i]);
-        _wi_array_add_data(array, string);
-        wi_release(string);
-    }
-    
-    return array;
-}
-
-
-
-wi_array_t * wi_array_init_with_argument_string(wi_array_t *array, wi_string_t *string, wi_integer_t index) {
-    wi_string_t     *data;
-    const char      *cstring;
-    char            *buffer, *end;
-    wi_uinteger_t   count;
-    wi_boolean_t    squote, dquote, bsquote;
-    
-    array           = wi_array_init_with_capacity(array, 0);
-    cstring         = wi_string_cstring(string);
-    buffer          = wi_malloc(strlen(cstring) + 1);
-    count           = 0;
-
-    squote = dquote = bsquote = false;
-
-    while(*cstring) {
-        if(index < 0 || (index >= 0 && count != (wi_uinteger_t) index)) {
-            while(isspace(*cstring))
-                cstring++;
-        }
-        
-        end = buffer;
-        
-        while(*cstring) {
-            if(index >= 0 && count == (wi_uinteger_t) index) {
-                *end++ = *cstring++;
-                
-                continue;
-            }
-
-            if(isspace(*cstring) && !squote && !dquote && !bsquote)
-                break;
-            
-            if(bsquote) {
-                bsquote = false;
-                *end++ = *cstring;
-            }
-            else if(squote) {
-                if(*cstring == '\'')
-                    squote = false;
-                else
-                    *end++ = *cstring;
-            }
-            else if(dquote) {
-                if(*cstring == '"')
-                    dquote = false;
-                else
-                    *end++ = *cstring;
-            }
-            else {
-                if(*cstring == '\'')
-                    squote = true;
-                else if(*cstring == '"')
-                    dquote = true;
-                else if(*cstring == '\\')
-                    bsquote = true;
-                else
-                    *end++ = *cstring;
-            }
-            
-            cstring++;
-        }
-        
-        *end = '\0';
-        
-        data = wi_string_init_with_cstring(wi_string_alloc(), buffer);
-        _wi_array_add_data(array, data);
-        wi_release(data);
-        
-        count++;
-        
-        while(isspace(*cstring))
-            cstring++;
-    }
-    
-    wi_free(buffer);
-    
-    return array;
-}
-
-
-
-wi_array_t * wi_array_init_with_arguments(wi_array_t *array, va_list ap) {
-    void    *data;
-    
-    array = wi_array_init(array);
-    
-    while((data = va_arg(ap, void *)))
-        _wi_array_add_data(array, data);
     
     return array;
 }
@@ -605,13 +483,13 @@ void wi_array_get_data(wi_array_t *array, void **data) {
 
 
 void wi_array_get_data_in_range(wi_array_t *array, void **data, wi_range_t range) {
-    wi_uinteger_t   i;
+    wi_uinteger_t   i, j;
     
     _WI_ARRAY_ASSERT_INDEX(array, range.location);
     _WI_ARRAY_ASSERT_INDEX(array, range.location + range.length - 1);
     
-    for(i = range.location; i < range.location + range.length; i++)
-        data[i] = array->items[i]->data;
+    for(i = range.location, j = 0; i < range.location + range.length; i++, j++)
+        data[j] = array->items[i]->data;
 }
 
 
@@ -641,43 +519,6 @@ wi_string_t * wi_array_components_joined_by_string(wi_array_t *array, wi_string_
     wi_runtime_make_immutable(string);
     
     return wi_autorelease(string);
-}
-
-
-
-const char ** wi_array_create_argv(wi_array_t *array) {
-    wi_string_t     *description;
-    const char      **argv;
-    void            *data;
-    wi_uinteger_t   i;
-    
-    argv = wi_malloc((array->data_count + 1) * sizeof(void *));
-    
-    for(i = 0; i < array->data_count; i++) {
-        data = WI_ARRAY(array, i);
-        
-        if(array->callbacks.description)
-            description = (*array->callbacks.description)(data);
-        else
-            description = wi_string_with_format(WI_STR("%p"), data);
-        
-        argv[i]    = strdup(wi_string_cstring(description));
-    }
-    
-    argv[array->data_count] = NULL;
-    
-    return argv;
-}
-
-
-
-void wi_array_destroy_argv(wi_uinteger_t argc, const char **argv) {
-    wi_uinteger_t   i;
-    
-    for(i = 0; i < argc; i++)
-        free((char *) argv[i]);
-    
-    free(argv);
 }
 
 
@@ -751,7 +592,7 @@ wi_array_t * wi_array_by_adding_data(wi_array_t *array, void *data) {
     wi_mutable_array_t  *newarray;
     
     newarray = wi_mutable_copy(array);
-    wi_mutable_array_add_data(array, data);
+    wi_mutable_array_add_data(newarray, data);
     
     wi_runtime_make_immutable(newarray);
     
@@ -764,7 +605,7 @@ wi_array_t * wi_array_by_adding_data_from_array(wi_array_t *array, wi_array_t *o
     wi_mutable_array_t  *newarray;
     
     newarray = wi_mutable_copy(array);
-    wi_mutable_array_add_data_from_array(array, otherarray);
+    wi_mutable_array_add_data_from_array(newarray, otherarray);
     
     wi_runtime_make_immutable(newarray);
     
@@ -947,8 +788,13 @@ static void _wi_array_remove_all_data(wi_array_t *array) {
 
 void wi_mutable_array_add_data(wi_mutable_array_t *array, void *data) {
     WI_RUNTIME_ASSERT_MUTABLE(array);
-    _WI_ARRAY_ASSERT_INSERT_DATA_NOT_NULL(array, data);
-    
+
+    if(array->callbacks.retain == wi_retain) {
+        WI_ASSERT(data != NULL,
+                  "attempt to insert NULL data in %@",
+                  array);
+    }
+
     _wi_array_add_data(array, data);
 }
 
@@ -989,6 +835,12 @@ void wi_mutable_array_add_data_from_array(wi_mutable_array_t *array, wi_array_t 
 void wi_mutable_array_insert_data_at_index(wi_mutable_array_t *array, void *data, wi_uinteger_t index) {
     _wi_array_item_t    *item;
     
+    if(array->data_count == 0 && index == 0) {
+        wi_mutable_array_add_data(array, data);
+        
+        return;
+    }
+        
     WI_RUNTIME_ASSERT_MUTABLE(array);
     _WI_ARRAY_ASSERT_INDEX(array, index);
     

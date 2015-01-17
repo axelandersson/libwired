@@ -177,24 +177,23 @@ pid_t wi_fork(void) {
 
 
 wi_boolean_t wi_execv(wi_string_t *program, wi_array_t *arguments) {
-    wi_mutable_array_t  *argv;
-    const char          **xargv;
+    char            **argv;
+    wi_uinteger_t   i;
     
-    argv = wi_mutable_copy(arguments);
+    argv = wi_malloc((wi_array_count(arguments) + 2) * sizeof(char *));
+    argv[0] = strdup(wi_string_cstring(program));
     
-    if(wi_array_count(argv) == 0)
-        wi_mutable_array_add_data(argv, program);
-    else
-        wi_mutable_array_insert_data_at_index(argv, program, 0);
+    for(i = 0; i < wi_array_count(arguments); i++)
+        argv[i + 1] = strdup(wi_string_cstring(wi_description(WI_ARRAY(arguments, i))));
     
-    xargv = wi_array_create_argv(argv);
-    
-    if(execv(xargv[0], (char * const *) xargv) < 0) {
+    if(execv(argv[0], (char * const *) argv) < 0) {
         wi_error_set_errno(errno);
         
-        wi_array_destroy_argv(wi_array_count(argv), xargv);
-        wi_release(argv);
-    
+        for(i = 0; i < wi_array_count(arguments) + 1; i++)
+            wi_free(argv[i]);
+        
+        wi_free(argv);
+        
         return false;
     }
     

@@ -49,7 +49,4 @@ WI_EXPORT void                      wi_pool_set_context(wi_pool_t *, wi_string_t
 
 WI_EXPORT wi_runtime_instance_t *   _wi_autorelease(wi_runtime_instance_t *, const char *, wi_uinteger_t);
 
-
-WI_EXPORT wi_boolean_t              wi_pool_debug;
-
 #endif /* WI_POOL_H */

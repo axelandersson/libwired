@@ -69,6 +69,7 @@ void wi_test_dictionary_creation(void) {
 
 
 void wi_test_dictionary_serialization(void) {
+#ifdef WI_PLIST
     wi_dictionary_t     *dictionary1, *dictionary2;
     wi_string_t         *path;
     
@@ -95,6 +96,7 @@ void wi_test_dictionary_serialization(void) {
     wi_fs_delete_path(path);
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
+#endif
 }
 
 

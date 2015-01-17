@@ -84,7 +84,7 @@ static void                             _wi_pool_remove_pool(wi_pool_t *);
 static void                             _wi_pool_invalid_abort(wi_pool_t *, wi_runtime_instance_t *);
 
 
-wi_boolean_t                            wi_pool_debug = false;
+static wi_boolean_t                     _wi_pool_debug = false;
 
 static wi_runtime_id_t                  _wi_pool_runtime_id = WI_RUNTIME_ID_NULL;
 static wi_runtime_class_t               _wi_pool_runtime_class = {
@@ -110,9 +110,9 @@ void wi_pool_initialize(void) {
     env = getenv("wi_pool_debug");
     
     if(env) {
-        wi_pool_debug = (strcmp(env, "0") != 0);
+        _wi_pool_debug = (strcmp(env, "0") != 0);
         
-        printf("*** wi_pool_initialize(): wi_pool_debug = %u\n", wi_pool_debug);
+        printf("*** wi_pool_initialize(): wi_pool_debug = %u\n", _wi_pool_debug);
     }
 }
 
@@ -143,7 +143,7 @@ wi_pool_t * wi_pool_init(wi_pool_t *pool) {
 wi_pool_t * wi_pool_init_with_debug(wi_pool_t *pool, wi_boolean_t debug) {
     _wi_pool_add_pool(pool);
 
-    if(wi_pool_debug && debug) {
+    if(_wi_pool_debug && debug) {
         pool->locations = wi_dictionary_init_with_capacity_and_callbacks(wi_mutable_dictionary_alloc(),
             200, wi_dictionary_null_key_callbacks, wi_dictionary_default_value_callbacks);
     }
