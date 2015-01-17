@@ -45,48 +45,71 @@
                   ## __VA_ARGS__);                                      \
     WI_STMT_END
 
-#define WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(a1, a2, epsilon, fmt, ...)  \
-    WI_STMT_START                                                       \
-        typeof(a1)            v1 = (a1);                                \
-        typeof(a2)            v2 = (a2);                                \
-        typeof(epsilon)        e = (epsilon);                           \
-                                                                        \
-        WI_ASSERT(WI_MAX(v1, v2) - WI_MIN(v1, v2) < e,                  \
-                  "'%s' should be equal to '%s': " fmt,                 \
-                  #a1, #a2,                                             \
-                  ## __VA_ARGS__);                                      \
+#define WI_TEST_ASSERT_NOT_EQUALS(a1, a2, fmt, ...)                        \
+    WI_STMT_START                                                          \
+        typeof(a1)  v1 = (a1);                                             \
+        typeof(a2)  v2 = (a2);                                             \
+                                                                           \
+        WI_ASSERT(v1 != v2,                                                \
+                  "'%s' should not be equal to '%s': " fmt,                \
+                  #a1, #a2,                                                \
+                  ## __VA_ARGS__);                                         \
     WI_STMT_END
 
-#define WI_TEST_ASSERT_EQUAL_INSTANCES(a1, a2, fmt, ...)                \
-    WI_STMT_START                                                       \
-        wi_runtime_instance_t    *i1 = (a1);                            \
-        wi_runtime_instance_t    *i2 = (a2);                            \
-                                                                        \
-        WI_ASSERT(wi_is_equal(i1, i2),                                  \
-                  "'%@' should be equal to '%@': " fmt,                 \
-                  i1, i2, ## __VA_ARGS__);                              \
+#define WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(a1, a2, epsilon, fmt, ...)     \
+    WI_STMT_START                                                          \
+        typeof(a1)            v1 = (a1);                                   \
+        typeof(a2)            v2 = (a2);                                   \
+        typeof(epsilon)        e = (epsilon);                              \
+                                                                           \
+        WI_ASSERT(WI_MAX(v1, v2) - WI_MIN(v1, v2) < e,                     \
+                  "'%s' should be equal to '%s': " fmt,                    \
+                  #a1, #a2,                                                \
+                  ## __VA_ARGS__);                                         \
     WI_STMT_END
 
-#define WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(a1, a2, fmt, ...)            \
-    WI_STMT_START                                                       \
-        wi_runtime_instance_t    *i1 = (a1);                            \
-        wi_runtime_instance_t    *i2 = (a2);                            \
-                                                                        \
-        WI_ASSERT(!wi_is_equal(i1, i2),                                 \
-                  "'%@' should not be equal to '%@': " fmt,             \
-                  i1, i2, ## __VA_ARGS__);                              \
+#define WI_TEST_ASSERT_NOT_EQUALS_WITH_ACCURACY(a1, a2, epsilon, fmt, ...) \
+    WI_STMT_START                                                          \
+        typeof(a1)            v1 = (a1);                                   \
+        typeof(a2)            v2 = (a2);                                   \
+        typeof(epsilon)        e = (epsilon);                              \
+                                                                           \
+        WI_ASSERT(WI_MAX(v1, v2) - WI_MIN(v1, v2) > e,                     \
+                  "'%s' should not be equal to '%s': " fmt,                \
+                  #a1, #a2,                                                \
+                  ## __VA_ARGS__);                                         \
     WI_STMT_END
 
-#define WI_TEST_ASSERT_NULL(a1, fmt, ...)                               \
+#define WI_TEST_ASSERT_EQUAL_INSTANCES(a1, a2, fmt, ...)                   \
+    WI_STMT_START                                                          \
+        wi_runtime_instance_t    *i1 = (a1);                               \
+        wi_runtime_instance_t    *i2 = (a2);                               \
+                                                                           \
+        WI_ASSERT(wi_is_equal(i1, i2),                                     \
+                  "'%@' should be equal to '%@': " fmt,                    \
+                  i1, i2, ## __VA_ARGS__);                                 \
+    WI_STMT_END
+
+#define WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(a1, a2, fmt, ...)               \
+    WI_STMT_START                                                          \
+        wi_runtime_instance_t    *i1 = (a1);                               \
+        wi_runtime_instance_t    *i2 = (a2);                               \
+                                                                           \
+        WI_ASSERT(!wi_is_equal(i1, i2),                                    \
+                  "'%@' should not be equal to '%@': " fmt,                \
+                  i1, i2, ## __VA_ARGS__);                                 \
+    WI_STMT_END
+
+#define WI_TEST_ASSERT_NULL(a1, fmt, ...)                                  \
     WI_ASSERT((a1) == NULL, "'%s' should be NULL: " fmt, #a1, ## __VA_ARGS__);
 
-#define WI_TEST_ASSERT_NOT_NULL(a1, fmt, ...)                           \
+#define WI_TEST_ASSERT_NOT_NULL(a1, fmt, ...)                              \
     WI_ASSERT((a1) != NULL, "'%s' should not be NULL: " fmt, #a1, ## __VA_ARGS__);
 
-#define WI_TEST_ASSERT_TRUE(a1, fmt, ...)                               \
+#define WI_TEST_ASSERT_TRUE(a1, fmt, ...)                                  \
     WI_ASSERT((a1), "'%s' should be true: " fmt, #a1, ## __VA_ARGS__);
 
-#define WI_TEST_ASSERT_FALSE(a1, fmt, ...)                              \
+#define WI_TEST_ASSERT_FALSE(a1, fmt, ...)                                 \
     WI_ASSERT(!(a1), "'%s' should be false: " fmt, #a1, ## __VA_ARGS__);
 
 

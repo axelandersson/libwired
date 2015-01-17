@@ -127,8 +127,8 @@ void wi_test_dictionary_runtime_functions(void) {
     
     WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
 
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(dictionary1), WI_STR("foo"), 0) != WI_NOT_FOUND, "");
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(dictionary2), WI_STR("0x1"), 0) != WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(dictionary1), WI_STR("foo"), 0), WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(dictionary2), WI_STR("0x1"), 0), WI_NOT_FOUND, "");
 }
 
 

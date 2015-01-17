@@ -26,25 +26,19 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_process(void);
+WI_TEST_EXPORT void						wi_test_system(void);
 
 
-void wi_test_process(void) {
-    wi_process_t    *process;
-	
-	process = wi_process();
+void wi_test_system(void) {
+    WI_TEST_ASSERT_TRUE(wi_user_id() >= 0, "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_user_name()) > 0, "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_user_home()) > 0, "");
+    WI_TEST_ASSERT_TRUE(wi_group_id() >= 0, "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_group_name()) > 0, "");
+
+    WI_TEST_ASSERT_TRUE(wi_page_size() > 0, "");
     
-    WI_TEST_ASSERT_NOT_NULL(process, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(process), wi_process_runtime_id(), "");
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(process), wi_process_name(process), 0) != WI_NOT_FOUND, "");
-
-	WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_name(process)) > 0, "");
-    WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_path(process)) > 0, "");
-    WI_TEST_ASSERT_TRUE(wi_array_count(wi_process_arguments(process)) >= 0, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_array_components_joined_by_string(wi_backtrace(), WI_STR("\n")), WI_STR("wi_test_system"), 0), WI_NOT_FOUND, "");
     
-    WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_hostname(process)) > 0, "");
-
-    WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_os_name(process)) > 0, "");
-    WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_os_release(process)) > 0, "");
-    WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_os_arch(process)) > 0, "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_getenv(WI_STR("HOME"))) > 0, "");
 }

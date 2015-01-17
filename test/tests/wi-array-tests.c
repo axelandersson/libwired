@@ -130,8 +130,8 @@ void wi_test_array_runtime_functions(void) {
     
     WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(array1, array2, "");
 
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(array1), WI_STR("foo"), 0) != WI_NOT_FOUND, "");
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(array2), WI_STR("0x1"), 0) != WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(array1), WI_STR("foo"), 0), WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(array2), WI_STR("0x1"), 0), WI_NOT_FOUND, "");
 }
 
 

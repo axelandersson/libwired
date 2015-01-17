@@ -40,6 +40,7 @@ wi_tests_run_test("wi_test_string_length", wi_test_string_length);
 wi_tests_run_test("wi_test_string_format", wi_test_string_format);
 wi_tests_run_test("wi_test_string_numeric_conversions", wi_test_string_numeric_conversions);
 wi_tests_run_test("wi_test_string_paths", wi_test_string_paths);
+wi_tests_run_test("wi_test_system", wi_test_system);
 wi_tests_run_test("wi_test_timer", wi_test_timer);
 wi_tests_run_test("wi_test_url", wi_test_url);
 wi_tests_run_test("wi_test_uuid", wi_test_uuid);

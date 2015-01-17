@@ -84,8 +84,8 @@ void wi_test_set_runtime_functions(void) {
     wi_mutable_set_add_data(set2, (void *) 1);
     wi_mutable_set_add_data(set2, (void *) 2);
     
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(set1), WI_STR("foo"), 0) != WI_NOT_FOUND, "");
-    WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(set2), WI_STR("0x1"), 0) != WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(set1), WI_STR("foo"), 0), WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(set2), WI_STR("0x1"), 0), WI_NOT_FOUND, "");
 }
 
 

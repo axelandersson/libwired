@@ -40,6 +40,7 @@ WI_TEST_EXPORT void						wi_test_string_length(void);
 WI_TEST_EXPORT void						wi_test_string_format(void);
 WI_TEST_EXPORT void						wi_test_string_numeric_conversions(void);
 WI_TEST_EXPORT void						wi_test_string_paths(void);
+WI_TEST_EXPORT void						wi_test_system(void);
 WI_TEST_EXPORT void                     wi_test_timer(void);
 WI_TEST_EXPORT void                     wi_test_url(void);
 WI_TEST_EXPORT void                     wi_test_uuid(void);
