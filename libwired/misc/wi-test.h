@@ -32,7 +32,7 @@
 #define WI_TEST_EXPORT                  WI_EXPORT
 
 #define WI_TEST_FAIL(fmt, ...)                                          \
-    WI_ASSERT(0, fmt, ## __VA_ARGS__)
+    WI_ASSERT(false, fmt, ## __VA_ARGS__)
 
 #define WI_TEST_ASSERT_EQUALS(a1, a2, fmt, ...)                         \
     WI_STMT_START                                                       \

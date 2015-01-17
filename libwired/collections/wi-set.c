@@ -409,6 +409,14 @@ wi_array_t * wi_set_all_data(wi_set_t *set) {
 
 #pragma mark -
 
+wi_set_callbacks_t wi_set_callbacks(wi_set_t *set) {
+    return set->callbacks;
+}
+
+
+
+#pragma mark -
+
 wi_enumerator_t * wi_set_data_enumerator(wi_set_t *set) {
     return wi_autorelease(wi_enumerator_init_with_collection(wi_enumerator_alloc(), set, wi_enumerator_set_data_enumerator));
 }

@@ -26,7 +26,7 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void                     wi_test_runtime_initialize(void);
+WI_TEST_EXPORT void						wi_test_runtime_initialize(void);
 
 WI_TEST_EXPORT void						wi_test_runtime_invalid(void);
 WI_TEST_EXPORT void						wi_test_runtime_info(void);

@@ -642,6 +642,20 @@ wi_array_t * wi_dictionary_keys_sorted_by_value(wi_dictionary_t *dictionary, wi_
 
 #pragma mark -
 
+wi_dictionary_key_callbacks_t wi_dictionary_key_callbacks(wi_dictionary_t *dictionary) {
+    return dictionary->key_callbacks;
+}
+
+
+
+wi_dictionary_value_callbacks_t wi_dictionary_value_callbacks(wi_dictionary_t *dictionary) {
+    return dictionary->value_callbacks;
+}
+
+
+
+#pragma mark -
+
 wi_enumerator_t * wi_dictionary_key_enumerator(wi_dictionary_t *dictionary) {
     return wi_autorelease(wi_enumerator_init_with_collection(wi_enumerator_alloc(), dictionary, wi_enumerator_dictionary_key_enumerator));
 }
@@ -712,6 +726,7 @@ void * wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *instance,
     
     return NULL;
 }
+
 
 
 #pragma mark -

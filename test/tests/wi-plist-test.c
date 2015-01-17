@@ -27,7 +27,7 @@
 #include <wired/wired.h>
 #include "test.h"
 
-WI_TEST_EXPORT void                     wi_test_plist(void);
+WI_TEST_EXPORT void						wi_test_plist(void);
 
 
 void wi_test_plist(void) {

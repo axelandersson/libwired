@@ -525,6 +525,14 @@ wi_string_t * wi_array_components_joined_by_string(wi_array_t *array, wi_string_
 
 #pragma mark -
 
+wi_array_callbacks_t wi_array_callbacks(wi_array_t *array) {
+    return array->callbacks;
+}
+
+
+
+#pragma mark -
+
 wi_enumerator_t * wi_array_data_enumerator(wi_array_t *array) {
     return wi_autorelease(wi_enumerator_init_with_collection(wi_enumerator_alloc(), array, wi_enumerator_array_data_enumerator));
 }

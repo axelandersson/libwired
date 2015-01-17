@@ -33,8 +33,8 @@ WI_TEST_EXPORT void						wi_test_base(void);
 void wi_test_base(void) {
     WI_TEST_ASSERT_TRUE(wi_hash_cstring("foo", 3) > 0, "");
     WI_TEST_ASSERT_NOT_EQUALS(wi_hash_cstring("foo", 3), wi_hash_cstring("bar", 3), "");
-    WI_TEST_ASSERT_TRUE(wi_hash_pointer(0xDEADBEEF) > 0, "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_pointer(0xDEADBEEF), wi_hash_pointer(0xAC1DFEED), "");
+    WI_TEST_ASSERT_TRUE(wi_hash_pointer((void *) 0xDEADBEEF) > 0, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_pointer((void *) 0xDEADBEEF), wi_hash_pointer((void *) 0xAC1DFEED), "");
     WI_TEST_ASSERT_TRUE(wi_hash_int(42) > 0, "");
     WI_TEST_ASSERT_NOT_EQUALS(wi_hash_int(42), wi_hash_int(-1337), "");
     WI_TEST_ASSERT_TRUE(wi_hash_double(42.42) > 0, "");

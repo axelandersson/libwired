@@ -231,7 +231,7 @@ void wi_runtime_make_immutable(wi_runtime_instance_t *instance) {
 #pragma mark -
 
 static void _wi_runtime_null_abort(wi_runtime_instance_t *instance) {
-    WI_ASSERT(0, "%p has no associated class", instance);
+    WI_ASSERT(false, "%p has no associated class", instance);
 }
 
 
@@ -240,14 +240,14 @@ static void _wi_runtime_zombie_abort(wi_runtime_instance_t *instance) {
     wi_pool_t        *pool;
     
     pool = wi_pool_init(wi_pool_alloc());
-    WI_ASSERT(0, "%p %@ is a deallocated instance", instance, instance);
+    WI_ASSERT(false, "%p %@ is a deallocated instance", instance, instance);
     wi_release(pool);
 }
 
 
 
 static void _wi_runtime_invalid_abort(wi_runtime_instance_t *instance) {
-    WI_ASSERT(0, "%p is not a valid instance: magic=0x%x, id=%u",
+    WI_ASSERT(false, "%p is not a valid instance: magic=0x%x, id=%u",
         instance, WI_RUNTIME_BASE(instance)->magic, WI_RUNTIME_BASE(instance)->id);
 }
 
@@ -346,7 +346,7 @@ wi_runtime_instance_t * wi_copy(wi_runtime_instance_t *instance) {
     if(class->copy)
         return class->copy(instance);
     
-    WI_ASSERT(0, "%@ does not implement wi_copy()", instance);
+    WI_ASSERT(false, "%@ does not implement wi_copy()", instance);
 
     return NULL;
 }
@@ -379,7 +379,7 @@ wi_runtime_instance_t * wi_mutable_copy(wi_runtime_instance_t *instance) {
         return copy;
     }
 
-    WI_ASSERT(0, "%@ does not implement wi_copy()", instance);
+    WI_ASSERT(false, "%@ does not implement wi_copy()", instance);
 
     return NULL;
 }
