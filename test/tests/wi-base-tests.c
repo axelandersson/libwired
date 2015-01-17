@@ -27,7 +27,7 @@
 #include <wired/wired.h>
 #include <wired/wi-private.h>
 
-WI_TEST_EXPORT void						wi_test_base(void);
+WI_TEST_EXPORT void                     wi_test_base(void);
 
 
 void wi_test_base(void) {

@@ -141,9 +141,9 @@ WI_EXPORT wi_enumerator_t *                 wi_enumerator_alloc(void);
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
 
 WI_EXPORT void *                            wi_enumerator_array_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                        	wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                            wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
 WI_EXPORT void *                            wi_enumerator_hash_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                        	wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT void *                            wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
 WI_EXPORT void *                            wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
 WI_EXPORT void *                            wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
 WI_EXPORT void *                            wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);

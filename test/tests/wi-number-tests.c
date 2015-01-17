@@ -26,25 +26,25 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_number(void);
+WI_TEST_EXPORT void                     wi_test_number(void);
 
 
 void wi_test_number(void) {
-	WI_TEST_ASSERT_TRUE(wi_number_bool(wi_number_with_bool(true)), "");
-	WI_TEST_ASSERT_FALSE(wi_number_bool(wi_number_with_bool(false)), "");
-	WI_TEST_ASSERT_EQUALS(wi_number_int32(wi_number_with_int32(2147483647)), 2147483647, "");
-	WI_TEST_ASSERT_EQUALS((uint32_t) wi_number_int32(wi_number_with_int32(4294967295U)), 4294967295U, "");
-	WI_TEST_ASSERT_EQUALS(wi_number_int64(wi_number_with_int64(9223372036854775807LL)), 9223372036854775807LL, "");
-	WI_TEST_ASSERT_EQUALS((uint64_t) wi_number_int64(wi_number_with_int64(18446744073709551615ULL)), 18446744073709551615ULL, "");
+    WI_TEST_ASSERT_TRUE(wi_number_bool(wi_number_with_bool(true)), "");
+    WI_TEST_ASSERT_FALSE(wi_number_bool(wi_number_with_bool(false)), "");
+    WI_TEST_ASSERT_EQUALS(wi_number_int32(wi_number_with_int32(2147483647)), 2147483647, "");
+    WI_TEST_ASSERT_EQUALS((uint32_t) wi_number_int32(wi_number_with_int32(4294967295U)), 4294967295U, "");
+    WI_TEST_ASSERT_EQUALS(wi_number_int64(wi_number_with_int64(9223372036854775807LL)), 9223372036854775807LL, "");
+    WI_TEST_ASSERT_EQUALS((uint64_t) wi_number_int64(wi_number_with_int64(18446744073709551615ULL)), 18446744073709551615ULL, "");
 
 #ifdef WI_32
-	WI_TEST_ASSERT_EQUALS(wi_number_integer(wi_number_with_integer(2147483647)), 2147483647, "");
-	WI_TEST_ASSERT_EQUALS((wi_uinteger_t) wi_number_integer(wi_number_with_integer(4294967295U)), 4294967295U, "");
+    WI_TEST_ASSERT_EQUALS(wi_number_integer(wi_number_with_integer(2147483647)), 2147483647, "");
+    WI_TEST_ASSERT_EQUALS((wi_uinteger_t) wi_number_integer(wi_number_with_integer(4294967295U)), 4294967295U, "");
 #else
-	WI_TEST_ASSERT_EQUALS(wi_number_integer(wi_number_with_integer(9223372036854775807LL)), 9223372036854775807LL, "");
-	WI_TEST_ASSERT_EQUALS((wi_uinteger_t) wi_number_integer(wi_number_with_integer(18446744073709551615ULL)), 18446744073709551615ULL, "");
+    WI_TEST_ASSERT_EQUALS(wi_number_integer(wi_number_with_integer(9223372036854775807LL)), 9223372036854775807LL, "");
+    WI_TEST_ASSERT_EQUALS((wi_uinteger_t) wi_number_integer(wi_number_with_integer(18446744073709551615ULL)), 18446744073709551615ULL, "");
 #endif
-	
-	WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(wi_number_float(wi_number_with_float(3.40282346e38)), 3.40282346e38F, 0.0001, "");
-	WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(wi_number_double(wi_number_with_double(1.7976931348623155e308)), 1.7976931348623155e308, 0.0001, "");
+    
+    WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(wi_number_float(wi_number_with_float(3.40282346e38)), 3.40282346e38F, 0.0001, "");
+    WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(wi_number_double(wi_number_with_double(1.7976931348623155e308)), 1.7976931348623155e308, 0.0001, "");
 }

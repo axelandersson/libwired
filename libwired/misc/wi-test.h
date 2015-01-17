@@ -116,7 +116,7 @@
 typedef void                            wi_run_test_func_t(void);
 
 
-WI_EXPORT void                        	wi_tests_start(void);
+WI_EXPORT void                          wi_tests_start(void);
 WI_EXPORT void                          wi_tests_stop_and_report(void);
 WI_EXPORT void                          wi_tests_run_test(const char *, wi_run_test_func_t *);
 

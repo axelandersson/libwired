@@ -27,10 +27,10 @@
 #include <wired/wired.h>
 #include <wired/wi-private.h>
 
-WI_TEST_EXPORT void						wi_test_enumerator_instances_enumeration(void);
-WI_TEST_EXPORT void						wi_test_enumerator_instances_all_data(void);
-WI_TEST_EXPORT void						wi_test_enumerator_scalars_enumeration(void);
-WI_TEST_EXPORT void						wi_test_enumerator_scalars_all_data(void);
+WI_TEST_EXPORT void                     wi_test_enumerator_instances_enumeration(void);
+WI_TEST_EXPORT void                     wi_test_enumerator_instances_all_data(void);
+WI_TEST_EXPORT void                     wi_test_enumerator_scalars_enumeration(void);
+WI_TEST_EXPORT void                     wi_test_enumerator_scalars_all_data(void);
 
 static void *                           _wi_test_enumerator_instance_function(wi_runtime_instance_t *, wi_enumerator_context_t *);
 static void *                           _wi_test_enumerator_scalar_function(wi_runtime_instance_t *, wi_enumerator_context_t *);

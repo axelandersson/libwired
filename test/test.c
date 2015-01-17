@@ -31,25 +31,25 @@ wi_string_t                 *wi_test_fixture_path;
 
 
 int main(int argc, const char **argv) {
-	wi_pool_t   *pool;
-	
-	wi_initialize();
-	wi_load(argc, argv);
-	
+    wi_pool_t   *pool;
+    
+    wi_initialize();
+    wi_load(argc, argv);
+    
     wi_log_set_level(WI_LOG_DEBUG);
     wi_log_add_stdout_logger(WI_LOG_TOOL);
-	
-	pool = wi_pool_init(wi_pool_alloc());
-
-	wi_tests_start();
     
-	wi_test_fixture_path = wi_string_by_appending_path_component(WI_STR(WI_TEST_ROOT), WI_STR("fixture"));
-	
+    pool = wi_pool_init(wi_pool_alloc());
+
+    wi_tests_start();
+    
+    wi_test_fixture_path = wi_string_by_appending_path_component(WI_STR(WI_TEST_ROOT), WI_STR("fixture"));
+    
 #include "test/testlist.inc"
 
-	wi_tests_stop_and_report();
-	
-	wi_release(pool);
-	
-	return wi_tests_failed;
+    wi_tests_stop_and_report();
+    
+    wi_release(pool);
+    
+    return wi_tests_failed;
 }

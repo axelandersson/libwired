@@ -26,14 +26,14 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_ip(void);
+WI_TEST_EXPORT void                     wi_test_ip(void);
 
 
 void wi_test_ip(void) {
-	WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("127.0.0.1"), WI_STR("127.0.0.1")), "");
-	WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("127.0.0.1"), WI_STR("127.0.0.*")), "");
-	WI_TEST_ASSERT_FALSE(wi_ip_matches_string(WI_STR("255.0.0.1"), WI_STR("127.0.0.*")), "");
-	WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("127.0.0.1"), WI_STR("127.0.0.0/24")), "");
-	WI_TEST_ASSERT_FALSE(wi_ip_matches_string(WI_STR("255.0.0.1"), WI_STR("127.0.0.0/24")), "");
-	WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("::1"), WI_STR("0000:0000:0000:0000:0000:0000:0000:0001")), "");
+    WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("127.0.0.1"), WI_STR("127.0.0.1")), "");
+    WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("127.0.0.1"), WI_STR("127.0.0.*")), "");
+    WI_TEST_ASSERT_FALSE(wi_ip_matches_string(WI_STR("255.0.0.1"), WI_STR("127.0.0.*")), "");
+    WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("127.0.0.1"), WI_STR("127.0.0.0/24")), "");
+    WI_TEST_ASSERT_FALSE(wi_ip_matches_string(WI_STR("255.0.0.1"), WI_STR("127.0.0.0/24")), "");
+    WI_TEST_ASSERT_TRUE(wi_ip_matches_string(WI_STR("::1"), WI_STR("0000:0000:0000:0000:0000:0000:0000:0001")), "");
 }

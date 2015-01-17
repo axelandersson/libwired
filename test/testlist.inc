@@ -6,6 +6,7 @@ wi_tests_run_test("wi_test_array_scalars", wi_test_array_scalars);
 wi_tests_run_test("wi_test_array_enumeration", wi_test_array_enumeration);
 wi_tests_run_test("wi_test_array_mutation", wi_test_array_mutation);
 wi_tests_run_test("wi_test_base", wi_test_base);
+wi_tests_run_test("wi_test_byteorder", wi_test_byteorder);
 wi_tests_run_test("wi_test_crypto_cipher", wi_test_crypto_cipher);
 wi_tests_run_test("wi_test_crypto_rsa", wi_test_crypto_rsa);
 wi_tests_run_test("wi_test_dictionary_creation", wi_test_dictionary_creation);

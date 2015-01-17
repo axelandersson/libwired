@@ -26,19 +26,19 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_process(void);
+WI_TEST_EXPORT void                     wi_test_process(void);
 
 
 void wi_test_process(void) {
     wi_process_t    *process;
-	
-	process = wi_process();
+    
+    process = wi_process();
     
     WI_TEST_ASSERT_NOT_NULL(process, "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(process), wi_process_runtime_id(), "");
     WI_TEST_ASSERT_TRUE(wi_string_index_of_string(wi_description(process), wi_process_name(process), 0) != WI_NOT_FOUND, "");
 
-	WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_name(process)) > 0, "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_name(process)) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_path(process)) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_array_count(wi_process_arguments(process)) >= 0, "");
     

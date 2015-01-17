@@ -28,13 +28,13 @@
 #include <string.h>
 #include "test.h"
 
-WI_TEST_EXPORT void						wi_test_array_creation(void);
-WI_TEST_EXPORT void						wi_test_array_serialization(void);
-WI_TEST_EXPORT void						wi_test_array_runtime_functions(void);
-WI_TEST_EXPORT void						wi_test_array_instances(void);
-WI_TEST_EXPORT void						wi_test_array_scalars(void);
-WI_TEST_EXPORT void						wi_test_array_enumeration(void);
-WI_TEST_EXPORT void						wi_test_array_mutation(void);
+WI_TEST_EXPORT void                     wi_test_array_creation(void);
+WI_TEST_EXPORT void                     wi_test_array_serialization(void);
+WI_TEST_EXPORT void                     wi_test_array_runtime_functions(void);
+WI_TEST_EXPORT void                     wi_test_array_instances(void);
+WI_TEST_EXPORT void                     wi_test_array_scalars(void);
+WI_TEST_EXPORT void                     wi_test_array_enumeration(void);
+WI_TEST_EXPORT void                     wi_test_array_mutation(void);
 
 
 void wi_test_array_creation(void) {

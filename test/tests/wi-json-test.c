@@ -27,41 +27,41 @@
 #include <wired/wired.h>
 #include "test.h"
 
-WI_TEST_EXPORT void						wi_test_json(void);
+WI_TEST_EXPORT void                     wi_test_json(void);
 
 
 void wi_test_json(void) {
-	wi_string_t			*string1, *string2;
-	wi_dictionary_t     *dictionary1, *dictionary2;
-	
-	string1 = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-json-tests-1.json"))));
+    wi_string_t         *string1, *string2;
+    wi_dictionary_t     *dictionary1, *dictionary2;
+    
+    string1 = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-json-tests-1.json"))));
 
-	dictionary1 = wi_json_instance_for_string(string1);
-	
-	WI_TEST_ASSERT_NOT_NULL(dictionary1, "%m");
-	
-	dictionary2 = wi_dictionary_with_data_and_keys(
-		WI_STR("\"hello world\""),
-			WI_STR("string"),
-		wi_number_with_bool(true),
-			WI_STR("true"),
-		wi_number_with_bool(false),
-			WI_STR("false"),
-		wi_number_with_integer(42),
-			WI_STR("integer"),
-		wi_number_with_double(3.14),
-			WI_STR("real"),
+    dictionary1 = wi_json_instance_for_string(string1);
+    
+    WI_TEST_ASSERT_NOT_NULL(dictionary1, "%m");
+    
+    dictionary2 = wi_dictionary_with_data_and_keys(
+        WI_STR("\"hello world\""),
+            WI_STR("string"),
+        wi_number_with_bool(true),
+            WI_STR("true"),
+        wi_number_with_bool(false),
+            WI_STR("false"),
+        wi_number_with_integer(42),
+            WI_STR("integer"),
+        wi_number_with_double(3.14),
+            WI_STR("real"),
         wi_null(),
             WI_STR("null"),
-		wi_dictionary_with_data_and_keys(WI_STR("value1"), WI_STR("key1"), WI_STR("value2"), WI_STR("key2"), NULL),
-			WI_STR("dict"),
-		wi_array_with_data(WI_STR("value1"), WI_STR("value2"), NULL),
-			WI_STR("array"),
-		NULL);
-	
-	WI_TEST_ASSERT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
-	
-	string2 = wi_json_string_for_instance(dictionary2);
-	
-	WI_TEST_ASSERT_EQUAL_INSTANCES(string1, string2, "");
+        wi_dictionary_with_data_and_keys(WI_STR("value1"), WI_STR("key1"), WI_STR("value2"), WI_STR("key2"), NULL),
+            WI_STR("dict"),
+        wi_array_with_data(WI_STR("value1"), WI_STR("value2"), NULL),
+            WI_STR("array"),
+        NULL);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
+    
+    string2 = wi_json_string_for_instance(dictionary2);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string1, string2, "");
 }

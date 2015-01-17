@@ -3544,434 +3544,434 @@ fi
 if test -n "$enable_warnings"; then
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-W"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-W"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-W"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-W"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -W"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -W"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-W"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-W"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-W"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-W"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -W"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -W"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wall"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wall"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wall"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wall"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wall"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wall"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wall"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wall"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wall"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wall"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wall"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wall"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wno-unknown-pragmas"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wno-unknown-pragmas"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wno-unknown-pragmas"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wno-unknown-pragmas"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wno-unknown-pragmas"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wno-unknown-pragmas"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wno-unknown-pragmas"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-unknown-pragmas"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wno-unknown-pragmas"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-unknown-pragmas"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wno-unknown-pragmas"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wno-unknown-pragmas"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wno-unused-parameter"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wno-unused-parameter"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wno-unused-parameter"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wno-unused-parameter"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wno-unused-parameter"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wno-unused-parameter"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wno-unused-parameter"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-unused-parameter"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wno-unused-parameter"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-unused-parameter"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wno-unused-parameter"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wno-unused-parameter"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wsign-compare"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wsign-compare"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wsign-compare"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wsign-compare"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wsign-compare"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wsign-compare"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wsign-compare"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wsign-compare"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wsign-compare"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wsign-compare"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wsign-compare"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wsign-compare"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wstrict-prototypes"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wstrict-prototypes"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wstrict-prototypes"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wstrict-prototypes"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wstrict-prototypes"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wstrict-prototypes"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wstrict-prototypes"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wstrict-prototypes"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wstrict-prototypes"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wstrict-prototypes"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wstrict-prototypes"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wstrict-prototypes"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wmissing-prototypes"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wmissing-prototypes"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wmissing-prototypes"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wmissing-prototypes"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wmissing-prototypes"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wmissing-prototypes"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wmissing-prototypes"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wmissing-prototypes"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wmissing-prototypes"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wmissing-prototypes"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wmissing-prototypes"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wmissing-prototypes"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wmissing-declarations"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wmissing-declarations"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wmissing-declarations"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wmissing-declarations"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wmissing-declarations"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wmissing-declarations"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wmissing-declarations"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wmissing-declarations"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wmissing-declarations"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wmissing-declarations"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wmissing-declarations"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wmissing-declarations"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wredundant-decls"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wredundant-decls"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wredundant-decls"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wredundant-decls"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wredundant-decls"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wredundant-decls"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wredundant-decls"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wredundant-decls"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wredundant-decls"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wredundant-decls"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wredundant-decls"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wredundant-decls"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wno-deprecated-declarations"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wno-deprecated-declarations"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wno-deprecated-declarations"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wno-deprecated-declarations"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wno-deprecated-declarations"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wno-deprecated-declarations"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-deprecated-declarations"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wno-deprecated-declarations"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-deprecated-declarations"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wno-deprecated-declarations"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wno-deprecated-declarations"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $WARNFLAGS" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $WARNFLAGS" >&5
 $as_echo "$WARNFLAGS" >&6; }
 else
 
-	OLD_CFLAGS="$CFLAGS"
+    OLD_CFLAGS="$CFLAGS"
 
-	if test -z "$CFLAGS"; then
-		CFLAGS="-Wno-deprecated-declarations"
-	else
-		MATCH=`expr -- "$CFLAGS" : ".*-Wno-deprecated-declarations"`
+    if test -z "$CFLAGS"; then
+        CFLAGS="-Wno-deprecated-declarations"
+    else
+        MATCH=`expr -- "$CFLAGS" : ".*-Wno-deprecated-declarations"`
 
-		if test "$MATCH" = "0"; then
-			CFLAGS="$CFLAGS -Wno-deprecated-declarations"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+        fi
+    fi
 
 
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
 
 
-	if test -z "$WARNFLAGS"; then
-		WARNFLAGS="-Wno-deprecated-declarations"
-	else
-		MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-deprecated-declarations"`
+    if test -z "$WARNFLAGS"; then
+        WARNFLAGS="-Wno-deprecated-declarations"
+    else
+        MATCH=`expr -- "$WARNFLAGS" : ".*-Wno-deprecated-declarations"`
 
-		if test "$MATCH" = "0"; then
-			WARNFLAGS="$WARNFLAGS -Wno-deprecated-declarations"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            WARNFLAGS="$WARNFLAGS -Wno-deprecated-declarations"
+        fi
+    fi
 
 
 else
 
-		CFLAGS="$OLD_CFLAGS"
+        CFLAGS="$OLD_CFLAGS"
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
@@ -4031,10 +4031,10 @@ fi
 
 
 if test -n "$with_objdir"; then
-	objdir="$with_objdir"
+    objdir="$with_objdir"
 
 else
-	objdir='obj'
+    objdir='obj'
 
 fi
 
@@ -4048,10 +4048,10 @@ fi
 
 
 if test -n "$with_rundir"; then
-	rundir="$with_rundir"
+    rundir="$with_rundir"
 
 else
-	rundir='run'
+    rundir='run'
 
 fi
 
@@ -4064,10 +4064,10 @@ fi
 
 
 if test -n "$enable_maintainer_mode"; then
-	WI_MAINTAINER=1
+    WI_MAINTAINER=1
 
 else
-	WI_MAINTAINER=0
+    WI_MAINTAINER=0
 
 fi
 
@@ -4076,84 +4076,84 @@ fi
 # Checks for additional paths
 
 
-	if test "$wi_include_extra_include_paths_done" != "yes"; then
-		if test -d /usr/local/include; then
+    if test "$wi_include_extra_include_paths_done" != "yes"; then
+        if test -d /usr/local/include; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/local/include"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/include"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/local/include"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/include"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/local/include"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/local/include"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/pkg/include; then
+        if test -d /usr/pkg/include; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/pkg/include"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/pkg/include"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/pkg/include"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/pkg/include"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/pkg/include"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/pkg/include"
+        fi
+    fi
 
-		fi
+        fi
 
-		wi_include_extra_include_paths_done="yes"
-	fi
+        wi_include_extra_include_paths_done="yes"
+    fi
 
 
-	if test "$wi_include_extra_library_paths_done" != "yes"; then
-		if test -d /usr/local/lib; then
+    if test "$wi_include_extra_library_paths_done" != "yes"; then
+        if test -d /usr/local/lib; then
 
-	if test -z "$LDFLAGS"; then
-		LDFLAGS="-L/usr/local/lib"
-	else
-		MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/local/lib"`
+    if test -z "$LDFLAGS"; then
+        LDFLAGS="-L/usr/local/lib"
+    else
+        MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/local/lib"`
 
-		if test "$MATCH" = "0"; then
-			LDFLAGS="$LDFLAGS -L/usr/local/lib"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LDFLAGS="$LDFLAGS -L/usr/local/lib"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/pkg/lib; then
+        if test -d /usr/pkg/lib; then
 
-	if test -z "$LDFLAGS"; then
-		LDFLAGS="-L/usr/pkg/lib"
-	else
-		MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/pkg/lib"`
+    if test -z "$LDFLAGS"; then
+        LDFLAGS="-L/usr/pkg/lib"
+    else
+        MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/pkg/lib"`
 
-		if test "$MATCH" = "0"; then
-			LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LDFLAGS="$LDFLAGS -L/usr/pkg/lib"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /lib; then
+        if test -d /lib; then
 
-	if test -z "$LDFLAGS"; then
-		LDFLAGS="-L/lib"
-	else
-		MATCH=`expr -- "$LDFLAGS" : ".*-L/lib"`
+    if test -z "$LDFLAGS"; then
+        LDFLAGS="-L/lib"
+    else
+        MATCH=`expr -- "$LDFLAGS" : ".*-L/lib"`
 
-		if test "$MATCH" = "0"; then
-			LDFLAGS="$LDFLAGS -L/lib"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LDFLAGS="$LDFLAGS -L/lib"
+        fi
+    fi
 
-		fi
+        fi
 
-		wi_include_extra_library_paths_done="yes"
-	fi
+        wi_include_extra_library_paths_done="yes"
+    fi
 
 
 
@@ -4422,13 +4422,13 @@ done
 
 
 
-	if test "$wi_include_math_library_done" != "yes"; then
-		ac_fn_c_check_func "$LINENO" "pow" "ac_cv_func_pow"
+    if test "$wi_include_math_library_done" != "yes"; then
+        ac_fn_c_check_func "$LINENO" "pow" "ac_cv_func_pow"
 if test "x$ac_cv_func_pow" = xyes; then :
 
 else
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sqrt in -lm" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sqrt in -lm" >&5
 $as_echo_n "checking for sqrt in -lm... " >&6; }
 if ${ac_cv_lib_m_sqrt+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -4467,34 +4467,34 @@ $as_echo "$ac_cv_lib_m_sqrt" >&6; }
 if test "x$ac_cv_lib_m_sqrt" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lm"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lm"`
+    if test -z "$LIBS"; then
+        LIBS="-lm"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lm"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lm"
-		fi
-	fi
-
-
-fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lm"
+        fi
+    fi
 
 
 fi
 
 
-		wi_include_math_library_done="yes"
-	fi
+fi
 
 
-	if test "$wi_include_socket_library_done" != "yes"; then
-		ac_fn_c_check_func "$LINENO" "setsockopt" "ac_cv_func_setsockopt"
+        wi_include_math_library_done="yes"
+    fi
+
+
+    if test "$wi_include_socket_library_done" != "yes"; then
+        ac_fn_c_check_func "$LINENO" "setsockopt" "ac_cv_func_setsockopt"
 if test "x$ac_cv_func_setsockopt" = xyes; then :
 
 else
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for setsockopt in -lsocket" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setsockopt in -lsocket" >&5
 $as_echo_n "checking for setsockopt in -lsocket... " >&6; }
 if ${ac_cv_lib_socket_setsockopt+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -4533,34 +4533,34 @@ $as_echo "$ac_cv_lib_socket_setsockopt" >&6; }
 if test "x$ac_cv_lib_socket_setsockopt" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lsocket"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lsocket"`
+    if test -z "$LIBS"; then
+        LIBS="-lsocket"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lsocket"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lsocket"
-		fi
-	fi
-
-
-fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lsocket"
+        fi
+    fi
 
 
 fi
 
 
-		wi_include_socket_library_done="yes"
-	fi
+fi
 
 
-	if test "$wi_include_nsl_library_done" != "yes"; then
-		ac_fn_c_check_func "$LINENO" "gethostent" "ac_cv_func_gethostent"
+        wi_include_socket_library_done="yes"
+    fi
+
+
+    if test "$wi_include_nsl_library_done" != "yes"; then
+        ac_fn_c_check_func "$LINENO" "gethostent" "ac_cv_func_gethostent"
 if test "x$ac_cv_func_gethostent" = xyes; then :
 
 else
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gethostent in -lnsl" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gethostent in -lnsl" >&5
 $as_echo_n "checking for gethostent in -lnsl... " >&6; }
 if ${ac_cv_lib_nsl_gethostent+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -4599,34 +4599,34 @@ $as_echo "$ac_cv_lib_nsl_gethostent" >&6; }
 if test "x$ac_cv_lib_nsl_gethostent" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lnsl"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lnsl"`
+    if test -z "$LIBS"; then
+        LIBS="-lnsl"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lnsl"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lnsl"
-		fi
-	fi
-
-
-fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lnsl"
+        fi
+    fi
 
 
 fi
 
 
-		wi_include_nsl_library_done="yes"
-	fi
+fi
 
 
-	if test "$wi_include_resolv_library_done" != "yes"; then
-		ac_fn_c_check_func "$LINENO" "herror" "ac_cv_func_herror"
+        wi_include_nsl_library_done="yes"
+    fi
+
+
+    if test "$wi_include_resolv_library_done" != "yes"; then
+        ac_fn_c_check_func "$LINENO" "herror" "ac_cv_func_herror"
 if test "x$ac_cv_func_herror" = xyes; then :
 
 else
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for herror in -lresolv" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for herror in -lresolv" >&5
 $as_echo_n "checking for herror in -lresolv... " >&6; }
 if ${ac_cv_lib_resolv_herror+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -4665,30 +4665,30 @@ $as_echo "$ac_cv_lib_resolv_herror" >&6; }
 if test "x$ac_cv_lib_resolv_herror" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lresolv"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lresolv"`
+    if test -z "$LIBS"; then
+        LIBS="-lresolv"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lresolv"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lresolv"
-		fi
-	fi
-
-
-fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lresolv"
+        fi
+    fi
 
 
 fi
 
 
-		wi_include_resolv_library_done="yes"
-	fi
+fi
 
 
-	for ac_header in  \
-		CommonCrypto/CommonDigest.h \
-		CommonCrypto/CommonCryptor.h \
+        wi_include_resolv_library_done="yes"
+    fi
+
+
+    for ac_header in  \
+        CommonCrypto/CommonDigest.h \
+        CommonCrypto/CommonCryptor.h \
 
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -4699,33 +4699,33 @@ if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
 _ACEOF
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_DIGESTS"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DIGESTS"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_DIGESTS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DIGESTS"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_DIGESTS"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_DIGESTS"
+        fi
+    fi
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_CIPHERS"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_CIPHERS"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_CIPHERS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_CIPHERS"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_CIPHERS"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_CIPHERS"
+        fi
+    fi
 
-		:
+        :
 
 
 else
 
-		:
+        :
 
 
 fi
@@ -4737,16 +4737,16 @@ done
 
 if test -n "$enable_pthreads" -o -n "$enable_all"; then
 
-	if test "$wi_include_pthreads_done" != "yes"; then
-		case $host in
-			*-solaris*)
+    if test "$wi_include_pthreads_done" != "yes"; then
+        case $host in
+            *-solaris*)
 
 $as_echo "#define _POSIX_PTHREAD_SEMANTICS /**/" >>confdefs.h
 
-				;;
-		esac
+                ;;
+        esac
 
-		for ac_header in pthread.h
+        for ac_header in pthread.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "pthread.h" "ac_cv_header_pthread_h" "$ac_includes_default"
 if test "x$ac_cv_header_pthread_h" = xyes; then :
@@ -4754,46 +4754,46 @@ if test "x$ac_cv_header_pthread_h" = xyes; then :
 #define HAVE_PTHREAD_H 1
 _ACEOF
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthreads" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthreads" >&5
 $as_echo_n "checking for pthreads... " >&6; }
 
 
-	if test "$wi_pthreads_found" != "yes"; then
-		OLD_LIBS="$LIBS"
+    if test "$wi_pthreads_found" != "yes"; then
+        OLD_LIBS="$LIBS"
 
-	if test -z "$LIBS"; then
-		LIBS=""
-	else
-		MATCH=`expr -- "$LIBS" : ".*"`
+    if test -z "$LIBS"; then
+        LIBS=""
+    else
+        MATCH=`expr -- "$LIBS" : ".*"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS "
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS "
+        fi
+    fi
 
 
-		if test "$cross_compiling" = yes; then :
+        if test "$cross_compiling" = yes; then :
 
-			cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-	#include <pthread.h>
-	#include <errno.h>
+    #include <pthread.h>
+    #include <errno.h>
 
-	void * thread(void *arg) {
-		return NULL;
-	}
+    void * thread(void *arg) {
+        return NULL;
+    }
 
 int
 main ()
 {
 
-	pthread_t tid;
+    pthread_t tid;
 
-	if(pthread_create(&tid, 0, thread, NULL) < 0)
-		return errno;
+    if(pthread_create(&tid, 0, thread, NULL) < 0)
+        return errno;
 
-	return 0;
+    return 0;
 
   ;
   return 0;
@@ -4801,11 +4801,11 @@ main ()
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
 
-				wi_pthreads_test=yes
+                wi_pthreads_test=yes
 
 else
 
-				wi_pthreads_test=no
+                wi_pthreads_test=no
 
 fi
 rm -f core conftest.err conftest.$ac_objext \
@@ -4816,33 +4816,33 @@ else
 /* end confdefs.h.  */
 
 
-	#include <pthread.h>
-	#include <errno.h>
+    #include <pthread.h>
+    #include <errno.h>
 
-	void * thread(void *arg) {
-		return NULL;
-	}
+    void * thread(void *arg) {
+        return NULL;
+    }
 
 
-	int main(void) {
+    int main(void) {
 
-	pthread_t tid;
+    pthread_t tid;
 
-	if(pthread_create(&tid, 0, thread, NULL) < 0)
-		return errno;
+    if(pthread_create(&tid, 0, thread, NULL) < 0)
+        return errno;
 
-	return 0;
+    return 0;
 
-	}
+    }
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
 
-			wi_pthreads_test=yes
+            wi_pthreads_test=yes
 
 else
 
-			wi_pthreads_test=no
+            wi_pthreads_test=no
 
 fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
@@ -4850,51 +4850,51 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
 fi
 
 
-		LIBS="$OLD_LIBS"
+        LIBS="$OLD_LIBS"
 
-		if test "$wi_pthreads_test" = "yes"; then
-			wi_pthreads_found="yes"
-			wi_pthreads_libs=""
-		fi
-	fi
-
-
-	if test "$wi_pthreads_found" != "yes"; then
-		OLD_LIBS="$LIBS"
-
-	if test -z "$LIBS"; then
-		LIBS="-pthread"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-pthread"`
-
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -pthread"
-		fi
-	fi
+        if test "$wi_pthreads_test" = "yes"; then
+            wi_pthreads_found="yes"
+            wi_pthreads_libs=""
+        fi
+    fi
 
 
-		if test "$cross_compiling" = yes; then :
+    if test "$wi_pthreads_found" != "yes"; then
+        OLD_LIBS="$LIBS"
 
-			cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    if test -z "$LIBS"; then
+        LIBS="-pthread"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-pthread"`
+
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -pthread"
+        fi
+    fi
+
+
+        if test "$cross_compiling" = yes; then :
+
+            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-	#include <pthread.h>
-	#include <errno.h>
+    #include <pthread.h>
+    #include <errno.h>
 
-	void * thread(void *arg) {
-		return NULL;
-	}
+    void * thread(void *arg) {
+        return NULL;
+    }
 
 int
 main ()
 {
 
-	pthread_t tid;
+    pthread_t tid;
 
-	if(pthread_create(&tid, 0, thread, NULL) < 0)
-		return errno;
+    if(pthread_create(&tid, 0, thread, NULL) < 0)
+        return errno;
 
-	return 0;
+    return 0;
 
   ;
   return 0;
@@ -4902,11 +4902,11 @@ main ()
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
 
-				wi_pthreads_test=yes
+                wi_pthreads_test=yes
 
 else
 
-				wi_pthreads_test=no
+                wi_pthreads_test=no
 
 fi
 rm -f core conftest.err conftest.$ac_objext \
@@ -4917,33 +4917,33 @@ else
 /* end confdefs.h.  */
 
 
-	#include <pthread.h>
-	#include <errno.h>
+    #include <pthread.h>
+    #include <errno.h>
 
-	void * thread(void *arg) {
-		return NULL;
-	}
+    void * thread(void *arg) {
+        return NULL;
+    }
 
 
-	int main(void) {
+    int main(void) {
 
-	pthread_t tid;
+    pthread_t tid;
 
-	if(pthread_create(&tid, 0, thread, NULL) < 0)
-		return errno;
+    if(pthread_create(&tid, 0, thread, NULL) < 0)
+        return errno;
 
-	return 0;
+    return 0;
 
-	}
+    }
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
 
-			wi_pthreads_test=yes
+            wi_pthreads_test=yes
 
 else
 
-			wi_pthreads_test=no
+            wi_pthreads_test=no
 
 fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
@@ -4951,51 +4951,51 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
 fi
 
 
-		LIBS="$OLD_LIBS"
+        LIBS="$OLD_LIBS"
 
-		if test "$wi_pthreads_test" = "yes"; then
-			wi_pthreads_found="yes"
-			wi_pthreads_libs="-pthread"
-		fi
-	fi
-
-
-	if test "$wi_pthreads_found" != "yes"; then
-		OLD_LIBS="$LIBS"
-
-	if test -z "$LIBS"; then
-		LIBS="-lpthread"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lpthread"`
-
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lpthread"
-		fi
-	fi
+        if test "$wi_pthreads_test" = "yes"; then
+            wi_pthreads_found="yes"
+            wi_pthreads_libs="-pthread"
+        fi
+    fi
 
 
-		if test "$cross_compiling" = yes; then :
+    if test "$wi_pthreads_found" != "yes"; then
+        OLD_LIBS="$LIBS"
 
-			cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    if test -z "$LIBS"; then
+        LIBS="-lpthread"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lpthread"`
+
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lpthread"
+        fi
+    fi
+
+
+        if test "$cross_compiling" = yes; then :
+
+            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-	#include <pthread.h>
-	#include <errno.h>
+    #include <pthread.h>
+    #include <errno.h>
 
-	void * thread(void *arg) {
-		return NULL;
-	}
+    void * thread(void *arg) {
+        return NULL;
+    }
 
 int
 main ()
 {
 
-	pthread_t tid;
+    pthread_t tid;
 
-	if(pthread_create(&tid, 0, thread, NULL) < 0)
-		return errno;
+    if(pthread_create(&tid, 0, thread, NULL) < 0)
+        return errno;
 
-	return 0;
+    return 0;
 
   ;
   return 0;
@@ -5003,11 +5003,11 @@ main ()
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
 
-				wi_pthreads_test=yes
+                wi_pthreads_test=yes
 
 else
 
-				wi_pthreads_test=no
+                wi_pthreads_test=no
 
 fi
 rm -f core conftest.err conftest.$ac_objext \
@@ -5018,33 +5018,33 @@ else
 /* end confdefs.h.  */
 
 
-	#include <pthread.h>
-	#include <errno.h>
+    #include <pthread.h>
+    #include <errno.h>
 
-	void * thread(void *arg) {
-		return NULL;
-	}
+    void * thread(void *arg) {
+        return NULL;
+    }
 
 
-	int main(void) {
+    int main(void) {
 
-	pthread_t tid;
+    pthread_t tid;
 
-	if(pthread_create(&tid, 0, thread, NULL) < 0)
-		return errno;
+    if(pthread_create(&tid, 0, thread, NULL) < 0)
+        return errno;
 
-	return 0;
+    return 0;
 
-	}
+    }
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
 
-			wi_pthreads_test=yes
+            wi_pthreads_test=yes
 
 else
 
-			wi_pthreads_test=no
+            wi_pthreads_test=no
 
 fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
@@ -5052,38 +5052,38 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
 fi
 
 
-		LIBS="$OLD_LIBS"
+        LIBS="$OLD_LIBS"
 
-		if test "$wi_pthreads_test" = "yes"; then
-			wi_pthreads_found="yes"
-			wi_pthreads_libs="-lpthread"
-		fi
-	fi
+        if test "$wi_pthreads_test" = "yes"; then
+            wi_pthreads_found="yes"
+            wi_pthreads_libs="-lpthread"
+        fi
+    fi
 
 
-			if test "$wi_pthreads_found" = "yes"; then
-				{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+            if test "$wi_pthreads_found" = "yes"; then
+                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
-	if test -z "$LIBS"; then
-		LIBS="$wi_pthreads_libs"
-	else
-		MATCH=`expr -- "$LIBS" : ".*$wi_pthreads_libs"`
+    if test -z "$LIBS"; then
+        LIBS="$wi_pthreads_libs"
+    else
+        MATCH=`expr -- "$LIBS" : ".*$wi_pthreads_libs"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS $wi_pthreads_libs"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS $wi_pthreads_libs"
+        fi
+    fi
 
-			else
-				{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+            else
+                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-				as_fn_error $? "could not locate pthreads" "$LINENO" 5
-			fi
+                as_fn_error $? "could not locate pthreads" "$LINENO" 5
+            fi
 
 else
 
-			as_fn_error $? "could not locate pthreads" "$LINENO" 5
+            as_fn_error $? "could not locate pthreads" "$LINENO" 5
 
 fi
 
@@ -5091,75 +5091,75 @@ done
 
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_PTHREADS"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_PTHREADS"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_PTHREADS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_PTHREADS"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_PTHREADS"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_PTHREADS"
+        fi
+    fi
 
 
-		wi_include_pthreads_done="yes"
-	fi
+        wi_include_pthreads_done="yes"
+    fi
 
 fi
 
 if test -n "$enable_ssl" -o -n "$enable_all"; then
 
 
-	if test "$wi_include_crypto_library_done" != "yes"; then
+    if test "$wi_include_crypto_library_done" != "yes"; then
 
-	if test "$wi_include_extra_ssl_paths_done" != "yes"; then
-		if test -d /usr/local/ssl/include; then
+    if test "$wi_include_extra_ssl_paths_done" != "yes"; then
+        if test -d /usr/local/ssl/include; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/local/ssl/include"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/ssl/include"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/local/ssl/include"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/ssl/include"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/local/ssl/include"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/local/ssl/include"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/kerberos/include; then
+        if test -d /usr/kerberos/include; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/kerberos/include"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/kerberos/include"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/kerberos/include"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/kerberos/include"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/kerberos/include"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/kerberos/include"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/local/ssl/lib; then
+        if test -d /usr/local/ssl/lib; then
 
-	if test -z "$LDFLAGS"; then
-		LDFLAGS="-L/usr/local/ssl/lib"
-	else
-		MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/local/ssl/lib"`
+    if test -z "$LDFLAGS"; then
+        LDFLAGS="-L/usr/local/ssl/lib"
+    else
+        MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/local/ssl/lib"`
 
-		if test "$MATCH" = "0"; then
-			LDFLAGS="$LDFLAGS -L/usr/local/ssl/lib"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LDFLAGS="$LDFLAGS -L/usr/local/ssl/lib"
+        fi
+    fi
 
-		fi
+        fi
 
-		wi_include_extra_ssl_paths_done="yes"
-	fi
+        wi_include_extra_ssl_paths_done="yes"
+    fi
 
 
-		for ac_header in openssl/sha.h
+        for ac_header in openssl/sha.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "openssl/sha.h" "ac_cv_header_openssl_sha_h" "$ac_includes_default"
 if test "x$ac_cv_header_openssl_sha_h" = xyes; then :
@@ -5169,22 +5169,22 @@ _ACEOF
 
 else
 
-			if test "" != "noerror"; then
+            if test "" != "noerror"; then
 
-	as_fn_error $? "could not locate OpenSSL
+    as_fn_error $? "could not locate OpenSSL
 
 If you installed OpenSSL into a non-standard directory, please run:
 
     env CPPFLAGS=\"-I/path/to/include\" LDFLAGS=\"-L/path/to/lib\" ./configure" "$LINENO" 5
 
-			fi
+            fi
 
 fi
 
 done
 
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SHA1_Init in -lcrypto" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SHA1_Init in -lcrypto" >&5
 $as_echo_n "checking for SHA1_Init in -lcrypto... " >&6; }
 if ${ac_cv_lib_crypto_SHA1_Init+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -5223,119 +5223,119 @@ $as_echo "$ac_cv_lib_crypto_SHA1_Init" >&6; }
 if test "x$ac_cv_lib_crypto_SHA1_Init" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lcrypto"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lcrypto"`
+    if test -z "$LIBS"; then
+        LIBS="-lcrypto"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lcrypto"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lcrypto"
-		fi
-	fi
-
-
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_DIGESTS"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DIGESTS"`
-
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_DIGESTS"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lcrypto"
+        fi
+    fi
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_CIPHERS"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_CIPHERS"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_DIGESTS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DIGESTS"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_CIPHERS"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_DIGESTS"
+        fi
+    fi
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_RSA"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_RSA"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_CIPHERS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_CIPHERS"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_RSA"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_CIPHERS"
+        fi
+    fi
+
+
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_RSA"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_RSA"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_RSA"
+        fi
+    fi
 
 
 else
 
-			if test "" != "noerror"; then
+            if test "" != "noerror"; then
 
-	as_fn_error $? "could not locate OpenSSL
+    as_fn_error $? "could not locate OpenSSL
 
 If you installed OpenSSL into a non-standard directory, please run:
 
     env CPPFLAGS=\"-I/path/to/include\" LDFLAGS=\"-L/path/to/lib\" ./configure" "$LINENO" 5
 
-			fi
+            fi
 
 fi
 
 
-		wi_include_crypto_library_done="yes"
-	fi
+        wi_include_crypto_library_done="yes"
+    fi
 
 
-	if test "$wi_include_ssl_library_done" != "yes"; then
+    if test "$wi_include_ssl_library_done" != "yes"; then
 
-	if test "$wi_include_extra_ssl_paths_done" != "yes"; then
-		if test -d /usr/local/ssl/include; then
+    if test "$wi_include_extra_ssl_paths_done" != "yes"; then
+        if test -d /usr/local/ssl/include; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/local/ssl/include"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/ssl/include"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/local/ssl/include"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/ssl/include"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/local/ssl/include"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/local/ssl/include"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/kerberos/include; then
+        if test -d /usr/kerberos/include; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/kerberos/include"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/kerberos/include"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/kerberos/include"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/kerberos/include"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/kerberos/include"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/kerberos/include"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/local/ssl/lib; then
+        if test -d /usr/local/ssl/lib; then
 
-	if test -z "$LDFLAGS"; then
-		LDFLAGS="-L/usr/local/ssl/lib"
-	else
-		MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/local/ssl/lib"`
+    if test -z "$LDFLAGS"; then
+        LDFLAGS="-L/usr/local/ssl/lib"
+    else
+        MATCH=`expr -- "$LDFLAGS" : ".*-L/usr/local/ssl/lib"`
 
-		if test "$MATCH" = "0"; then
-			LDFLAGS="$LDFLAGS -L/usr/local/ssl/lib"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LDFLAGS="$LDFLAGS -L/usr/local/ssl/lib"
+        fi
+    fi
 
-		fi
+        fi
 
-		wi_include_extra_ssl_paths_done="yes"
-	fi
+        wi_include_extra_ssl_paths_done="yes"
+    fi
 
 
-		for ac_header in openssl/ssl.h
+        for ac_header in openssl/ssl.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "openssl/ssl.h" "ac_cv_header_openssl_ssl_h" "$ac_includes_default"
 if test "x$ac_cv_header_openssl_ssl_h" = xyes; then :
@@ -5345,22 +5345,22 @@ _ACEOF
 
 else
 
-			if test "" != "noerror"; then
+            if test "" != "noerror"; then
 
-	as_fn_error $? "could not locate OpenSSL
+    as_fn_error $? "could not locate OpenSSL
 
 If you installed OpenSSL into a non-standard directory, please run:
 
     env CPPFLAGS=\"-I/path/to/include\" LDFLAGS=\"-L/path/to/lib\" ./configure" "$LINENO" 5
 
-			fi
+            fi
 
 fi
 
 done
 
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSL_library_init in -lssl" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSL_library_init in -lssl" >&5
 $as_echo_n "checking for SSL_library_init in -lssl... " >&6; }
 if ${ac_cv_lib_ssl_SSL_library_init+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -5399,53 +5399,53 @@ $as_echo "$ac_cv_lib_ssl_SSL_library_init" >&6; }
 if test "x$ac_cv_lib_ssl_SSL_library_init" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lssl"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lssl"`
+    if test -z "$LIBS"; then
+        LIBS="-lssl"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lssl"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lssl"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lssl"
+        fi
+    fi
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_SSL"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_SSL"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_SSL"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_SSL"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_SSL"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_SSL"
+        fi
+    fi
 
 
 else
 
-			if test "" != "noerror"; then
+            if test "" != "noerror"; then
 
-	as_fn_error $? "could not locate OpenSSL
+    as_fn_error $? "could not locate OpenSSL
 
 If you installed OpenSSL into a non-standard directory, please run:
 
     env CPPFLAGS=\"-I/path/to/include\" LDFLAGS=\"-L/path/to/lib\" ./configure" "$LINENO" 5
 
-			fi
+            fi
 
 fi
 
 
-		wi_include_ssl_library_done="yes"
-	fi
+        wi_include_ssl_library_done="yes"
+    fi
 
 
 fi
 
 if test -n "$enable_iconv" -o -n "$enable_all"; then
 
-	if test "$wi_include_iconv_library_done" != "yes"; then
-		for ac_header in iconv.h
+    if test "$wi_include_iconv_library_done" != "yes"; then
+        for ac_header in iconv.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "iconv.h" "ac_cv_header_iconv_h" "$ac_includes_default"
 if test "x$ac_cv_header_iconv_h" = xyes; then :
@@ -5456,7 +5456,7 @@ _ACEOF
 else
 
 
-	as_fn_error $? "could not locate iconv
+    as_fn_error $? "could not locate iconv
 
 If you installed iconv into a non-standard directory, please run:
 
@@ -5468,7 +5468,7 @@ fi
 done
 
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for iconv in -liconv" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for iconv in -liconv" >&5
 $as_echo_n "checking for iconv in -liconv... " >&6; }
 if ${ac_cv_lib_iconv_iconv+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -5507,20 +5507,20 @@ $as_echo "$ac_cv_lib_iconv_iconv" >&6; }
 if test "x$ac_cv_lib_iconv_iconv" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-liconv"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-liconv"`
+    if test -z "$LIBS"; then
+        LIBS="-liconv"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-liconv"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -liconv"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -liconv"
+        fi
+    fi
 
 
 else
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libiconv in -liconv" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libiconv in -liconv" >&5
 $as_echo_n "checking for libiconv in -liconv... " >&6; }
 if ${ac_cv_lib_iconv_libiconv+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -5559,26 +5559,26 @@ $as_echo "$ac_cv_lib_iconv_libiconv" >&6; }
 if test "x$ac_cv_lib_iconv_libiconv" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-liconv"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-liconv"`
+    if test -z "$LIBS"; then
+        LIBS="-liconv"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-liconv"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -liconv"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -liconv"
+        fi
+    fi
 
 
 else
 
-				ac_fn_c_check_func "$LINENO" "iconv" "ac_cv_func_iconv"
+                ac_fn_c_check_func "$LINENO" "iconv" "ac_cv_func_iconv"
 if test "x$ac_cv_func_iconv" = xyes; then :
 
 else
 
 
-	as_fn_error $? "could not locate iconv
+    as_fn_error $? "could not locate iconv
 
 If you installed iconv into a non-standard directory, please run:
 
@@ -5594,9 +5594,9 @@ fi
 fi
 
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if iconv understands Unicode" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking if iconv understands Unicode" >&5
 $as_echo_n "checking if iconv understands Unicode... " >&6; }
-		if test "$cross_compiling" = yes; then :
+        if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "cannot run test program while cross compiling
@@ -5605,23 +5605,23 @@ else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-			#include <iconv.h>
-			int main(void) {
-				iconv_t conv = iconv_open("UTF-8", "UTF-16");
-				if(conv == (iconv_t) -1)
-					return 1;
-				return 0;
-			}
+            #include <iconv.h>
+            int main(void) {
+                iconv_t conv = iconv_open("UTF-8", "UTF-16");
+                if(conv == (iconv_t) -1)
+                    return 1;
+                return 0;
+            }
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
 
-			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
 else
 
-			as_fn_error $? "no" "$LINENO" 5
+            as_fn_error $? "no" "$LINENO" 5
 
 fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
@@ -5630,68 +5630,68 @@ fi
 
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_ICONV"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_ICONV"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_ICONV"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_ICONV"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_ICONV"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_ICONV"
+        fi
+    fi
 
 
-		wi_include_iconv_library_done="yes"
-	fi
+        wi_include_iconv_library_done="yes"
+    fi
 
 fi
 
 if test -n "$enable_libxml2" -o -n "$enable_all"; then
 
-	if test "$wi_include_libxml2_library_done" != "yes"; then
-		if test -d /usr/include/libxml2; then
+    if test "$wi_include_libxml2_library_done" != "yes"; then
+        if test -d /usr/include/libxml2; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/include/libxml2"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/include/libxml2"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/include/libxml2"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/include/libxml2"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/include/libxml2"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/include/libxml2"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/local/include/libxml2; then
+        if test -d /usr/local/include/libxml2; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/local/include/libxml2"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/include/libxml2"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/local/include/libxml2"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/local/include/libxml2"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/local/include/libxml2"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/local/include/libxml2"
+        fi
+    fi
 
-		fi
+        fi
 
-		if test -d /usr/pkg/include/libxml2; then
+        if test -d /usr/pkg/include/libxml2; then
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-I/usr/pkg/include/libxml2"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/pkg/include/libxml2"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-I/usr/pkg/include/libxml2"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-I/usr/pkg/include/libxml2"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -I/usr/pkg/include/libxml2"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -I/usr/pkg/include/libxml2"
+        fi
+    fi
 
-		fi
+        fi
 
-		for ac_header in libxml/parser.h
+        for ac_header in libxml/parser.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "libxml/parser.h" "ac_cv_header_libxml_parser_h" "$ac_includes_default"
 if test "x$ac_cv_header_libxml_parser_h" = xyes; then :
@@ -5702,7 +5702,7 @@ _ACEOF
 else
 
 
-	as_fn_error $? "could not locate libxml2
+    as_fn_error $? "could not locate libxml2
 
 If you installed libxml2 into a non-standard directory, please run:
 
@@ -5714,7 +5714,7 @@ fi
 done
 
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for xmlParseFile in -lxml2" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for xmlParseFile in -lxml2" >&5
 $as_echo_n "checking for xmlParseFile in -lxml2... " >&6; }
 if ${ac_cv_lib_xml2_xmlParseFile+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -5753,21 +5753,21 @@ $as_echo "$ac_cv_lib_xml2_xmlParseFile" >&6; }
 if test "x$ac_cv_lib_xml2_xmlParseFile" = xyes; then :
 
 
-	if test -z "$LIBS"; then
-		LIBS="-lxml2"
-	else
-		MATCH=`expr -- "$LIBS" : ".*-lxml2"`
+    if test -z "$LIBS"; then
+        LIBS="-lxml2"
+    else
+        MATCH=`expr -- "$LIBS" : ".*-lxml2"`
 
-		if test "$MATCH" = "0"; then
-			LIBS="$LIBS -lxml2"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            LIBS="$LIBS -lxml2"
+        fi
+    fi
 
 
 else
 
 
-	as_fn_error $? "could not locate libxml2
+    as_fn_error $? "could not locate libxml2
 
 If you installed libxml2 into a non-standard directory, please run:
 
@@ -5778,30 +5778,30 @@ fi
 
 
 
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_LIBXML2"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_LIBXML2"`
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_LIBXML2"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_LIBXML2"`
 
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_LIBXML2"
-		fi
-	fi
-
-
-	if test -z "$CPPFLAGS"; then
-		CPPFLAGS="-DWI_PLIST"
-	else
-		MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_PLIST"`
-
-		if test "$MATCH" = "0"; then
-			CPPFLAGS="$CPPFLAGS -DWI_PLIST"
-		fi
-	fi
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_LIBXML2"
+        fi
+    fi
 
 
-		wi_include_libxml2_library_done="yes"
-	fi
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_PLIST"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_PLIST"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_PLIST"
+        fi
+    fi
+
+
+        wi_include_libxml2_library_done="yes"
+    fi
 
 fi
 
@@ -5812,10 +5812,10 @@ $as_echo_n "checking for glibc... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-	#include <features.h>
-	#ifndef __GLIBC__
-	chokeme
-	#endif
+    #include <features.h>
+    #ifndef __GLIBC__
+    chokeme
+    #endif
 
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
@@ -5826,12 +5826,12 @@ $as_echo "#define HAVE_GLIBC 1" >>confdefs.h
 
 $as_echo "#define _GNU_SOURCE 1" >>confdefs.h
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
 else
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 
 fi
@@ -5840,10 +5840,10 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 # Check if the sockaddr structs have length members
 ac_fn_c_check_member "$LINENO" "struct sockaddr" "sa_len" "ac_cv_member_struct_sockaddr_sa_len" "
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <netdb.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <netdb.h>
 
 "
 if test "x$ac_cv_member_struct_sockaddr_sa_len" = xyes; then :
@@ -5855,10 +5855,10 @@ _ACEOF
 
 fi
 ac_fn_c_check_member "$LINENO" "struct sockaddr_in" "sin_len" "ac_cv_member_struct_sockaddr_in_sin_len" "
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <netdb.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <netdb.h>
 
 "
 if test "x$ac_cv_member_struct_sockaddr_in_sin_len" = xyes; then :
@@ -5870,10 +5870,10 @@ _ACEOF
 
 fi
 ac_fn_c_check_member "$LINENO" "struct sockaddr_in6" "sin6_len" "ac_cv_member_struct_sockaddr_in6_sin6_len" "
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <netdb.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <netdb.h>
 
 "
 if test "x$ac_cv_member_struct_sockaddr_in6_sin6_len" = xyes; then :
@@ -5889,9 +5889,9 @@ fi
 
 # Check if syslog has facilitynames
 ac_fn_c_check_decl "$LINENO" "facilitynames" "ac_cv_have_decl_facilitynames" "
-	#include <stdlib.h>
-	#define SYSLOG_NAMES
-	#include <syslog.h>
+    #include <stdlib.h>
+    #define SYSLOG_NAMES
+    #include <syslog.h>
 
 "
 if test "x$ac_cv_have_decl_facilitynames" = xyes; then :
@@ -5906,8 +5906,8 @@ fi
 
 # Check if DIR structs have dirfd member
 ac_fn_c_check_member "$LINENO" "DIR" "d_fd" "ac_cv_member_DIR_d_fd" "
-	#include <sys/types.h>
-	#include <dirent.h>
+    #include <sys/types.h>
+    #include <dirent.h>
 
 "
 if test "x$ac_cv_member_DIR_d_fd" = xyes; then :
@@ -5919,8 +5919,8 @@ _ACEOF
 
 fi
 ac_fn_c_check_member "$LINENO" "DIR" "dd_fd" "ac_cv_member_DIR_dd_fd" "
-	#include <sys/types.h>
-	#include <dirent.h>
+    #include <sys/types.h>
+    #include <dirent.h>
 
 "
 if test "x$ac_cv_member_DIR_dd_fd" = xyes; then :
@@ -5936,9 +5936,9 @@ fi
 
 # Check if stat struct has st_birthtime member
 ac_fn_c_check_member "$LINENO" "struct stat" "st_birthtime" "ac_cv_member_struct_stat_st_birthtime" "
-	#define _DARWIN_USE_64_BIT_INODE
-	#include <sys/types.h>
-	#include <sys/stat.h>
+    #define _DARWIN_USE_64_BIT_INODE
+    #include <sys/types.h>
+    #include <sys/stat.h>
 
 "
 if test "x$ac_cv_member_struct_stat_st_birthtime" = xyes; then :
@@ -5950,9 +5950,9 @@ _ACEOF
 
 fi
 ac_fn_c_check_member "$LINENO" "struct stat64" "st_birthtime" "ac_cv_member_struct_stat64_st_birthtime" "
-	#define _DARWIN_USE_64_BIT_INODE
-	#include <sys/types.h>
-	#include <sys/stat.h>
+    #define _DARWIN_USE_64_BIT_INODE
+    #include <sys/types.h>
+    #include <sys/stat.h>
 
 "
 if test "x$ac_cv_member_struct_stat64_st_birthtime" = xyes; then :
@@ -5970,29 +5970,29 @@ fi
 # Checks for header files
 
 for ac_header in  \
-	mach-o/arch.h \
-	machine/param.h \
-	sys/attr.h \
-	sys/event.h \
-	sys/inotify.h \
-	sys/sockio.h \
-	sys/statfs.h \
-	sys/statvfs.h \
-	sys/sysctl.h \
-	sys/systeminfo.h \
-	netinet/in_systm.h \
-	netinet/ip.h \
-	inotifytools/inotify.h \
-	getopt.h \
-	ifaddrs.h \
-	net/if_dl.h \
-	paths.h \
-	execinfo.h \
+    mach-o/arch.h \
+    machine/param.h \
+    sys/attr.h \
+    sys/event.h \
+    sys/inotify.h \
+    sys/sockio.h \
+    sys/statfs.h \
+    sys/statvfs.h \
+    sys/sysctl.h \
+    sys/systeminfo.h \
+    netinet/in_systm.h \
+    netinet/ip.h \
+    inotifytools/inotify.h \
+    getopt.h \
+    ifaddrs.h \
+    net/if_dl.h \
+    paths.h \
+    execinfo.h \
 
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "
-	#include <sys/types.h>
+    #include <sys/types.h>
 
 "
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
@@ -6317,28 +6317,28 @@ $as_echo "#define HAVE_FSEEKO 1" >>confdefs.h
 fi
 
 for ac_func in  \
-	MDItemCreate \
-	NXGetLocalArchInfo \
-	backtrace \
-	dirfd \
-	getifaddrs \
-	getpagesize \
-	pthread_attr_setschedpolicy \
-	qsort_r \
-	sched_get_priority_max \
-	sched_get_priority_min \
-	setproctitle \
-	srandom \
-	stat64 \
-	statvfs \
-	strcasestr \
-	strlcat \
-	strlcpy \
-	strsep \
-	sysinfo \
-	timegm \
-	vasprintf \
-	vfprintf \
+    MDItemCreate \
+    NXGetLocalArchInfo \
+    backtrace \
+    dirfd \
+    getifaddrs \
+    getpagesize \
+    pthread_attr_setschedpolicy \
+    qsort_r \
+    sched_get_priority_max \
+    sched_get_priority_min \
+    setproctitle \
+    srandom \
+    stat64 \
+    statvfs \
+    strcasestr \
+    strlcat \
+    strlcpy \
+    strsep \
+    sysinfo \
+    timegm \
+    vasprintf \
+    vfprintf \
 
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`

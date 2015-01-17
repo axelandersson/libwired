@@ -26,12 +26,12 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void						wi_test_set_creation(void);
-WI_TEST_EXPORT void						wi_test_set_runtime_functions(void);
-WI_TEST_EXPORT void						wi_test_set_instances(void);
-WI_TEST_EXPORT void						wi_test_set_scalars(void);
-WI_TEST_EXPORT void						wi_test_set_enumeration(void);
-WI_TEST_EXPORT void						wi_test_set_mutation(void);
+WI_TEST_EXPORT void                     wi_test_set_creation(void);
+WI_TEST_EXPORT void                     wi_test_set_runtime_functions(void);
+WI_TEST_EXPORT void                     wi_test_set_instances(void);
+WI_TEST_EXPORT void                     wi_test_set_scalars(void);
+WI_TEST_EXPORT void                     wi_test_set_enumeration(void);
+WI_TEST_EXPORT void                     wi_test_set_mutation(void);
 
 
 void wi_test_set_creation(void) {

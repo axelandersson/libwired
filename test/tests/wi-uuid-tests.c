@@ -30,16 +30,16 @@ WI_TEST_EXPORT void                     wi_test_uuid(void);
 
 
 void wi_test_uuid(void) {
-	wi_uuid_t   *uuid;
-	char        bytes[WI_UUID_BUFFER_SIZE];
-	
-	uuid = wi_uuid();
+    wi_uuid_t   *uuid;
+    char        bytes[WI_UUID_BUFFER_SIZE];
+    
+    uuid = wi_uuid();
 
-	WI_TEST_ASSERT_EQUAL_INSTANCES(uuid, wi_uuid_with_string(wi_uuid_string(uuid)), "");
-	
-	wi_uuid_get_bytes(uuid, bytes);
-	
-	WI_TEST_ASSERT_EQUAL_INSTANCES(uuid, wi_uuid_with_bytes(bytes), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(uuid, wi_uuid_with_string(wi_uuid_string(uuid)), "");
+    
+    wi_uuid_get_bytes(uuid, bytes);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(uuid, wi_uuid_with_bytes(bytes), "");
 
-	WI_TEST_ASSERT_FALSE(wi_is_equal(uuid, wi_uuid()), "");
+    WI_TEST_ASSERT_FALSE(wi_is_equal(uuid, wi_uuid()), "");
 }

@@ -28,13 +28,13 @@
 #include <string.h>
 #include "test.h"
 
-WI_TEST_EXPORT void						wi_test_dictionary_creation(void);
-WI_TEST_EXPORT void						wi_test_dictionary_serialization(void);
-WI_TEST_EXPORT void						wi_test_dictionary_runtime_functions(void);
-WI_TEST_EXPORT void						wi_test_dictionary_instances(void);
-WI_TEST_EXPORT void						wi_test_dictionary_scalars(void);
-WI_TEST_EXPORT void						wi_test_dictionary_enumeration(void);
-WI_TEST_EXPORT void						wi_test_dictionary_mutation(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_creation(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_serialization(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_runtime_functions(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_instances(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_scalars(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_enumeration(void);
+WI_TEST_EXPORT void                     wi_test_dictionary_mutation(void);
 
 
 void wi_test_dictionary_creation(void) {
