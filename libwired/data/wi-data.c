@@ -357,7 +357,7 @@ wi_data_t * wi_data_by_appending_data(wi_data_t *data, wi_data_t *append_data) {
 wi_data_t * wi_data_by_appending_bytes(wi_data_t *data, const void *bytes, wi_uinteger_t length) {
     wi_mutable_data_t   *newdata;
     
-    newdata = wi_copy(data);
+    newdata = wi_mutable_copy(data);
     wi_mutable_data_append_bytes(newdata, bytes, length);
     
     wi_runtime_make_immutable(data);
