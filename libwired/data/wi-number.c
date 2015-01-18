@@ -63,7 +63,6 @@ struct _wi_number {
 };
 
 
-static wi_runtime_instance_t *          _wi_number_copy(wi_runtime_instance_t *);
 static wi_boolean_t                     _wi_number_is_equal(wi_runtime_instance_t *, wi_runtime_instance_t *);
 static wi_hash_code_t                   _wi_number_hash(wi_runtime_instance_t *);
 static wi_string_t *                    _wi_number_description(wi_runtime_instance_t *);
@@ -76,7 +75,7 @@ static wi_runtime_id_t                  _wi_number_runtime_id = WI_RUNTIME_ID_NU
 static wi_runtime_class_t               _wi_number_runtime_class = {
     "wi_number_t",
     NULL,
-    _wi_number_copy,
+    NULL,
     _wi_number_is_equal,
     _wi_number_description,
     _wi_number_hash
@@ -180,7 +179,7 @@ wi_number_t * wi_number_with_double(double value) {
 #pragma mark -
 
 wi_number_t * wi_number_alloc(void) {
-    return wi_runtime_create_instance(_wi_number_runtime_id, sizeof(wi_number_t));
+    return wi_runtime_create_instance_with_options(_wi_number_runtime_id, sizeof(wi_number_t), WI_RUNTIME_OPTION_IMMUTABLE);
 }
 
 
@@ -273,12 +272,6 @@ wi_number_t * wi_number_init_with_double(wi_number_t *number, double value) {
 
 
 
-static wi_runtime_instance_t * _wi_number_copy(wi_runtime_instance_t *instance) {
-    return wi_retain(instance);
-}
-
-
-
 static wi_boolean_t _wi_number_is_equal(wi_runtime_instance_t *instance1, wi_runtime_instance_t *instance2) {
     return (wi_number_compare(instance1, instance2) == 0);
 }
@@ -311,13 +304,13 @@ static wi_hash_code_t _wi_number_hash(wi_runtime_instance_t *instance) {
     wi_number_t     *number = instance;
     
     switch(number->storage_type) {
-        case WI_NUMBER_STORAGE_INT8:        return wi_hash_int(number->value.i8);        break;
-        case WI_NUMBER_STORAGE_INT16:        return wi_hash_int(number->value.i16);        break;
-        case WI_NUMBER_STORAGE_INT32:        return wi_hash_int(number->value.i32);        break;
-        case WI_NUMBER_STORAGE_INT64:        return wi_hash_double(number->value.i64);    break;
-        case WI_NUMBER_STORAGE_FLOAT:        return wi_hash_double(number->value.f);        break;
-        case WI_NUMBER_STORAGE_DOUBLE:        return wi_hash_double(number->value.d);        break;
-        default:                            return 0;                                    break;
+        case WI_NUMBER_STORAGE_INT8:    return wi_hash_int(number->value.i8);       break;
+        case WI_NUMBER_STORAGE_INT16:   return wi_hash_int(number->value.i16);      break;
+        case WI_NUMBER_STORAGE_INT32:   return wi_hash_int(number->value.i32);      break;
+        case WI_NUMBER_STORAGE_INT64:   return wi_hash_double(number->value.i64);   break;
+        case WI_NUMBER_STORAGE_FLOAT:   return wi_hash_double(number->value.f);     break;
+        case WI_NUMBER_STORAGE_DOUBLE:  return wi_hash_double(number->value.d);     break;
+        default:                        return 0;                                   break;
     }
 }
 
@@ -392,15 +385,17 @@ wi_number_storage_type_t wi_number_storage_type(wi_number_t *number) {
 
 
 
-#define WI_NUMBER_GET_VALUE(value, storage_type, outvalue)                                    \
-    switch(storage_type) {                                                                    \
-        case WI_NUMBER_STORAGE_INT8:    *(int8_t *) outvalue    = (int8_t) value;   break;    \
-        case WI_NUMBER_STORAGE_INT16:   *(int16_t *) outvalue   = (int16_t) value;  break;    \
-        case WI_NUMBER_STORAGE_INT32:   *(int32_t *) outvalue   = (int32_t) value;  break;    \
-        case WI_NUMBER_STORAGE_INT64:   *(int64_t *) outvalue   = (int64_t) value;  break;    \
-        case WI_NUMBER_STORAGE_FLOAT:   *(float *) outvalue     = (float) value;    break;    \
-        case WI_NUMBER_STORAGE_DOUBLE:  *(double *) outvalue    = (double) value;   break;    \
-    }
+#define WI_NUMBER_GET_VALUE(value, storage_type, outvalue)                                      \
+    WI_STMT_START                                                                               \
+        switch(storage_type) {                                                                  \
+            case WI_NUMBER_STORAGE_INT8:    *(int8_t *) outvalue    = (int8_t) value;   break;  \
+            case WI_NUMBER_STORAGE_INT16:   *(int16_t *) outvalue   = (int16_t) value;  break;  \
+            case WI_NUMBER_STORAGE_INT32:   *(int32_t *) outvalue   = (int32_t) value;  break;  \
+            case WI_NUMBER_STORAGE_INT64:   *(int64_t *) outvalue   = (int64_t) value;  break;  \
+            case WI_NUMBER_STORAGE_FLOAT:   *(float *) outvalue     = (float) value;    break;  \
+            case WI_NUMBER_STORAGE_DOUBLE:  *(double *) outvalue    = (double) value;   break;  \
+        }                                                                                       \
+    WI_STMT_END
 
 
 

@@ -26,17 +26,214 @@
 
 #include <wired/wired.h>
 
-WI_TEST_EXPORT void                     wi_test_number(void);
+WI_TEST_EXPORT void                     wi_test_number_creation(void);
+WI_TEST_EXPORT void                     wi_test_number_runtime_functions(void);
+WI_TEST_EXPORT void                     wi_test_number_accessors(void);
+WI_TEST_EXPORT void                     wi_test_number_conversion(void);
+WI_TEST_EXPORT void                     wi_test_number_values(void);
 
 
-void wi_test_number(void) {
-    WI_TEST_ASSERT_TRUE(wi_number_bool(wi_number_with_bool(true)), "");
-    WI_TEST_ASSERT_FALSE(wi_number_bool(wi_number_with_bool(false)), "");
+void wi_test_number_creation(void) {
+    wi_number_t     *number;
+    int16_t         i16 = 1;
+    int8_t          i8 = 1;
+    
+    number = wi_number_with_value(WI_NUMBER_INT8, &i8);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_value(WI_NUMBER_INT16, &i16);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_bool(true);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_char('a');
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_short(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_int(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_int32(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_int64(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_integer(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_long(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_long_long(1);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_float(1.0f);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+    
+    number = wi_number_with_double(1.0);
+    
+    WI_TEST_ASSERT_NOT_NULL(number, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(number), wi_number_runtime_id(), "");
+}
+
+
+
+void wi_test_number_runtime_functions(void) {
+    wi_number_t   *number1, *number2;
+    
+    number1 = wi_number_with_bool(true);
+    number2 = wi_autorelease(wi_copy(number1));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(number1, number2, "");
+
+    number1 = wi_number_with_int(1);
+    number2 = wi_number_with_long(1);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(number1, number2, "");
+    
+    number1 = wi_number_with_int(1);
+    number2 = wi_number_with_double(1.0);
+
+    WI_TEST_ASSERT_EQUAL_INSTANCES(number1, number2, "");
+    
+    WI_TEST_ASSERT_EQUALS(wi_hash(wi_number_with_char(1)), wi_hash(wi_number_with_short(1)), "");
+    WI_TEST_ASSERT_EQUALS(wi_hash(wi_number_with_int32(1)), wi_hash(wi_number_with_int64(1)), "");
+    WI_TEST_ASSERT_EQUALS(wi_hash(wi_number_with_float(1.0f)), wi_hash(wi_number_with_double(1.0)), "");
+    
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(wi_number_with_int(1337)), WI_STR("1337"), 0), WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(wi_number_with_double(42.42)), WI_STR("42.42"), 0), WI_NOT_FOUND, "");
+}
+
+
+
+void wi_test_number_accessors(void) {
+    WI_TEST_ASSERT_EQUALS(wi_number_type(wi_number_with_bool(true)), WI_NUMBER_BOOL, "");
+
+    WI_TEST_ASSERT_EQUALS(wi_number_storage_type(wi_number_with_bool(true)), WI_NUMBER_STORAGE_INT32, "");
+
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_number_string(wi_number_with_int(1337)), WI_STR("1337"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_number_string(wi_number_with_double(42.42)), WI_STR("42.420000"), "");
+}
+
+
+
+void wi_test_number_conversion(void) {
+    wi_array_t          *array;
+    wi_enumerator_t     *enumerator;
+    wi_number_t         *number;
+    int64_t             i64;
+    int32_t             i32;
+    int16_t             i16;
+    int8_t              i8;
+    double              d;
+    float               f;
+    long long           ll;
+    long                l;
+    int                 i;
+    short               s;
+    char                c;
+    wi_boolean_t        b;
+    
+    array = wi_array_with_data(wi_number_with_char(1),
+                               wi_number_with_short(1),
+                               wi_number_with_int32(1),
+                               wi_number_with_int64(1),
+                               wi_number_with_float(1.0f),
+                               wi_number_with_double(1.0),
+                               NULL);
+    enumerator = wi_array_data_enumerator(array);
+    
+    while((number = wi_enumerator_next_data(enumerator))) {
+        wi_number_get_value(number, WI_NUMBER_BOOL, &b);
+
+        WI_TEST_ASSERT_EQUALS(b, true, "");
+        
+        wi_number_get_value(number, WI_NUMBER_CHAR, &c);
+        
+        WI_TEST_ASSERT_EQUALS(c, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_SHORT, &s);
+        
+        WI_TEST_ASSERT_EQUALS(s, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_INT, &i);
+        
+        WI_TEST_ASSERT_EQUALS(i, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_INT8, &i8);
+        
+        WI_TEST_ASSERT_EQUALS(i8, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_INT16, &i16);
+        
+        WI_TEST_ASSERT_EQUALS(i16, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_INT32, &i32);
+        
+        WI_TEST_ASSERT_EQUALS(i32, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_INT64, &i64);
+        
+        WI_TEST_ASSERT_EQUALS(i64, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_LONG, &l);
+        
+        WI_TEST_ASSERT_EQUALS(l, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_LONG_LONG, &ll);
+        
+        WI_TEST_ASSERT_EQUALS(ll, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_FLOAT, &f);
+        
+        WI_TEST_ASSERT_EQUALS(f, 1, "");
+        
+        wi_number_get_value(number, WI_NUMBER_DOUBLE, &d);
+        
+        WI_TEST_ASSERT_EQUALS(d, 1, "");
+    }
+}
+
+
+
+void wi_test_number_values(void) {
+    WI_TEST_ASSERT_EQUALS(wi_number_bool(wi_number_with_bool(true)), true, "");
+    WI_TEST_ASSERT_EQUALS(wi_number_bool(wi_number_with_bool(false)), false, "");
+    WI_TEST_ASSERT_EQUALS(wi_number_char(wi_number_with_char(127)), 127, "");
+    WI_TEST_ASSERT_EQUALS(wi_number_short(wi_number_with_short(32767)), 32767, "");
     WI_TEST_ASSERT_EQUALS(wi_number_int32(wi_number_with_int32(2147483647)), 2147483647, "");
     WI_TEST_ASSERT_EQUALS((uint32_t) wi_number_int32(wi_number_with_int32(4294967295U)), 4294967295U, "");
     WI_TEST_ASSERT_EQUALS(wi_number_int64(wi_number_with_int64(9223372036854775807LL)), 9223372036854775807LL, "");
     WI_TEST_ASSERT_EQUALS((uint64_t) wi_number_int64(wi_number_with_int64(18446744073709551615ULL)), 18446744073709551615ULL, "");
-
+    
 #ifdef WI_32
     WI_TEST_ASSERT_EQUALS(wi_number_integer(wi_number_with_integer(2147483647)), 2147483647, "");
     WI_TEST_ASSERT_EQUALS((wi_uinteger_t) wi_number_integer(wi_number_with_integer(4294967295U)), 4294967295U, "");
