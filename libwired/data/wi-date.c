@@ -160,12 +160,6 @@ wi_string_t * wi_time_interval_rfc3339_string(wi_time_interval_t interval) {
 
 
 
-wi_string_t * wi_time_interval_sqlite3_string(wi_time_interval_t interval) {
-    return wi_time_interval_string_with_format(interval, WI_STR("%Y-%m-%d %H:%M:%S"));
-}
-
-
-
 #pragma mark -
 
 wi_runtime_id_t wi_date_runtime_id(void) {
@@ -196,29 +190,6 @@ wi_date_t * wi_date_with_time(time_t time) {
 
 wi_date_t * wi_date_with_rfc3339_string(wi_string_t *string) {
     return wi_autorelease(wi_date_init_with_rfc3339_string(wi_date_alloc(), string));
-}
-
-
-
-wi_date_t * wi_date_with_sqlite3_string(wi_string_t *string) {
-    struct tm       tm;
-    time_t          time;
-    wi_uinteger_t   hours, minutes;
-    
-    time = wi_time_interval();
-    
-    localtime_r(&time, &tm);
-    
-    hours       = WI_ABS(tm.tm_gmtoff) / 3600;
-    minutes     = (WI_ABS(tm.tm_gmtoff) % 3600) / 60;
-    string      = wi_string_by_appending_format(string, WI_STR(" %@%.2lu%.2lu"),
-        (tm.tm_gmtoff > 0)
-            ? WI_STR("+")
-            : WI_STR("-"),
-        hours,
-        minutes);
-    
-    return wi_autorelease(wi_date_init_with_string(wi_date_alloc(), string, WI_STR("%Y-%m-%d %H:%M:%S %z")));
 }
 
 

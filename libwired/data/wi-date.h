@@ -39,7 +39,6 @@ WI_EXPORT wi_time_interval_t            wi_time_interval(void);
 WI_EXPORT wi_string_t *                 wi_time_interval_string(wi_time_interval_t);
 WI_EXPORT wi_string_t *                 wi_time_interval_string_with_format(wi_time_interval_t, wi_string_t *);
 WI_EXPORT wi_string_t *                 wi_time_interval_rfc3339_string(wi_time_interval_t);
-WI_EXPORT wi_string_t *                 wi_time_interval_sqlite3_string(wi_time_interval_t);
 
 WI_EXPORT wi_runtime_id_t               wi_date_runtime_id(void);
 
@@ -47,7 +46,6 @@ WI_EXPORT wi_date_t *                   wi_date(void);
 WI_EXPORT wi_date_t *                   wi_date_with_time_interval(wi_time_interval_t);
 WI_EXPORT wi_date_t *                   wi_date_with_time(time_t);
 WI_EXPORT wi_date_t *                   wi_date_with_rfc3339_string(wi_string_t *);
-WI_EXPORT wi_date_t *                   wi_date_with_sqlite3_string(wi_string_t *);
 
 WI_EXPORT wi_date_t *                   wi_date_alloc(void);
 WI_EXPORT wi_mutable_date_t *           wi_mutable_date_alloc(void);

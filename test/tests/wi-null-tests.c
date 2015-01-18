@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
- * 
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
  *  are met:
@@ -10,7 +10,7 @@
  *  2. Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,50 +24,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <wired/wi-null.h>
-#include <wired/wi-private.h>
+#include <wired/wired.h>
 
-struct _wi_null {
-    wi_runtime_base_t                   base;
-};
+WI_TEST_EXPORT void                     wi_test_null_creation(void);
+WI_TEST_EXPORT void                     wi_test_null_runtime_functions(void);
 
 
-static wi_null_t                        *_wi_null;
-
-static wi_runtime_id_t                  _wi_null_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t               _wi_null_runtime_class = {
-    "wi_null_t",
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-};
-
-
-
-void wi_null_register(void) {
-    _wi_null_runtime_id = wi_runtime_register_class(&_wi_null_runtime_class);
+void wi_test_null_creation(void) {
+    wi_null_t   *null;
+    
+    null = wi_null();
+    
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(null), wi_null_runtime_id(), "");
 }
 
 
 
-void wi_null_initialize(void) {
-    _wi_null = wi_runtime_create_instance_with_options(_wi_null_runtime_id, sizeof(wi_null_t), WI_RUNTIME_OPTION_IMMUTABLE);
-}
-
-
-
-#pragma mark -
-
-wi_runtime_id_t wi_null_runtime_id(void) {
-    return _wi_null_runtime_id;
-}
-
-
-
-#pragma mark -
-
-wi_runtime_instance_t * wi_null(void) {
-    return _wi_null;
+void wi_test_null_runtime_functions(void) {
+    wi_null_t   *null1, *null2;
+    
+    null1 = wi_null();
+    null2 = wi_autorelease(wi_copy(null1));
+    
+    WI_TEST_ASSERT_EQUALS(null1, null2, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(null1, null2, "");
 }
