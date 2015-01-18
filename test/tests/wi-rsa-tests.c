@@ -82,6 +82,7 @@ void wi_test_rsa_creation(void) {
 
 
 void wi_test_rsa_runtime_functions(void) {
+#ifdef WI_RSA
     wi_rsa_t    *rsa1, *rsa2;
     
     rsa1 = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
@@ -89,11 +90,13 @@ void wi_test_rsa_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_rsa_private_key(rsa1), wi_rsa_private_key(rsa2), "");
     WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(rsa1), WI_STR("512"), 0), WI_NOT_FOUND, "");
+#endif
 }
 
 
 
 void wi_test_rsa_accessors(void) {
+#ifdef WI_RSA
     wi_rsa_t    *rsa;
     
     rsa = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
@@ -102,11 +105,13 @@ void wi_test_rsa_accessors(void) {
     WI_TEST_ASSERT_TRUE(wi_data_length(wi_rsa_public_key(rsa)) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_data_length(wi_rsa_private_key(rsa)) > 0, "");
     WI_TEST_ASSERT_EQUALS(wi_rsa_bits(rsa), 512U, "");
+#endif
 }
 
 
 
 void wi_test_rsa_encrypting_and_decrypting(void) {
+#ifdef WI_RSA
     wi_rsa_t    *rsa1, *rsa2;
     
     rsa1 = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
@@ -117,4 +122,5 @@ void wi_test_rsa_encrypting_and_decrypting(void) {
     
     WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(wi_rsa_decrypt(rsa1, wi_rsa_encrypt(rsa2, wi_string_data(WI_STR("hello world")))),
                                        wi_string_data(WI_STR("hello world")), "");
+#endif
 }

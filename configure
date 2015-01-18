@@ -5267,6 +5267,17 @@ if test "x$ac_cv_lib_crypto_SHA1_Init" = xyes; then :
     fi
 
 
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_X509"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_X509"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_X509"
+        fi
+    fi
+
+
 else
 
             if test "" != "noerror"; then

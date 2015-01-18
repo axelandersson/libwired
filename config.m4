@@ -183,6 +183,7 @@ AC_DEFUN([WI_INCLUDE_CRYPTO_LIBRARY], [
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_DIGESTS])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_CIPHERS])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_RSA])
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_X509])
         ], [
             if test "$1" != "noerror"; then
                 _WI_MSG_LIB_ERROR([OpenSSL])

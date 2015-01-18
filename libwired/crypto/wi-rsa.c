@@ -26,7 +26,7 @@
 
 #include "config.h"
 
-#ifndef HAVE_OPENSSL_SHA_H
+#ifndef WI_RSA
 
 int wi_rsa_dummy = 0;
 
@@ -51,14 +51,13 @@ struct _wi_rsa {
 };
 
 static void                             _wi_rsa_dealloc(wi_runtime_instance_t *);
-static wi_runtime_instance_t *          _wi_rsa_copy(wi_runtime_instance_t *);
 static wi_string_t *                    _wi_rsa_description(wi_runtime_instance_t *);
 
 static wi_runtime_id_t                  _wi_rsa_runtime_id = WI_RUNTIME_ID_NULL;
 static wi_runtime_class_t               _wi_rsa_runtime_class = {
     "wi_rsa_t",
     _wi_rsa_dealloc,
-    _wi_rsa_copy,
+    NULL,
     NULL,
     _wi_rsa_description,
     NULL
@@ -88,7 +87,7 @@ wi_runtime_id_t wi_rsa_runtime_id(void) {
 #pragma mark -
 
 wi_rsa_t * wi_rsa_alloc(void) {
-    return wi_runtime_create_instance(_wi_rsa_runtime_id, sizeof(wi_rsa_t));
+    return wi_runtime_create_instance_with_options(_wi_rsa_runtime_id, sizeof(wi_rsa_t), WI_RUNTIME_OPTION_IMMUTABLE);
 }
 
 
@@ -200,14 +199,6 @@ static void _wi_rsa_dealloc(wi_runtime_instance_t *instance) {
     
     wi_release(rsa->public_key);
     wi_release(rsa->private_key);
-}
-
-
-
-static wi_runtime_instance_t * _wi_rsa_copy(wi_runtime_instance_t *instance) {
-    wi_rsa_t    *rsa = instance;
-    
-    return wi_rsa_init_with_private_key(wi_rsa_alloc(), wi_rsa_private_key(rsa));
 }
 
 

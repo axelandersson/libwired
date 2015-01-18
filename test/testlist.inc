@@ -58,3 +58,6 @@ wi_tests_run_test("wi_test_system", wi_test_system);
 wi_tests_run_test("wi_test_timer", wi_test_timer);
 wi_tests_run_test("wi_test_url", wi_test_url);
 wi_tests_run_test("wi_test_uuid", wi_test_uuid);
+wi_tests_run_test("wi_test_x509_creation", wi_test_x509_creation);
+wi_tests_run_test("wi_test_x509_runtime_functions", wi_test_x509_runtime_functions);
+wi_tests_run_test("wi_test_x509_accessors", wi_test_x509_accessors);

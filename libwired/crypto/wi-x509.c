@@ -26,7 +26,7 @@
 
 #include "config.h"
 
-#ifndef HAVE_OPENSSL_SHA_H
+#ifndef WI_X509
 
 int wi_x509_dummy = 0;
 
@@ -227,15 +227,34 @@ static void _wi_x509_dealloc(wi_runtime_instance_t *instance) {
 static wi_string_t * _wi_x509_description(wi_runtime_instance_t *instance) {
     wi_x509_t   *x509 = instance;
     
-    return wi_string_with_format(WI_STR("<%@ %p>{x509 = %p}"),
+    return wi_string_with_format(WI_STR("<%@ %p>{x509 = %p, commonname = %@}"),
         wi_runtime_class_name(x509),
         x509,
-        x509->x509);
+        x509->x509,
+        wi_x509_common_name(x509));
 }
 
 
 
 #pragma mark -
+
+wi_string_t * wi_x509_common_name(wi_x509_t *x509) {
+    X509_NAME       *name;
+    char            buffer[1024];
+    wi_uinteger_t   i;
+    
+    name = X509_get_subject_name(x509->x509);
+    
+    if(!name)
+        return NULL;
+    
+    if(X509_NAME_get_text_by_NID(name, NID_commonName, buffer, sizeof(buffer)) < 0)
+        return NULL;
+    
+    return wi_string_with_cstring(buffer);
+}
+
+
 
 void * wi_x509_x509(wi_x509_t *x509) {
     return x509->x509;

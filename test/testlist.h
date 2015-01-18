@@ -58,3 +58,6 @@ WI_TEST_EXPORT void                     wi_test_system(void);
 WI_TEST_EXPORT void                     wi_test_timer(void);
 WI_TEST_EXPORT void                     wi_test_url(void);
 WI_TEST_EXPORT void                     wi_test_uuid(void);
+WI_TEST_EXPORT void                     wi_test_x509_creation(void);
+WI_TEST_EXPORT void                     wi_test_x509_runtime_functions(void);
+WI_TEST_EXPORT void                     wi_test_x509_accessors(void);
