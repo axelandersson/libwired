@@ -315,11 +315,15 @@ static wi_boolean_t _wi_cipher_set_type(wi_cipher_t *cipher, wi_cipher_type_t ty
         case WI_CIPHER_AES128:
         case WI_CIPHER_AES192:
         case WI_CIPHER_AES256:
-            cipher->algorithm = kCCAlgorithmAES128;
+            cipher->algorithm = kCCAlgorithmAES;
             return true;
         
         case WI_CIPHER_3DES192:
             cipher->algorithm = kCCAlgorithm3DES;
+            return true;
+        
+        case WI_CIPHER_BF128:
+            cipher->algorithm = kCCAlgorithmBlowfish;
             return true;
         
         default:
@@ -400,6 +404,9 @@ wi_uinteger_t wi_cipher_bits(wi_cipher_t *cipher) {
     
         case WI_CIPHER_3DES192:
             return kCCKeySize3DES * 8;
+        
+        case WI_CIPHER_BF128:
+            return kCCKeySizeMinBlowfish * 2 * 8;
 
         default:
             return 0;
@@ -423,6 +430,9 @@ wi_uinteger_t wi_cipher_block_size(wi_cipher_t *cipher) {
         
         case WI_CIPHER_3DES192:
             return kCCBlockSize3DES;
+        
+        case WI_CIPHER_BF128:
+            return kCCBlockSizeBlowfish;
         
         default:
             return 0;

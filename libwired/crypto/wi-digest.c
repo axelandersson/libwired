@@ -247,6 +247,14 @@ wi_string_t * wi_md5_digest_string(wi_data_t *data) {
 
 #pragma mark -
 
+wi_runtime_id_t wi_md5_runtime_id(void) {
+    return _wi_md5_runtime_id;
+}
+
+
+
+#pragma mark -
+
 wi_md5_t * wi_md5(void) {
     return wi_autorelease(wi_md5_init(wi_md5_alloc()));
 }
@@ -347,6 +355,14 @@ wi_string_t * wi_sha1_digest_string(wi_data_t *data) {
     wi_sha1_close(sha1);
     
     return wi_sha1_string(sha1);
+}
+
+
+
+#pragma mark -
+
+wi_runtime_id_t wi_sha1_runtime_id(void) {
+    return _wi_sha1_runtime_id;
 }
 
 

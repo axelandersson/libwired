@@ -36,7 +36,7 @@ enum _wi_cipher_type {
     WI_CIPHER_AES192,
     WI_CIPHER_AES256,
     WI_CIPHER_BF128,
-    WI_CIPHER_3DES192,
+    WI_CIPHER_3DES192
 };
 typedef enum _wi_cipher_type            wi_cipher_type_t;
 

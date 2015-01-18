@@ -41,6 +41,8 @@ typedef struct _wi_sha1                 wi_sha1_t;
 WI_EXPORT void                          wi_md5_digest(const void *, wi_uinteger_t, unsigned char *);
 WI_EXPORT wi_string_t *                 wi_md5_digest_string(wi_data_t *);
 
+WI_EXPORT wi_runtime_id_t               wi_md5_runtime_id(void);
+
 WI_EXPORT wi_md5_t *                    wi_md5(void);
 
 WI_EXPORT wi_md5_t *                    wi_md5_alloc(void);
@@ -56,6 +58,8 @@ WI_EXPORT wi_string_t *                 wi_md5_string(wi_md5_t *);
 
 WI_EXPORT void                          wi_sha1_digest(const void *, wi_uinteger_t, unsigned char *);
 WI_EXPORT wi_string_t *                 wi_sha1_digest_string(wi_data_t *);
+
+WI_EXPORT wi_runtime_id_t               wi_sha1_runtime_id(void);
 
 WI_EXPORT wi_sha1_t *                   wi_sha1(void);
 
