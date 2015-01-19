@@ -43,27 +43,33 @@ void wi_test_dictionary_creation(void) {
     dictionary = wi_dictionary();
 
     WI_TEST_ASSERT_NOT_NULL(dictionary, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_dictionary_count(dictionary), 0U, "");
     
     dictionary = wi_mutable_dictionary();
     
     WI_TEST_ASSERT_NOT_NULL(dictionary, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_dictionary_count(dictionary), 0U, "");
     
     dictionary = wi_dictionary_with_data_and_keys(WI_STR("1"), WI_STR("foo"), WI_STR("2"), WI_STR("bar"), NULL);
 
     WI_TEST_ASSERT_NOT_NULL(dictionary, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_dictionary_count(dictionary), 2U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_dictionary_data_for_key(dictionary, WI_STR("foo")), WI_STR("1"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_dictionary_data_for_key(dictionary, WI_STR("bar")), WI_STR("2"), "");
     
     dictionary = wi_mutable_dictionary_with_data_and_keys(WI_STR("1"), WI_STR("foo"), WI_STR("2"), WI_STR("bar"), NULL);
     
     WI_TEST_ASSERT_NOT_NULL(dictionary, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_dictionary_count(dictionary), 2U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_dictionary_data_for_key(dictionary, WI_STR("foo")), WI_STR("1"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_dictionary_data_for_key(dictionary, WI_STR("bar")), WI_STR("2"), "");
     
     dictionary = wi_autorelease(wi_dictionary_init_with_data_and_keys(wi_dictionary_alloc(), WI_STR("1"), WI_STR("foo"), WI_STR("2"), WI_STR("bar"), NULL));
 
     WI_TEST_ASSERT_NOT_NULL(dictionary, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_dictionary_count(dictionary), 2U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_dictionary_data_for_key(dictionary, WI_STR("foo")), WI_STR("1"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_dictionary_data_for_key(dictionary, WI_STR("bar")), WI_STR("2"), "");
 }
 
 
@@ -110,6 +116,10 @@ void wi_test_dictionary_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
     WI_TEST_ASSERT_EQUALS(wi_hash(dictionary1), wi_hash(dictionary2), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary1), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(dictionary2), wi_dictionary_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(dictionary1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(dictionary2) & WI_RUNTIME_OPTION_MUTABLE, "");
     
     wi_mutable_dictionary_remove_data_for_key(dictionary2, WI_STR("bar"));
     wi_mutable_dictionary_set_data_for_key(dictionary2, WI_STR("2"), WI_STR("baz"));

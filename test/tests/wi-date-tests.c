@@ -62,32 +62,32 @@ void wi_test_date_creation(void) {
     date = wi_date();
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_date_time_interval(date) > 0, "");
     
     date = wi_date_with_time_interval(86400 + 3600 + 60 + 1);
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 86400 + 3600 + 60 + 1, "");
     
     date = wi_date_with_time(86400 + 3600 + 60 + 1);
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 86400 + 3600 + 60 + 1, "");
     
     date = wi_date_with_rfc3339_string(WI_STR("1970-01-02T02:01:01+01:00"));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 86400 + 3600 + 60 + 1, "");
     
     date = wi_autorelease(wi_date_init_with_tv(wi_date_alloc(), wi_dtotv(86400 + 3600 + 60 + 1)));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 86400 + 3600 + 60 + 1, "");
     
     date = wi_autorelease(wi_date_init_with_ts(wi_date_alloc(), wi_dtots(86400 + 3600 + 60 + 1)));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 86400 + 3600 + 60 + 1, "");
     
     date = wi_autorelease(wi_date_init_with_string(wi_date_alloc(), WI_STR("foo"), WI_STR("bar")));
     
@@ -96,12 +96,12 @@ void wi_test_date_creation(void) {
     date = wi_autorelease(wi_date_init_with_string(wi_date_alloc(), WI_STR("1970-01-01 00:00:00 +0100"), WI_STR("%Y-%m-%d %H:%M:%S %z")));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), -3600, "");
     
     date = wi_autorelease(wi_date_init_with_string(wi_date_alloc(), WI_STR("1970-01-01 00:00:00 -0100"), WI_STR("%Y-%m-%d %H:%M:%S %z")));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 10800, "");
 
     date = wi_autorelease(wi_date_init_with_rfc3339_string(wi_date_alloc(), WI_STR("foo")));
     
@@ -110,12 +110,12 @@ void wi_test_date_creation(void) {
     date = wi_autorelease(wi_date_init_with_rfc3339_string(wi_date_alloc(), WI_STR("1970-01-01T00:00:00+01:00")));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), -3600, "");
     
     date = wi_autorelease(wi_date_init_with_rfc3339_string(wi_date_alloc(), WI_STR("1970-01-01T00:00:00Z")));
     
     WI_TEST_ASSERT_NOT_NULL(date, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_date_time_interval(date), 0, "");
 }
 
 
@@ -129,6 +129,10 @@ void wi_test_date_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(date1, date2, "");
     WI_TEST_ASSERT_EQUALS(wi_hash(date1), wi_hash(date2), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date1), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(date2), wi_date_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(date1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(date2) & WI_RUNTIME_OPTION_MUTABLE, "");
     
     wi_mutable_date_add_time_interval(date2, 60);
 

@@ -40,22 +40,28 @@ void wi_test_set_creation(void) {
     set = wi_set();
 
     WI_TEST_ASSERT_NOT_NULL(set, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 0U, "");
     
     set = wi_set_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
 
     WI_TEST_ASSERT_NOT_NULL(set, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
     
     set = wi_autorelease(wi_set_init_with_data(wi_set_alloc(), WI_STR("foo"), WI_STR("bar"), NULL));
     
     WI_TEST_ASSERT_NOT_NULL(set, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
     
     set = wi_autorelease(wi_set_init_with_array(wi_set_alloc(), wi_array_with_data(WI_STR("foo"), WI_STR("bar"), NULL)));
     
     WI_TEST_ASSERT_NOT_NULL(set, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_set_count(set), 2U, "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("foo")), "");
+    WI_TEST_ASSERT_TRUE(wi_set_contains_data(set, WI_STR("bar")), "");
 }
 
 
@@ -69,6 +75,10 @@ void wi_test_set_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(set1, set2, "");
     WI_TEST_ASSERT_EQUALS(wi_hash(set1), wi_hash(set2), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set1), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(set2), wi_set_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(set1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(set2) & WI_RUNTIME_OPTION_MUTABLE, "");
     
     wi_mutable_set_remove_data(set2, WI_STR("bar"));
     wi_mutable_set_add_data(set2, WI_STR("baz"));

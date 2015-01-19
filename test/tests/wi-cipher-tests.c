@@ -27,6 +27,7 @@
 #include <wired/wired.h>
 
 WI_TEST_EXPORT void                     wi_test_cipher_creation(void);
+WI_TEST_EXPORT void                     wi_test_cipher_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_cipher_suites(void);
 
 #ifdef WI_CIPHERS
@@ -41,12 +42,14 @@ void wi_test_cipher_creation(void) {
     cipher = wi_autorelease(wi_cipher_init_with_key(wi_cipher_alloc(), WI_CIPHER_AES128, wi_data(), wi_data()));
     
     WI_TEST_ASSERT_NOT_NULL(cipher, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(cipher), wi_cipher_runtime_id(), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_key(cipher), wi_data(), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_iv(cipher), wi_data(), "");
     
     cipher = wi_autorelease(wi_cipher_init_with_random_key(wi_cipher_alloc(), WI_CIPHER_AES128));
     
     WI_TEST_ASSERT_NOT_NULL(cipher, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(cipher), wi_cipher_runtime_id(), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_length(wi_cipher_key(cipher)), 16U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_length(wi_cipher_iv(cipher)), 16U, "");
     
     cipher = wi_autorelease(wi_cipher_init_with_key(wi_cipher_alloc(), 999, wi_data(), wi_data()));
 
@@ -55,6 +58,16 @@ void wi_test_cipher_creation(void) {
     cipher = wi_autorelease(wi_cipher_init_with_random_key(wi_cipher_alloc(), 999));
     
     WI_TEST_ASSERT_NULL(cipher, "");
+}
+
+
+
+void wi_test_cipher_runtime_functions(void) {
+    wi_cipher_t     *cipher;
+    
+    cipher = wi_autorelease(wi_cipher_init_with_key(wi_cipher_alloc(), WI_CIPHER_AES128, wi_data(), wi_data()));
+    
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(cipher), wi_cipher_runtime_id(), "");
 }
 
 

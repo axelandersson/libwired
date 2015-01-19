@@ -44,29 +44,35 @@ void wi_test_array_creation(void) {
     array = wi_array();
 
     WI_TEST_ASSERT_NOT_NULL(array, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array), 0U, "");
     
     array = wi_mutable_array();
     
     WI_TEST_ASSERT_NOT_NULL(array, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array), 0U, "");
     
     array = wi_array_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
 
     WI_TEST_ASSERT_NOT_NULL(array, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array), 2U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array, 0), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array, 1), WI_STR("bar"), "");
     
     array = wi_autorelease(wi_array_init_with_data(wi_array_alloc(), WI_STR("foo"), WI_STR("bar"), NULL));
     
     WI_TEST_ASSERT_NOT_NULL(array, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array), 2U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array, 0), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array, 1), WI_STR("bar"), "");
     
     strings[0] = WI_STR("foo");
     strings[1] = WI_STR("bar");
     array = wi_autorelease(wi_array_init_with_data_and_count(wi_array_alloc(), (void **) strings, 2));
     
     WI_TEST_ASSERT_NOT_NULL(array, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array), 2U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array, 0), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array, 1), WI_STR("bar"), "");
 }
 
 
@@ -113,6 +119,10 @@ void wi_test_array_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(array1, array2, "");
     WI_TEST_ASSERT_EQUALS(wi_hash(array1), wi_hash(array2), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array1), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(array2), wi_array_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(array1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(array2) & WI_RUNTIME_OPTION_MUTABLE, "");
     
     wi_mutable_array_remove_data(array2, WI_STR("bar"));
     wi_mutable_array_add_data(array2, WI_STR("baz"));

@@ -46,32 +46,36 @@ void wi_test_data_creation(void) {
     data = wi_data();
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 0U, "");
 
     data = wi_data_with_bytes(buffer, 1024);
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 1024U, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), buffer, 1024), 0, "");
     
     data = wi_data_with_bytes_no_copy(buffer, 1024, false);
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 1024U, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), buffer, 1024), 0, "");
     
     data = wi_data_with_bytes_no_copy(buffer, 1024, true);
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 1024U, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), buffer, 1024), 0, "");
     
     data = wi_data_with_random_bytes(1024);
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 1024U, "");
     
     data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 11U, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), "hello world", 11), 0, "");
     
     data = wi_data_with_contents_of_file(WI_STR("/non/existing/file.data"));
     
@@ -80,12 +84,12 @@ void wi_test_data_creation(void) {
     data = wi_data_with_contents_of_file(wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-data-tests-1.data")));
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 12U, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), "hello world\n", 12), 0, "");
     
     data = wi_mutable_data();
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data), wi_data_runtime_id(), "");
 }
 
 
@@ -99,6 +103,10 @@ void wi_test_data_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(data1, data2, "");
     WI_TEST_ASSERT_EQUALS(wi_hash(data1), wi_hash(data2), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data1), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(data2), wi_data_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(data1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(data2) & WI_RUNTIME_OPTION_MUTABLE, "");
     
     wi_mutable_data_append_data(data2, data1);
 

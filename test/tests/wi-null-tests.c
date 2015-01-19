@@ -35,7 +35,7 @@ void wi_test_null_creation(void) {
     
     null = wi_null();
     
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(null), wi_null_runtime_id(), "");
+    WI_TEST_ASSERT_NOT_NULL(null, "");
 }
 
 
@@ -48,4 +48,8 @@ void wi_test_null_runtime_functions(void) {
     
     WI_TEST_ASSERT_EQUALS(null1, null2, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(null1, null2, "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(null1), wi_null_runtime_id(), "");
+    WI_TEST_ASSERT_EQUALS(wi_runtime_id(null2), wi_null_runtime_id(), "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(null1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
+    WI_TEST_ASSERT_TRUE(wi_runtime_options(null2) & WI_RUNTIME_OPTION_IMMUTABLE, "");
 }
