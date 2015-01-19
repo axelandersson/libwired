@@ -115,13 +115,13 @@ void wi_test_data_accessors(void) {
     
     data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
     
-    WI_TEST_ASSERT_TRUE(memcmp(wi_data_bytes(data), wi_data_bytes(wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="))), wi_data_length(data)) == 0, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), wi_data_bytes(wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="))), wi_data_length(data)), 0, "");
     
     buffer = wi_malloc(wi_data_length(data));
     
     wi_data_get_bytes(data, buffer, wi_data_length(data));
 
-    WI_TEST_ASSERT_TRUE(memcmp(buffer, wi_data_bytes(data), wi_data_length(data)) == 0, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(buffer, wi_data_bytes(data), wi_data_length(data)), 0, "");
     
     wi_free(buffer);
 }
@@ -137,8 +137,8 @@ void wi_test_data_appending(void) {
     
     WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(data1, data2, "");
     WI_TEST_ASSERT_TRUE(wi_data_length(data1) * 2 == wi_data_length(data2), "");
-    WI_TEST_ASSERT_TRUE(memcmp(wi_data_bytes(data1), wi_data_bytes(data2), wi_data_length(data1)) == 0, "");
-    WI_TEST_ASSERT_TRUE(memcmp(wi_data_bytes(data1), wi_data_bytes(data2) + wi_data_length(data1), wi_data_length(data1)) == 0, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data1), wi_data_bytes(data2), wi_data_length(data1)), 0, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data1), wi_data_bytes(data2) + wi_data_length(data1), wi_data_length(data1)), 0, "");
 
     buffer = wi_malloc(wi_data_length(data1));
 
@@ -198,6 +198,6 @@ void wi_test_data_mutation(void) {
         wi_mutable_data_append_data(data1, data2);
         wi_mutable_data_append_bytes(data1, wi_data_bytes(data2), wi_data_length(data2));
         
-        WI_TEST_ASSERT_TRUE(memcmp(wi_data_bytes(data1) + (i * wi_data_length(data2)), wi_data_bytes(data2), wi_data_length(data2)) == 0, "");
+        WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data1) + (i * wi_data_length(data2)), wi_data_bytes(data2), wi_data_length(data2)), 0, "");
     }
 }

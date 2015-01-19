@@ -272,7 +272,7 @@ char * wi_strrncasestr(const char *s, const char *find, size_t slen) {
     len = strlen(find);
 
     for(p = s + slen - 1; p >= s; --p) {
-        if(strncmp(p, find, len) == 0)
+        if(strncasecmp(p, find, len) == 0)
             return (char *) p;
     }
 
