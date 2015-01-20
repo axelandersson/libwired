@@ -59,6 +59,7 @@ WI_EXPORT wi_string_t *                     wi_string_with_data(wi_data_t *);
 WI_EXPORT wi_string_t *                     wi_string_with_bytes(const void *, wi_uinteger_t);
 WI_EXPORT wi_string_t *                     wi_string_with_bytes_no_copy(void *, wi_uinteger_t, wi_boolean_t);
 WI_EXPORT wi_string_t *                     wi_string_with_base64(wi_string_t *);
+WI_EXPORT wi_string_t *                     wi_string_with_contents_of_file(wi_string_t *);
 WI_EXPORT wi_mutable_string_t *             wi_mutable_string(void);
 WI_EXPORT wi_mutable_string_t *             wi_mutable_string_with_format(wi_string_t *, ...);
 
@@ -71,7 +72,6 @@ WI_EXPORT wi_string_t *                     wi_string_init_with_cstring_no_copy(
 WI_EXPORT wi_string_t *                     wi_string_init_with_data(wi_string_t *, wi_data_t *);
 WI_EXPORT wi_string_t *                     wi_string_init_with_bytes(wi_string_t *, const void *, wi_uinteger_t);
 WI_EXPORT wi_string_t *                     wi_string_init_with_bytes_no_copy(wi_string_t *, void *, wi_uinteger_t, wi_boolean_t);
-WI_EXPORT wi_string_t *                     wi_string_init_with_random_bytes(wi_string_t *, wi_uinteger_t);
 WI_EXPORT wi_string_t *                     wi_string_init_with_format(wi_string_t *, wi_string_t *, ...);
 WI_EXPORT wi_string_t *                     wi_string_init_with_format_and_arguments(wi_string_t *, wi_string_t *, va_list);
 WI_EXPORT wi_string_t *                     wi_string_init_with_base64(wi_string_t *, wi_string_t *);
@@ -179,7 +179,7 @@ WI_EXPORT void                              wi_mutable_string_delete_last_path_c
 WI_EXPORT void                              wi_mutable_string_append_path_extension(wi_mutable_string_t *, wi_string_t *);
 WI_EXPORT void                              wi_mutable_string_delete_path_extension(wi_mutable_string_t *);
 
-WI_EXPORT void                              wi_mutable_string_convert_encoding(wi_mutable_string_t *, wi_string_encoding_t *, wi_string_encoding_t *);
+WI_EXPORT wi_boolean_t                      wi_mutable_string_convert_encoding(wi_mutable_string_t *, wi_string_encoding_t *, wi_string_encoding_t *);
 
 
 enum _wi_string_encoding_options {
