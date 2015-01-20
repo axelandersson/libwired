@@ -276,7 +276,11 @@ void _wi_url_regenerate_string(wi_url_t *url) {
     
         wi_mutable_string_append_string(url->string, WI_STR("@"));
     }
-    wi_mutable_string_append_format(url->string, WI_STR("%#@"), url->host);
+    
+    if(url->host && wi_string_index_of_char(url->host, ':', 0) != WI_NOT_FOUND)
+        wi_mutable_string_append_format(url->string, WI_STR("[%#@]"), url->host);
+    else
+        wi_mutable_string_append_format(url->string, WI_STR("%#@"), url->host);
     
     if(url->port > 0)
         wi_mutable_string_append_format(url->string, WI_STR(":%lu"), url->port);

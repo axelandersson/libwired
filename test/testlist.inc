@@ -100,8 +100,11 @@ wi_tests_run_test("wi_test_string_mutation_paths", wi_test_string_mutation_paths
 wi_tests_run_test("wi_test_string_mutation_encodings", wi_test_string_mutation_encodings);
 wi_tests_run_test("wi_test_system", wi_test_system);
 wi_tests_run_test("wi_test_timer", wi_test_timer);
-wi_tests_run_test("wi_test_url", wi_test_url);
-wi_tests_run_test("wi_test_uuid", wi_test_uuid);
+wi_tests_run_test("wi_test_url_creation", wi_test_url_creation);
+wi_tests_run_test("wi_test_url_runtime_functions", wi_test_url_runtime_functions);
+wi_tests_run_test("wi_test_url_mutation", wi_test_url_mutation);
+wi_tests_run_test("wi_test_uuid_creation", wi_test_uuid_creation);
+wi_tests_run_test("wi_test_uuid_runtime_functions", wi_test_uuid_runtime_functions);
 wi_tests_run_test("wi_test_x509_creation", wi_test_x509_creation);
 wi_tests_run_test("wi_test_x509_runtime_functions", wi_test_x509_runtime_functions);
 wi_tests_run_test("wi_test_x509_accessors", wi_test_x509_accessors);
