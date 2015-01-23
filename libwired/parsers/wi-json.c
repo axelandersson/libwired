@@ -33,6 +33,7 @@
 #include <wired/wi-date.h>
 #include <wired/wi-dictionary.h>
 #include <wired/wi-json.h>
+#include <wired/wi-encoding.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-number.h>
 #include <wired/wi-null.h>
@@ -56,7 +57,7 @@ static wi_string_t *                _wi_json_string_for_null(wi_null_t *);
 wi_runtime_instance_t * wi_json_read_instance_from_file(wi_string_t *path) {
     wi_string_t     *string;
     
-    string = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), path));
+    string = wi_string_with_utf8_contents_of_file(path);
     
     return wi_json_instance_for_string(string);
 }
@@ -256,7 +257,7 @@ wi_runtime_instance_t * wi_json_instance_for_string(wi_string_t *string) {
 
 #pragma mark -
 
-wi_boolean_t wi_json_write_instance_to_file(wi_runtime_instance_t *instance, wi_string_t *path) {
+wi_boolean_t wi_json_write_instance_to_path(wi_runtime_instance_t *instance, wi_string_t *path) {
     wi_string_t     *string;
     
     string = wi_json_string_for_instance(instance);
@@ -264,7 +265,7 @@ wi_boolean_t wi_json_write_instance_to_file(wi_runtime_instance_t *instance, wi_
     if(!string)
         return false;
     
-    return wi_string_write_to_file(string, path);
+    return wi_string_write_utf8_string_to_path(string, path);
 }
 
 

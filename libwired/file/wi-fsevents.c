@@ -282,7 +282,7 @@ wi_boolean_t wi_fsevents_add_path(wi_fsevents_t *fsevents, wi_string_t *path) {
     
 #if defined(_WI_FSEVENTS_KQUEUE)
     if(!wi_set_contains_data(fsevents->paths, path)) {
-        fd = open(wi_string_cstring(path),
+        fd = open(wi_string_utf8_string(path),
 #ifdef O_EVTONLY
                   O_EVTONLY,
 #else

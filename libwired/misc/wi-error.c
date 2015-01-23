@@ -79,7 +79,7 @@ static void                             _wi_error_dealloc(wi_runtime_instance_t 
 
 static wi_error_t *                     _wi_error_get_error(void);
 
-#ifdef HAVE_LIBXML_PARSER_H
+#ifdef WI_LIBXML2
 static void                             _wi_error_xml_error_handler(void *, const char *, ...);
 #endif
 
@@ -93,6 +93,9 @@ static const char                       *_wi_error_strings[] = {
 
     /* WI_ERROR_CIPHER_CIPHERNOTSUPP */
     "Cipher not supported",
+    
+    /* WI_ERROR_FILE_NOTTEXT */
+    "File is not text",
     
     /* WI_ERROR_FSEVENTS_NOTSUPP */
     "No compatible API available",
@@ -207,7 +210,7 @@ static wi_error_t * _wi_error_get_error(void) {
 
 
 
-#ifdef HAVE_LIBXML_PARSER_H
+#ifdef WI_LIBXML2
 
 static void _wi_error_xml_error_handler(void *context, const char *message, ...) {
 }
@@ -414,7 +417,7 @@ void wi_error_set_libxml2_error(void) {
     
     wi_error_set_error_with_string(WI_ERROR_DOMAIN_LIBXML2,
                                    xml_error->code,
-                                   wi_string_by_deleting_surrounding_whitespace(wi_string_with_cstring(xml_error->message)));
+                                   wi_string_by_deleting_surrounding_whitespace(wi_string_with_utf8_string(xml_error->message)));
 }
 
 #endif
@@ -428,7 +431,7 @@ void wi_error_set_regex_error(regex_t *regex, int code) {
     
     wi_error_set_error_with_string(WI_ERROR_DOMAIN_REGEX,
                                    code,
-                                   wi_string_with_cstring(string));
+                                   wi_string_with_utf8_string(string));
 }
 
 
@@ -442,7 +445,7 @@ void wi_error_set_libwired_error(int code) {
 void wi_error_set_libwired_error_with_string(int code, wi_string_t *string) {
     wi_string_t     *errorstring;
     
-    errorstring = wi_string_init_with_cstring(wi_mutable_string_alloc(), _wi_error_strings[code]);
+    errorstring = wi_string_init_with_utf8_string(wi_mutable_string_alloc(), _wi_error_strings[code]);
 
     if(wi_string_length(string) > 0) {
         if(wi_string_length(errorstring) > 0)
@@ -481,11 +484,11 @@ wi_string_t * wi_error_string(void) {
     if(!error->string) {
         switch(error->domain) {
             case WI_ERROR_DOMAIN_ERRNO:
-                error->string = wi_string_init_with_cstring(wi_string_alloc(), strerror(error->code));
+                error->string = wi_string_init_with_utf8_string(wi_string_alloc(), strerror(error->code));
                 break;
 
             case WI_ERROR_DOMAIN_GAI:
-                error->string = wi_string_init_with_cstring(wi_string_alloc(), gai_strerror(error->code));
+                error->string = wi_string_init_with_utf8_string(wi_string_alloc(), gai_strerror(error->code));
                 break;
 
             case WI_ERROR_DOMAIN_REGEX:
@@ -496,7 +499,7 @@ wi_string_t * wi_error_string(void) {
                 break;
             
             case WI_ERROR_DOMAIN_LIBWIRED:
-                error->string = wi_string_init_with_cstring(wi_string_alloc(), _wi_error_strings[error->code]);
+                error->string = wi_string_init_with_utf8_string(wi_string_alloc(), _wi_error_strings[error->code]);
                 break;
 
             case WI_ERROR_DOMAIN_NONE:

@@ -139,9 +139,9 @@ wi_string_t * wi_time_interval_string_with_format(wi_time_interval_t interval, w
     else
         localtime_r(&time, &tm);
     
-    (void) strftime(string, sizeof(string), wi_string_cstring(format), &tm);
+    (void) strftime(string, sizeof(string), wi_string_utf8_string(format), &tm);
     
-    return wi_string_with_cstring(string);
+    return wi_string_with_utf8_string(string);
 }
 
 
@@ -249,7 +249,7 @@ wi_date_t * wi_date_init_with_string(wi_date_t *date, wi_string_t *string, wi_st
 
     memset(&tm, 0, sizeof(tm));
 
-    if(!strptime(wi_string_cstring(string), wi_string_cstring(format), &tm)) {
+    if(!strptime(wi_string_utf8_string(string), wi_string_utf8_string(format), &tm)) {
         wi_release(date);
         
         return NULL;

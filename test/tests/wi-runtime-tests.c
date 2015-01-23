@@ -162,7 +162,7 @@ void wi_test_runtime_info(void) {
     runtimetest = _wi_runtimetest_init_with_value(_wi_runtimetest_alloc(), 42);
     
     WI_TEST_ASSERT_EQUALS(wi_runtime_class(runtimetest), &_wi_runtimetest_runtime_class, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_runtime_class_name(runtimetest), wi_string_with_cstring(_wi_runtimetest_runtime_class.name), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_runtime_class_name(runtimetest), wi_string_with_utf8_string(_wi_runtimetest_runtime_class.name), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(runtimetest), _wi_runtimetest_runtime_id, "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_options(runtimetest), WI_RUNTIME_OPTION_IMMUTABLE, "");
     

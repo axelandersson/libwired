@@ -142,7 +142,7 @@ wi_runtime_class_t * wi_runtime_class_with_name(wi_string_t *name) {
     const char          *cname;
     wi_uinteger_t       i;
     
-    cname = wi_string_cstring(name);
+    cname = wi_string_utf8_string(name);
     
     for(i = 0; i < _wi_runtime_class_table_count; i++) {
         class = _wi_runtime_class_table[i];
@@ -195,7 +195,7 @@ wi_string_t * wi_runtime_class_name(wi_runtime_instance_t *instance) {
     class = wi_runtime_class(instance);
     
     if(class)
-        return wi_string_with_cstring(class->name);
+        return wi_string_with_utf8_string(class->name);
     
     return NULL;
 }
@@ -457,6 +457,6 @@ void wi_show(wi_runtime_instance_t *instance) {
     wi_pool_t   *pool;
     
     pool = wi_pool_init(wi_pool_alloc());
-    printf("%s\n", wi_string_cstring(wi_description(instance)));
+    printf("%s\n", wi_string_utf8_string(wi_description(instance)));
     wi_release(pool);
 }

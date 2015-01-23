@@ -24,21 +24,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <wired/wired.h>
-#include <wired/wi-private.h>
+#ifndef WI_ENCODING_H
+#define WI_ENCODING_H 1
 
-WI_TEST_EXPORT void                     wi_test_base(void);
+#include <wired/wi-base.h>
+#include <wired/wi-runtime.h>
+
+enum _wi_encoding_options {
+    WI_ENCODING_IGNORE                      = (1 << 0),
+    WI_ENCODING_TRANSLITERATE               = (1 << 1),
+    WI_ENCODING_ALL                         = (WI_ENCODING_IGNORE | WI_ENCODING_TRANSLITERATE)
+};
+typedef enum _wi_encoding_options           wi_encoding_options_t;
 
 
-void wi_test_base(void) {
-    WI_TEST_ASSERT_TRUE(wi_hash_utf8_string("foo") > 0, "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_utf8_string("foo"), wi_hash_utf8_string("bar"), "");
-    WI_TEST_ASSERT_TRUE(wi_hash_pointer((void *) 0xDEADBEEF) > 0, "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_pointer((void *) 0xDEADBEEF), wi_hash_pointer((void *) 0xAC1DFEED), "");
-    WI_TEST_ASSERT_TRUE(wi_hash_int(42) > 0, "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_int(42), wi_hash_int(-1337), "");
-    WI_TEST_ASSERT_TRUE(wi_hash_double(42.42) > 0, "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_double(42.42), wi_hash_double(-1337.1337), "");
-    WI_TEST_ASSERT_TRUE(wi_hash_data((unsigned char *) "foobar", 6) > 0, "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_hash_data((unsigned char *) "foobar", 6), wi_hash_data((unsigned char *) "barfoo", 6), "");
-}
+WI_EXPORT wi_runtime_id_t                   wi_encoding_runtime_id(void);
+
+WI_EXPORT wi_encoding_t *                   wi_encoding_with_charset(wi_string_t *, wi_encoding_options_t);
+
+WI_EXPORT wi_encoding_t *                   wi_encoding_alloc(void);
+WI_EXPORT wi_encoding_t *                   wi_encoding_init_with_charset(wi_encoding_t *, wi_string_t *, wi_encoding_options_t);
+
+WI_EXPORT wi_string_t *                     wi_encoding_charset(wi_encoding_t *);
+WI_EXPORT wi_encoding_options_t             wi_encoding_options(wi_encoding_t *);
+
+#endif /* WI_ENCODING_H */

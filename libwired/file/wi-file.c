@@ -55,6 +55,7 @@
 struct _wi_file {
     wi_runtime_base_t                   base;
 
+    wi_string_t                         *path;
     int                                 fd;
     wi_file_offset_t                    offset;
 };
@@ -62,6 +63,9 @@ struct _wi_file {
 
 static void                             _wi_file_dealloc(wi_runtime_instance_t *);
 static wi_string_t *                    _wi_file_description(wi_runtime_instance_t *);
+
+static wi_integer_t                     _wi_file_read_bytes(wi_file_t *, void *, wi_uinteger_t);
+static wi_integer_t                     _wi_file_write_bytes(wi_file_t *, const void *, wi_uinteger_t);
 
 
 static wi_runtime_id_t                  _wi_file_runtime_id = WI_RUNTIME_ID_NULL;
@@ -151,7 +155,7 @@ wi_file_t * wi_file_init_with_path(wi_file_t *file, wi_string_t *path, wi_file_m
             flags |= O_TRUNC;
     }
         
-    file->fd = open(wi_string_cstring(path), flags, 0666);
+    file->fd = open(wi_string_utf8_string(path), flags, 0666);
     
     if(file->fd < 0) {
         wi_error_set_errno(errno);
@@ -160,6 +164,8 @@ wi_file_t * wi_file_init_with_path(wi_file_t *file, wi_string_t *path, wi_file_m
         
         return NULL;
     }
+    
+    file->path = wi_retain(path);
     
     return file;
 }
@@ -197,6 +203,8 @@ static void _wi_file_dealloc(wi_runtime_instance_t *instance) {
     wi_file_t   *file = instance;
     
     wi_file_close(file);
+    
+    wi_release(file->path);
 }
 
 
@@ -204,15 +212,22 @@ static void _wi_file_dealloc(wi_runtime_instance_t *instance) {
 static wi_string_t * _wi_file_description(wi_runtime_instance_t *instance) {
     wi_file_t   *file = instance;
     
-    return wi_string_with_format(WI_STR("<%@ %p>{descriptor = %d}"),
+    return wi_string_with_format(WI_STR("<%@ %p>{descriptor = %d, path = %@}"),
       wi_runtime_class_name(file),
       file,
-      file->fd);
+      file->fd,
+      file->path);
 }
 
 
 
 #pragma mark -
+
+wi_string_t * wi_file_path(wi_file_t *file) {
+    return file->path;
+}
+
+
 
 int wi_file_descriptor(wi_file_t *file) {
     return file->fd;
@@ -222,121 +237,97 @@ int wi_file_descriptor(wi_file_t *file) {
 
 #pragma mark -
 
-wi_string_t * wi_file_read(wi_file_t *file, wi_uinteger_t length) {
-    wi_mutable_string_t     *string;
-    char                    buffer[WI_FILE_BUFFER_SIZE];
-    wi_integer_t            bytes = -1;
+wi_data_t * wi_file_read(wi_file_t *file, wi_uinteger_t length) {
+    wi_mutable_data_t   *data;
+    char                buffer[WI_FILE_BUFFER_SIZE];
+    wi_integer_t        bytes = -1;
     
     _WI_FILE_ASSERT_OPEN(file);
     
-    string = wi_string_init_with_capacity(wi_mutable_string_alloc(), length);
+    data = wi_data_init_with_capacity(wi_mutable_data_alloc(), length);
     
-    while(length > sizeof(buffer)) {
-        bytes = wi_file_read_buffer(file, buffer, sizeof(buffer));
+    while(length > 0) {
+        bytes = wi_file_read_bytes(file, buffer, WI_MIN(sizeof(buffer), length));
         
         if(bytes <= 0)
-            goto end;
+            break;
         
-        wi_mutable_string_append_bytes(string, buffer, bytes);
+        wi_mutable_data_append_bytes(data, buffer, bytes);
         
         length -= bytes;
     }
     
-    if(length > 0) {
-        bytes = wi_file_read_buffer(file, buffer, length);
+    if(bytes < 0) {
+        wi_release(data);
         
-        if(bytes <= 0)
-            goto end;
-        
-        wi_mutable_string_append_bytes(string, buffer, bytes);
+        data = NULL;
     }
     
-end:
-    if(bytes <= 0) {
-        wi_release(string);
-        
-        string = NULL;
-    }
-    
-    wi_runtime_make_immutable(string);
+    wi_runtime_make_immutable(data);
 
-    return wi_autorelease(string);
+    return wi_autorelease(data);
 }
 
 
 
-wi_string_t * wi_file_read_to_end_of_file(wi_file_t *file) {
-    wi_mutable_string_t     *string;
-    char                    buffer[WI_FILE_BUFFER_SIZE];
-    wi_integer_t            bytes;
-    
-    string = wi_string_init(wi_mutable_string_alloc());
-    
-    while((bytes = wi_file_read_buffer(file, buffer, sizeof(buffer))))
-        wi_mutable_string_append_bytes(string, buffer, bytes);
-    
-    wi_runtime_make_immutable(string);
-    
-    return wi_autorelease(string);
-}
-
-
-
-wi_string_t * wi_file_read_line(wi_file_t *file) {
-    return wi_file_read_to_string(file, WI_STR("\n"));
-}
-
-
-
-wi_string_t * wi_file_read_config_line(wi_file_t *file) {
-    wi_string_t        *string;
-    
-    while((string = wi_file_read_line(file))) {
-        if(wi_string_length(string) == 0 || wi_string_has_prefix(string, WI_STR("#")))
-            continue;
-
-        return string;
-    }
-    
-    return NULL;
-}
-
-
-
-wi_string_t * wi_file_read_to_string(wi_file_t *file, wi_string_t *separator) {
-    wi_mutable_string_t     *totalstring = NULL;
-    wi_string_t             *string;
-    wi_uinteger_t           index, length;
+wi_data_t * wi_file_read_to_end_of_file(wi_file_t *file) {
+    wi_mutable_data_t   *data;
+    char                buffer[WI_FILE_BUFFER_SIZE];
+    wi_integer_t        bytes;
     
     _WI_FILE_ASSERT_OPEN(file);
     
-    while((string = wi_file_read(file, WI_FILE_BUFFER_SIZE))) {
-        if(!totalstring)
-            totalstring = wi_string_init(wi_mutable_string_alloc());
+    data = wi_data_init_with_capacity(wi_mutable_data_alloc(), WI_FILE_BUFFER_SIZE);
+    
+    while(true) {
+        bytes = wi_file_read_bytes(file, buffer, sizeof(buffer));
         
-        index = wi_string_index_of_string(string, separator, 0);
-        
-        if(index == WI_NOT_FOUND) {
-            wi_mutable_string_append_string(totalstring, string);
-        } else {
-            length = wi_string_length(string);
-            
-            wi_mutable_string_append_string(totalstring, wi_string_substring_to_index(string, index));
-
-            wi_file_seek(file, wi_file_offset(file) - length + index + 1);
-            
+        if(bytes <= 0)
             break;
-        }
+
+        wi_mutable_data_append_bytes(data, buffer, bytes);
+    }
+
+    if(bytes < 0) {
+        wi_release(data);
+        
+        data = NULL;
     }
     
-    wi_runtime_make_immutable(string);
-
-    return wi_autorelease(totalstring);
+    wi_runtime_make_immutable(data);
+    
+    return wi_autorelease(data);
 }
 
 
 
-wi_integer_t wi_file_read_buffer(wi_file_t *file, void *buffer, wi_uinteger_t length) {
+wi_integer_t wi_file_read_bytes(wi_file_t *file, void *buffer, wi_uinteger_t length) {
+    wi_uinteger_t   offset;
+    wi_integer_t    bytes;
+    
+    _WI_FILE_ASSERT_OPEN(file);
+    
+    offset = 0;
+    
+    while(offset < length) {
+        bytes = _wi_file_read_bytes(file, buffer + offset, length - offset);
+        
+        if(bytes <= 0) {
+            if(bytes < 0)
+                return -1;
+            
+            break;
+        }
+        
+        offset += bytes;
+    }
+    
+    return offset;
+}
+
+
+
+static wi_integer_t _wi_file_read_bytes(wi_file_t *file, void *buffer, wi_uinteger_t length) {
     wi_integer_t    bytes;
     
     bytes = read(file->fd, buffer, length);
@@ -351,27 +342,41 @@ wi_integer_t wi_file_read_buffer(wi_file_t *file, void *buffer, wi_uinteger_t le
 
 
 
-wi_integer_t wi_file_write_format(wi_file_t *file, wi_string_t *fmt, ...) {
-    wi_string_t     *string;
-    wi_integer_t    bytes;
-    va_list         ap;
-    
-    _WI_FILE_ASSERT_OPEN(file);
-    
-    va_start(ap, fmt);
-    string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-    va_end(ap);
-    
-    bytes = wi_file_write_buffer(file, wi_string_cstring(string), wi_string_length(string));
-    
-    wi_release(string);
-    
-    return bytes;
+#pragma mark -
+
+wi_integer_t wi_file_write(wi_file_t *file, wi_data_t *data) {
+    return wi_file_write_bytes(file, wi_data_bytes(data), wi_data_length(data));
 }
 
 
 
-wi_integer_t wi_file_write_buffer(wi_file_t *file, const void *buffer, wi_uinteger_t length) {
+wi_integer_t wi_file_write_bytes(wi_file_t *file, const void *buffer, wi_uinteger_t length) {
+    wi_uinteger_t   offset;
+    wi_integer_t    bytes;
+    
+    _WI_FILE_ASSERT_OPEN(file);
+    
+    offset = 0;
+    
+    while(offset < length) {
+        bytes = _wi_file_write_bytes(file, buffer + offset, length - offset);
+        
+        if(bytes <= 0) {
+            if(bytes < 0)
+                return -1;
+            
+            break;
+        }
+        
+        offset += bytes;
+    }
+    
+    return offset;
+}
+
+
+
+static wi_integer_t _wi_file_write_bytes(wi_file_t *file, const void *buffer, wi_uinteger_t length) {
     wi_integer_t    bytes;
     
     bytes = write(file->fd, buffer, length);

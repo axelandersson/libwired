@@ -122,7 +122,7 @@ static wi_string_t *                    _wi_socket_description(wi_runtime_instan
 static wi_boolean_t                     _wi_socket_set_option_int(wi_socket_t *, int, int, int);
 static wi_boolean_t                     _wi_socket_get_option_int(wi_socket_t *, int, int, int *);
 
-static wi_integer_t                     _wi_socket_read_buffer(wi_socket_t *, wi_time_interval_t, void *, size_t);
+static wi_integer_t                     _wi_socket_read_bytes(wi_socket_t *, wi_time_interval_t, void *, wi_uinteger_t);
 
 
 #if defined(HAVE_OPENSSL_SSL_H) && defined(WI_PTHREADS)
@@ -320,7 +320,7 @@ wi_boolean_t wi_socket_tls_set_private_key(wi_socket_tls_t *tls, wi_rsa_t *rsa) 
 
 
 wi_boolean_t wi_socket_tls_set_ciphers(wi_socket_tls_t *tls, wi_string_t *ciphers) {
-    if(SSL_CTX_set_cipher_list(tls->ssl_ctx, wi_string_cstring(ciphers)) != 1) {
+    if(SSL_CTX_set_cipher_list(tls->ssl_ctx, wi_string_utf8_string(ciphers)) != 1) {
         wi_error_set_libwired_error(WI_ERROR_SOCKET_NOVALIDCIPHER);
 
         return false;
@@ -331,7 +331,7 @@ wi_boolean_t wi_socket_tls_set_ciphers(wi_socket_tls_t *tls, wi_string_t *cipher
 
 
 
-wi_boolean_t wi_socket_tls_set_dh(wi_socket_tls_t *tls, const unsigned char *p, size_t p_size, const unsigned char *g, size_t g_size) {
+wi_boolean_t wi_socket_tls_set_dh(wi_socket_tls_t *tls, const unsigned char *p, wi_uinteger_t p_size, const unsigned char *g, wi_uinteger_t g_size) {
     tls->dh = DH_new();
     
     if(!tls->dh) {
@@ -550,7 +550,7 @@ end:
 
 wi_string_t * wi_socket_cipher_version(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
-    return wi_string_with_cstring(SSL_get_cipher_version(socket->ssl));
+    return wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl));
 #else
     return NULL;
 #endif
@@ -560,7 +560,7 @@ wi_string_t * wi_socket_cipher_version(wi_socket_t *socket) {
 
 wi_string_t * wi_socket_cipher_name(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
-    return wi_string_with_cstring(SSL_get_cipher_name(socket->ssl));
+    return wi_string_with_utf8_string(SSL_get_cipher_name(socket->ssl));
 #else
     return NULL;
 #endif
@@ -596,15 +596,15 @@ wi_string_t * wi_socket_certificate_name(wi_socket_t *socket) {
     
     switch(EVP_PKEY_type(pkey->type)) {
         case EVP_PKEY_RSA:
-            string = wi_string_init_with_cstring(wi_string_alloc(), "RSA");
+            string = wi_string_init_with_utf8_string(wi_string_alloc(), "RSA");
             break;
 
         case EVP_PKEY_DSA:
-            string = wi_string_init_with_cstring(wi_string_alloc(), "DSA");
+            string = wi_string_init_with_utf8_string(wi_string_alloc(), "DSA");
             break;
 
         case EVP_PKEY_DH:
-            string = wi_string_init_with_cstring(wi_string_alloc(), "DH");
+            string = wi_string_init_with_utf8_string(wi_string_alloc(), "DH");
             break;
 
         default:
@@ -675,7 +675,7 @@ wi_string_t * wi_socket_certificate_hostname(wi_socket_t *socket) {
                               hostname,
                               sizeof(hostname));
     
-    string = wi_string_init_with_cstring(wi_string_alloc(), hostname);
+    string = wi_string_init_with_utf8_string(wi_string_alloc(), hostname);
     
     X509_free(x509);
     
@@ -1328,31 +1328,13 @@ void wi_socket_close(wi_socket_t *socket) {
 
 #pragma mark -
 
-wi_integer_t wi_socket_sendto_format(wi_socket_t *socket, wi_string_t *fmt, ...) {
-    wi_string_t     *string;
-    int             bytes;
-    va_list         ap;
-
-    va_start(ap, fmt);
-    string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-    va_end(ap);
-
-    bytes = wi_socket_sendto_buffer(socket, wi_string_cstring(string), wi_string_length(string));
-    
-    wi_release(string);
-
-    return bytes;
-}
-
-
-
 wi_integer_t wi_socket_sendto_data(wi_socket_t *socket, wi_data_t *data) {
-    return wi_socket_sendto_buffer(socket, wi_data_bytes(data), wi_data_length(data));
+    return wi_socket_sendto_bytes(socket, wi_data_bytes(data), wi_data_length(data));
 }
 
 
 
-wi_integer_t wi_socket_sendto_buffer(wi_socket_t *socket, const char *buffer, size_t length) {
+wi_integer_t wi_socket_sendto_bytes(wi_socket_t *socket, const char *buffer, wi_uinteger_t length) {
     wi_address_t    *address;
     wi_integer_t    bytes;
     
@@ -1370,7 +1352,13 @@ wi_integer_t wi_socket_sendto_buffer(wi_socket_t *socket, const char *buffer, si
 
 
 
-wi_integer_t wi_socket_recvfrom_multiple(wi_array_t *array, char *buffer, size_t length, wi_address_t **address) {
+wi_data_t * wi_socket_recvfrom_multiple_data(wi_array_t *array, wi_uinteger_t length, wi_address_t **address) {
+    return NULL;
+}
+
+
+
+wi_integer_t wi_socket_recvfrom_multiple_bytes(wi_array_t *array, char *buffer, wi_uinteger_t length, wi_address_t **address) {
     wi_socket_t     *socket;
     
     *address    = NULL;
@@ -1379,18 +1367,24 @@ wi_integer_t wi_socket_recvfrom_multiple(wi_array_t *array, char *buffer, size_t
     if(!socket)
         return -1;
     
-    return wi_socket_recvfrom(socket, buffer, length, address);
+    return wi_socket_recvfrom_bytes(socket, buffer, length, address);
 }
 
 
 
-wi_integer_t wi_socket_recvfrom(wi_socket_t *socket, char *buffer, size_t length, wi_address_t **address) {
+wi_data_t * wi_socket_recvfrom_data(wi_socket_t *socket, wi_uinteger_t length, wi_address_t **address) {
+    return NULL;
+}
+
+
+
+wi_integer_t wi_socket_recvfrom_bytes(wi_socket_t *socket, char *buffer, wi_uinteger_t length, wi_address_t **address) {
     struct sockaddr_storage     ss;
     socklen_t                   sslength;
     wi_integer_t                bytes;
     
     sslength    = sizeof(ss);
-    bytes        = recvfrom(socket->sd, buffer, length, 0, (struct sockaddr *) &ss, &sslength);
+    bytes       = recvfrom(socket->sd, buffer, length, 0, (struct sockaddr *) &ss, &sslength);
     *address    = (sslength > 0) ? wi_autorelease(wi_address_init_with_sa(wi_address_alloc(), (struct sockaddr *) &ss)) : NULL;
 
     if(bytes < 0) {
@@ -1406,25 +1400,7 @@ wi_integer_t wi_socket_recvfrom(wi_socket_t *socket, char *buffer, size_t length
 
 #pragma mark -
 
-wi_integer_t wi_socket_write_format(wi_socket_t *socket, wi_time_interval_t timeout, wi_string_t *fmt, ...) {
-    wi_string_t     *string;
-    wi_integer_t    bytes;
-    va_list         ap;
-
-    va_start(ap, fmt);
-    string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-    va_end(ap);
-    
-    bytes = wi_socket_write_buffer(socket, timeout, wi_string_cstring(string), wi_string_length(string));
-    
-    wi_release(string);
-
-    return bytes;
-}
-
-
-
-wi_integer_t wi_socket_write_buffer(wi_socket_t *socket, wi_time_interval_t timeout, const void *buffer, size_t length) {
+wi_integer_t wi_socket_write_bytes(wi_socket_t *socket, wi_time_interval_t timeout, const void *buffer, wi_uinteger_t length) {
     wi_socket_state_t   state;
     wi_uinteger_t       offset;
     wi_integer_t        bytes;
@@ -1505,71 +1481,7 @@ wi_integer_t wi_socket_write_buffer(wi_socket_t *socket, wi_time_interval_t time
 
 
 
-wi_string_t * wi_socket_read_string(wi_socket_t *socket, wi_time_interval_t timeout) {
-    wi_mutable_string_t     *string;
-    char                    buffer[WI_SOCKET_BUFFER_SIZE];
-    int                     bytes = -1;
-    
-    string = wi_autorelease(wi_string_init_with_capacity(wi_mutable_string_alloc(), WI_SOCKET_BUFFER_SIZE));
-    bytes = _wi_socket_read_buffer(socket, timeout, buffer, WI_SOCKET_BUFFER_SIZE);
-    
-    if(bytes < 0)
-        return NULL;
-    
-    wi_mutable_string_append_bytes(string, buffer, bytes);
-
-    wi_runtime_make_immutable(string);
-
-    return string;
-}
-
-
-
-wi_string_t * wi_socket_read_to_string(wi_socket_t *socket, wi_time_interval_t timeout, wi_string_t *separator) {
-    wi_string_t     *string, *substring;
-    wi_uinteger_t   index;
-    
-    index = wi_string_index_of_string(socket->buffer, separator, 0);
-    
-    if(index != WI_NOT_FOUND) {
-        substring = wi_string_substring_to_index(socket->buffer, index + wi_string_length(separator));
-        
-        wi_mutable_string_delete_characters_in_range(socket->buffer, wi_make_range(0, wi_string_length(substring)));
-
-        return substring;
-    }
-    
-    while((string = wi_socket_read_string(socket, timeout))) {
-        if(wi_string_length(string) == 0)
-            return string;
-
-        wi_mutable_string_append_string(socket->buffer, string);
-
-        index = wi_string_index_of_string(socket->buffer, separator, 0);
-        
-        if(index == WI_NOT_FOUND) {
-            if(wi_string_length(socket->buffer) > _WI_SOCKET_BUFFER_MAX_SIZE) {
-                wi_error_set_libwired_error_with_format(WI_ERROR_SOCKET_OVERFLOW, WI_STR("Buffer is %u bytes"), wi_string_length(socket->buffer));
-                
-                wi_mutable_string_set_string(socket->buffer, WI_STR(""));
-            
-                return NULL;
-            }
-        } else {
-            substring = wi_string_substring_to_index(socket->buffer, index + wi_string_length(separator));
-            
-            wi_mutable_string_delete_characters_in_range(socket->buffer, wi_make_range(0, wi_string_length(substring)));
-            
-            return substring;
-        }
-    }
-    
-    return NULL;
-}
-
-
-
-wi_integer_t wi_socket_read_buffer(wi_socket_t *socket, wi_time_interval_t timeout, void *buffer, size_t length) {
+wi_integer_t wi_socket_read_bytes(wi_socket_t *socket, wi_time_interval_t timeout, void *buffer, wi_uinteger_t length) {
 #ifdef HAVE_OPENSSL_SSL_H
     wi_socket_state_t   state;
 #endif
@@ -1617,7 +1529,7 @@ wi_integer_t wi_socket_read_buffer(wi_socket_t *socket, wi_time_interval_t timeo
         offset = 0;
         
         while(offset < length) {
-            bytes = _wi_socket_read_buffer(socket, timeout, buffer + offset, length - offset);
+            bytes = _wi_socket_read_bytes(socket, timeout, buffer + offset, length - offset);
             
             if(bytes <= 0)
                 return bytes;
@@ -1635,7 +1547,7 @@ wi_integer_t wi_socket_read_buffer(wi_socket_t *socket, wi_time_interval_t timeo
 
 
 
-static wi_integer_t _wi_socket_read_buffer(wi_socket_t *socket, wi_time_interval_t timeout, void *buffer, size_t length) {
+static wi_integer_t _wi_socket_read_bytes(wi_socket_t *socket, wi_time_interval_t timeout, void *buffer, wi_uinteger_t length) {
     wi_socket_state_t   state;
     wi_integer_t        bytes;
     

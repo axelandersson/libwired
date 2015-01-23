@@ -115,14 +115,8 @@ wi_data_t * wi_data_with_bytes_no_copy(void *bytes, wi_uinteger_t length, wi_boo
 
 
 
-wi_data_t * wi_data_with_random_bytes(wi_uinteger_t length) {
-    return wi_autorelease(wi_data_init_with_random_bytes(wi_data_alloc(), length));
-}
-
-
-
-wi_data_t * wi_data_with_base64(wi_string_t *base64) {
-    return wi_autorelease(wi_data_init_with_base64(wi_data_alloc(), base64));
+wi_data_t * wi_data_with_base64_string(wi_string_t *base64) {
+    return wi_autorelease(wi_data_init_with_base64_string(wi_data_alloc(), base64));
 }
 
 
@@ -204,7 +198,7 @@ wi_data_t * wi_data_init_with_random_bytes(wi_data_t *data, wi_uinteger_t length
 
 
 
-wi_data_t * wi_data_init_with_base64(wi_data_t *data, wi_string_t *string) {
+wi_data_t * wi_data_init_with_base64_string(wi_data_t *data, wi_string_t *string) {
     wi_release(data);
     
     data = wi_data_from_base64_string(string);
@@ -216,30 +210,20 @@ wi_data_t * wi_data_init_with_base64(wi_data_t *data, wi_string_t *string) {
 
 wi_data_t * wi_data_init_with_contents_of_file(wi_data_t *data, wi_string_t *path) {
     wi_file_t       *file;
-    wi_fs_stat_t    sb;
-    char            buffer[WI_FILE_BUFFER_SIZE];
-    wi_integer_t    bytes;
     
-    if(!wi_fs_stat_path(path, &sb)) {
-        wi_release(data);
-        
-        return NULL;
-    }
+    wi_release(data);
     
     file = wi_file_for_reading(path);
     
-    if(!file) {
-        wi_release(data);
-        
+    if(!file)
         return NULL;
-    }
     
-    data = wi_data_init_with_capacity(data, sb.size);
+    data = wi_file_read_to_end_of_file(file);
     
-    while((bytes = wi_file_read_buffer(file, buffer, sizeof(buffer))))
-        _wi_data_append_bytes(data, buffer, bytes);
+    if(!data)
+        return NULL;
     
-    return data;
+    return wi_retain(data);
 }
 
 
@@ -324,6 +308,12 @@ void wi_data_get_bytes(wi_data_t *data, void *bytes, wi_uinteger_t length) {
 
 
 
+wi_string_t * wi_data_string(wi_data_t *data, wi_encoding_t *encoding) {
+    return NULL;
+}
+
+
+
 #pragma mark -
 
 static void _wi_data_append_bytes(wi_mutable_data_t *data, const void *bytes, wi_uinteger_t length) {
@@ -371,13 +361,13 @@ wi_data_t * wi_data_by_appending_bytes(wi_data_t *data, const void *bytes, wi_ui
 
 #ifdef WI_DIGESTS
 
-wi_string_t * wi_data_md5(wi_data_t *data) {
+wi_string_t * wi_data_md5_string(wi_data_t *data) {
     return wi_md5_digest_string(data);
 }
 
 
 
-wi_string_t * wi_data_sha1(wi_data_t *data) {
+wi_string_t * wi_data_sha1_string(wi_data_t *data) {
     return wi_sha1_digest_string(data);
 }
 
@@ -385,7 +375,7 @@ wi_string_t * wi_data_sha1(wi_data_t *data) {
 
 
 
-wi_string_t * wi_data_base64(wi_data_t *data) {
+wi_string_t * wi_data_base64_string(wi_data_t *data) {
     return wi_base64_string_from_data(data);
 }
 
@@ -393,22 +383,19 @@ wi_string_t * wi_data_base64(wi_data_t *data) {
 
 #pragma mark -
 
-wi_boolean_t wi_data_write_to_file(wi_data_t *data, wi_string_t *path) {
+wi_boolean_t wi_data_write_to_path(wi_data_t *data, wi_string_t *path) {
+    wi_file_t       *file;
     FILE            *fp;
     wi_string_t     *fullpath;
     
     fullpath = wi_string_by_appending_string(path, WI_STR("~"));
     
-    fp = fopen(wi_string_cstring(fullpath), "w");
-
-    if(!fp) {
-        wi_error_set_errno(errno);
-
-        return false;
-    }
+    file = wi_file_for_writing(fullpath);
     
-    fwrite(data->bytes, 1, data->length, fp);
-    fclose(fp);
+    if(!file)
+        return false;
+    
+    wi_file_write(file, data);
     
     if(!wi_fs_rename_path(fullpath, path)) {
         wi_fs_delete_path(fullpath);

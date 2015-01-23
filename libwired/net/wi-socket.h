@@ -78,7 +78,7 @@ WI_EXPORT wi_socket_tls_t *             wi_socket_tls_init_with_type(wi_socket_t
 
 WI_EXPORT wi_boolean_t                  wi_socket_tls_set_certificate(wi_socket_tls_t *, wi_x509_t *);
 WI_EXPORT wi_boolean_t                  wi_socket_tls_set_private_key(wi_socket_tls_t *, wi_rsa_t *);
-WI_EXPORT wi_boolean_t                  wi_socket_tls_set_dh(wi_socket_tls_t *, const unsigned char *, size_t, const unsigned char *, size_t);
+WI_EXPORT wi_boolean_t                  wi_socket_tls_set_dh(wi_socket_tls_t *, const unsigned char *, wi_uinteger_t, const unsigned char *, wi_uinteger_t);
 WI_EXPORT wi_boolean_t                  wi_socket_tls_set_ciphers(wi_socket_tls_t *, wi_string_t *);
 
 
@@ -127,16 +127,14 @@ WI_EXPORT wi_socket_t *                 wi_socket_accept(wi_socket_t *, wi_time_
 WI_EXPORT wi_boolean_t                  wi_socket_accept_tls(wi_socket_t *, wi_socket_tls_t *, wi_time_interval_t);
 WI_EXPORT void                          wi_socket_close(wi_socket_t *);
 
-WI_EXPORT wi_integer_t                  wi_socket_sendto_format(wi_socket_t *, wi_string_t *, ...);
 WI_EXPORT wi_integer_t                  wi_socket_sendto_data(wi_socket_t *, wi_data_t *);
-WI_EXPORT wi_integer_t                  wi_socket_sendto_buffer(wi_socket_t *, const char *, size_t);
-WI_EXPORT wi_integer_t                  wi_socket_recvfrom_multiple(wi_array_t *, char *, size_t, wi_address_t **);
-WI_EXPORT wi_integer_t                  wi_socket_recvfrom(wi_socket_t *, char *, size_t, wi_address_t **);
+WI_EXPORT wi_integer_t                  wi_socket_sendto_bytes(wi_socket_t *, const char *, wi_uinteger_t);
+WI_EXPORT wi_data_t *                   wi_socket_recvfrom_multiple_data(wi_array_t *, wi_uinteger_t, wi_address_t **);
+WI_EXPORT wi_integer_t                  wi_socket_recvfrom_multiple_bytes(wi_array_t *, char *, wi_uinteger_t, wi_address_t **);
+WI_EXPORT wi_data_t *                   wi_socket_recvfrom_data(wi_socket_t *, wi_uinteger_t, wi_address_t **);
+WI_EXPORT wi_integer_t                  wi_socket_recvfrom_bytes(wi_socket_t *, char *, wi_uinteger_t, wi_address_t **);
 
-WI_EXPORT wi_integer_t                  wi_socket_write_format(wi_socket_t *, wi_time_interval_t, wi_string_t *, ...);
-WI_EXPORT wi_integer_t                  wi_socket_write_buffer(wi_socket_t *, wi_time_interval_t, const void *, size_t);
-WI_EXPORT wi_string_t *                 wi_socket_read_string(wi_socket_t *, wi_time_interval_t);
-WI_EXPORT wi_string_t *                 wi_socket_read_to_string(wi_socket_t *, wi_time_interval_t, wi_string_t *);
-WI_EXPORT wi_integer_t                  wi_socket_read_buffer(wi_socket_t *, wi_time_interval_t, void *, size_t);
+WI_EXPORT wi_integer_t                  wi_socket_write_bytes(wi_socket_t *, wi_time_interval_t, const void *, wi_uinteger_t);
+WI_EXPORT wi_integer_t                  wi_socket_read_bytes(wi_socket_t *, wi_time_interval_t, void *, wi_uinteger_t);
 
 #endif /* WI_SOCKET_H */

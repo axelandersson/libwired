@@ -39,5 +39,5 @@ void wi_version_register(void) {
 
 
 void wi_version_initialize(void) {
-    wi_version_string = wi_string_init_with_cstring(wi_string_alloc(), WI_VERSION);
+    wi_version_string = wi_string_init_with_utf8_string(wi_string_alloc(), WI_VERSION);
 }

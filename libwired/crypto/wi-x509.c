@@ -110,7 +110,7 @@ wi_x509_t * wi_x509_init_with_common_name(wi_x509_t *x509, wi_rsa_t *rsa, wi_str
     if(X509_NAME_add_entry_by_NID(name,
                                   NID_commonName,
                                   MBSTRING_ASC,
-                                  (unsigned char *) wi_string_cstring(common_name),
+                                  (unsigned char *) wi_string_utf8_string(common_name),
                                   -1,
                                   -1,
                                   0) != 1)
@@ -189,7 +189,7 @@ end:
 wi_x509_t * wi_x509_init_with_pem_file(wi_x509_t *x509, wi_string_t *path) {
     FILE    *fp;
     
-    fp = fopen(wi_string_cstring(path), "r");
+    fp = fopen(wi_string_utf8_string(path), "r");
     
     if(!fp) {
         wi_error_set_errno(errno);
@@ -251,7 +251,7 @@ wi_string_t * wi_x509_common_name(wi_x509_t *x509) {
     if(X509_NAME_get_text_by_NID(name, NID_commonName, buffer, sizeof(buffer)) < 0)
         return NULL;
     
-    return wi_string_with_cstring(buffer);
+    return wi_string_with_utf8_string(buffer);
 }
 
 

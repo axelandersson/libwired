@@ -81,6 +81,7 @@
 #include <wired/wi-lock.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-private.h>
+#include <wired/wi-random.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
 #include <wired/wi-uuid.h>
@@ -119,7 +120,6 @@ static wi_string_t *                    _wi_uuid_description(wi_runtime_instance
 
 static wi_string_t *                    _wi_uuid_string(wi_uuid_t *);
 static void                             _wi_uuid_pack_buffer(wi_uuid_t *);
-static void                             _wi_uuid_get_random_buffer(void *, size_t);
 static wi_boolean_t                     _wi_uuid_get_node(unsigned char *);
 static void                             _wi_uuid_get_clock(uint32_t *, uint32_t *, uint16_t *);
 
@@ -149,7 +149,7 @@ void wi_uuid_initialize(void) {
     _wi_uuid_clock_lock = wi_lock_init(wi_lock_alloc());
     
     if(!_wi_uuid_get_node(_wi_uuid_node)) {
-        _wi_uuid_get_random_buffer(_wi_uuid_node, sizeof(_wi_uuid_node));
+        wi_random_get_bytes(_wi_uuid_node, sizeof(_wi_uuid_node));
         
         _wi_uuid_node[0] |= 0x01;
     }
@@ -202,7 +202,7 @@ wi_uuid_t * wi_uuid_init(wi_uuid_t *uuid) {
 wi_uuid_t * wi_uuid_init_from_random_data(wi_uuid_t *uuid) {
     unsigned char   buffer[WI_UUID_BUFFER_SIZE];
     
-    _wi_uuid_get_random_buffer(buffer, sizeof(buffer));
+    wi_random_get_bytes(buffer, sizeof(buffer));
     
     uuid = wi_uuid_init_with_bytes(uuid, buffer);
 
@@ -240,7 +240,8 @@ wi_uuid_t * wi_uuid_init_with_string(wi_uuid_t *uuid, wi_string_t *string) {
     uint32_t    time_low, time_mid, time_hi_and_version, clock_seq_high, clock_seq_low;
     uint32_t    node[6];
     
-    if(sscanf(wi_string_cstring(string), "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+    if(sscanf(wi_string_utf8_string(string),
+              "%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
               &time_low,
               &time_mid,
               &time_hi_and_version,
@@ -402,16 +403,6 @@ static void _wi_uuid_pack_buffer(wi_uuid_t *uuid) {
 
 
 
-static void _wi_uuid_get_random_buffer(void *buffer, size_t size) {
-    wi_data_t   *data;
-    
-    data = wi_data_init_with_random_bytes(wi_data_alloc(), size);
-    memcpy(buffer, wi_data_bytes(data), size);
-    wi_release(data);
-}
-
-
-
 static wi_boolean_t _wi_uuid_get_node(unsigned char *node) {
     struct ifconf       ifc;
     struct ifreq        ifr, *ifrp;
@@ -498,7 +489,7 @@ static void _wi_uuid_get_clock(uint32_t *clock_high, uint32_t *clock_low, uint16
         gettimeofday(&tv, 0);
         
         if(lasttv.tv_sec == 0 && lasttv.tv_usec == 0) {
-            _wi_uuid_get_random_buffer(&sequence, sizeof(sequence));
+            wi_random_get_bytes(&sequence, sizeof(sequence));
             sequence &= 0x3FFF;
             lasttv = tv;
             lasttv.tv_sec--;

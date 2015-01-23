@@ -76,12 +76,12 @@ static wi_boolean_t                         _wi_fs_stat_path(wi_string_t *, wi_f
 wi_string_t * wi_fs_temporary_path_with_template(wi_string_t *template) {
     char    path[WI_PATH_SIZE];
     
-    wi_strlcpy(path, wi_string_cstring(template), sizeof(path));
+    wi_strlcpy(path, wi_string_utf8_string(template), sizeof(path));
     
     if(!mktemp(path))
         return NULL;
     
-    return wi_string_with_cstring(path);
+    return wi_string_with_utf8_string(path);
 }
 
 
@@ -89,7 +89,7 @@ wi_string_t * wi_fs_temporary_path_with_template(wi_string_t *template) {
 #pragma mark -
 
 wi_boolean_t wi_fs_create_directory(wi_string_t *path, uint32_t mode) {
-    if(mkdir(wi_string_cstring(path), mode) < 0) {
+    if(mkdir(wi_string_utf8_string(path), mode) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -101,7 +101,7 @@ wi_boolean_t wi_fs_create_directory(wi_string_t *path, uint32_t mode) {
 
 
 wi_boolean_t wi_fs_change_directory(wi_string_t *path) {
-    if(chdir(wi_string_cstring(path)) < 0) {
+    if(chdir(wi_string_utf8_string(path)) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -135,7 +135,7 @@ wi_boolean_t wi_fs_delete_path_with_callback(wi_string_t *path, wi_fs_delete_pat
 
 
 static wi_boolean_t _wi_fs_delete_file(wi_string_t *path, wi_fs_delete_path_callback_t *callback) {
-    if(unlink(wi_string_cstring(path)) < 0) {
+    if(unlink(wi_string_utf8_string(path)) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -156,7 +156,7 @@ static wi_boolean_t _wi_fs_delete_directory(wi_string_t *path, wi_fs_delete_path
     wi_boolean_t    result = true;
     int             err = 0;
     
-    paths[0] = (char *) wi_string_cstring(path);
+    paths[0] = (char *) wi_string_utf8_string(path);
     paths[1] = NULL;
     
     errno = 0;
@@ -191,7 +191,7 @@ static wi_boolean_t _wi_fs_delete_directory(wi_string_t *path, wi_fs_delete_path
                     result = false;
                 } else {
                     if(callback)
-                        (*callback)(wi_string_with_cstring(p->fts_path));
+                        (*callback)(wi_string_with_utf8_string(p->fts_path));
                 }
                 break;
 
@@ -202,7 +202,7 @@ static wi_boolean_t _wi_fs_delete_directory(wi_string_t *path, wi_fs_delete_path
                     result = false;
                 } else {
                     if(callback)
-                        (*callback)(wi_string_with_cstring(p->fts_path));
+                        (*callback)(wi_string_with_utf8_string(p->fts_path));
                 }
                 break;
         }
@@ -219,7 +219,7 @@ static wi_boolean_t _wi_fs_delete_directory(wi_string_t *path, wi_fs_delete_path
 
 
 wi_boolean_t wi_fs_clear_path(wi_string_t *path) {
-    if(truncate(wi_string_cstring(path), 0) < 0) {
+    if(truncate(wi_string_utf8_string(path), 0) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -231,7 +231,7 @@ wi_boolean_t wi_fs_clear_path(wi_string_t *path) {
 
 
 wi_boolean_t wi_fs_rename_path(wi_string_t *path, wi_string_t *newpath) {
-    if(rename(wi_string_cstring(path), wi_string_cstring(newpath)) < 0) {
+    if(rename(wi_string_utf8_string(path), wi_string_utf8_string(newpath)) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -243,7 +243,7 @@ wi_boolean_t wi_fs_rename_path(wi_string_t *path, wi_string_t *newpath) {
 
 
 wi_boolean_t wi_fs_symlink_path(wi_string_t *frompath, wi_string_t *topath) {
-    if(symlink(wi_string_cstring(frompath), wi_string_cstring(topath)) < 0) {
+    if(symlink(wi_string_utf8_string(frompath), wi_string_utf8_string(topath)) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -298,12 +298,12 @@ static wi_boolean_t _wi_fs_copy_file(wi_string_t *frompath, wi_string_t *topath,
     int                rbytes, wbytes;
     wi_boolean_t    result = false;
     
-    fromfd = open(wi_string_cstring(frompath), O_RDONLY, 0);
+    fromfd = open(wi_string_utf8_string(frompath), O_RDONLY, 0);
     
     if(fromfd < 0)
         goto end;
     
-    tofd = open(wi_string_cstring(topath), O_WRONLY | O_TRUNC | O_CREAT, 0666);
+    tofd = open(wi_string_utf8_string(topath), O_WRONLY | O_TRUNC | O_CREAT, 0666);
     
     if(tofd < 0)
         goto end;
@@ -341,7 +341,7 @@ static wi_boolean_t _wi_fs_copy_directory(wi_string_t *frompath, wi_string_t *to
     wi_uinteger_t            pathlength;
     wi_boolean_t            result = true;
 
-    paths[0] = (char *) wi_string_cstring(frompath);
+    paths[0] = (char *) wi_string_utf8_string(frompath);
     paths[1] = NULL;
 
     fts = wi_fts_open(paths, WI_FTS_LOGICAL | WI_FTS_NOSTAT, NULL);
@@ -352,8 +352,8 @@ static wi_boolean_t _wi_fs_copy_directory(wi_string_t *frompath, wi_string_t *to
     pathlength = wi_string_length(frompath);
 
     while((p = wi_fts_read(fts))) {
-        path        = wi_string_init_with_cstring(wi_string_alloc(), p->fts_path);
-        newpath        = wi_string_init_with_cstring(wi_mutable_string_alloc(), p->fts_path + pathlength);
+        path        = wi_string_init_with_utf8_string(wi_string_alloc(), p->fts_path);
+        newpath     = wi_string_init_with_utf8_string(wi_mutable_string_alloc(), p->fts_path + pathlength);
 
         wi_mutable_string_insert_string_at_index(newpath, topath, 0);        
 
@@ -396,7 +396,7 @@ static wi_boolean_t _wi_fs_copy_directory(wi_string_t *frompath, wi_string_t *to
 
 
 wi_boolean_t wi_fs_set_mode_for_path(wi_string_t *path, uint32_t mode) {
-    if(chmod(wi_string_cstring(path), mode) < 0) {
+    if(chmod(wi_string_utf8_string(path), mode) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -413,8 +413,8 @@ static wi_boolean_t _wi_fs_stat_path(wi_string_t *path, wi_fs_stat_t *sp, wi_boo
 #if defined(HAVE_STAT64) && !defined(_DARWIN_FEATURE_64_BIT_INODE)
     struct stat64        sb;
     
-    if((link && lstat64(wi_string_cstring(path), &sb) < 0) ||
-       (!link && stat64(wi_string_cstring(path), &sb) < 0)) {
+    if((link && lstat64(wi_string_utf8_string(path), &sb) < 0) ||
+       (!link && stat64(wi_string_utf8_string(path), &sb) < 0)) {
         wi_error_set_errno(errno);
         
         return false;
@@ -447,8 +447,8 @@ static wi_boolean_t _wi_fs_stat_path(wi_string_t *path, wi_fs_stat_t *sp, wi_boo
 #else
     struct stat        sb;
     
-    if((link && lstat(wi_string_cstring(path), &sb) < 0) ||
-       (!link && stat(wi_string_cstring(path), &sb) < 0)) {
+    if((link && lstat(wi_string_utf8_string(path), &sb) < 0) ||
+       (!link && stat(wi_string_utf8_string(path), &sb) < 0)) {
         wi_error_set_errno(errno);
         
         return false;
@@ -499,7 +499,7 @@ wi_boolean_t wi_fs_statfs_path(wi_string_t *path, wi_fs_statfs_t *sfp) {
 #ifdef HAVE_STATVFS
     struct statvfs        sfvb;
 
-    if(statvfs(wi_string_cstring(path), &sfvb) < 0) {
+    if(statvfs(wi_string_utf8_string(path), &sfvb) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -519,7 +519,7 @@ wi_boolean_t wi_fs_statfs_path(wi_string_t *path, wi_fs_statfs_t *sfp) {
 #else
     struct statfs        sfb;
 
-    if(statfs(wi_string_cstring(path), &sfb) < 0) {
+    if(statfs(wi_string_utf8_string(path), &sfb) < 0) {
         wi_error_set_errno(errno);
         
         return false;
@@ -560,13 +560,13 @@ wi_boolean_t wi_fs_path_exists(wi_string_t *path, wi_boolean_t *is_directory) {
 wi_string_t * wi_fs_real_path_for_path(wi_string_t *path) {
     char    buffer[WI_PATH_SIZE];
     
-    if(!realpath(wi_string_cstring(path), buffer)) {
+    if(!realpath(wi_string_utf8_string(path), buffer)) {
         wi_error_set_errno(errno);
         
         return NULL;
     }
     
-    return wi_string_with_cstring(buffer);
+    return wi_string_with_utf8_string(buffer);
 }
 
 
@@ -579,7 +579,7 @@ wi_array_t * wi_fs_directory_contents_at_path(wi_string_t *path) {
     DIR                        *dir;
     struct dirent            *de, *dep;
     
-    dir = opendir(wi_string_cstring(path));
+    dir = opendir(wi_string_utf8_string(path));
     
     if(!dir) {
         wi_error_set_errno(errno);
@@ -593,7 +593,7 @@ wi_array_t * wi_fs_directory_contents_at_path(wi_string_t *path) {
     
     while(readdir_r(dir, de, &dep) == 0 && dep) {
         if(strcmp(dep->d_name, ".") != 0 && strcmp(dep->d_name, "..") != 0) {
-            name = wi_string_init_with_cstring(wi_string_alloc(), dep->d_name);
+            name = wi_string_init_with_utf8_string(wi_string_alloc(), dep->d_name);
             wi_mutable_array_add_data(contents, name);
             wi_release(name);
         }

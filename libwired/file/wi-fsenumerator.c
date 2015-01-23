@@ -76,7 +76,7 @@ wi_fsenumerator_t * wi_fsenumerator_alloc(void) {
 wi_fsenumerator_t * wi_fsenumerator_init_with_path(wi_fsenumerator_t *fsenumerator, wi_string_t *path) {
     char    *paths[2];
 
-    paths[0] = (char *) wi_string_cstring(path);
+    paths[0] = (char *) wi_string_utf8_string(path);
     paths[1] = NULL;
 
     errno = 0;
@@ -118,7 +118,7 @@ wi_fsenumerator_status_t wi_fsenumerator_get_next_path(wi_fsenumerator_t *fsenum
         
         switch(fsenumerator->ftsent->fts_info) {
             case WI_FTS_DC:
-                *path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
+                *path = wi_string_with_utf8_string(fsenumerator->ftsent->fts_path);
                 wi_error_set_errno(ELOOP);
 
                 return WI_FSENUMERATOR_ERROR;
@@ -126,7 +126,7 @@ wi_fsenumerator_status_t wi_fsenumerator_get_next_path(wi_fsenumerator_t *fsenum
 
             case WI_FTS_DNR:
             case WI_FTS_ERR:
-                *path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
+                *path = wi_string_with_utf8_string(fsenumerator->ftsent->fts_path);
                 wi_error_set_errno(fsenumerator->ftsent->fts_errno);
 
                 return WI_FSENUMERATOR_ERROR;
@@ -137,7 +137,7 @@ wi_fsenumerator_status_t wi_fsenumerator_get_next_path(wi_fsenumerator_t *fsenum
                 break;
 
             default:
-                *path = wi_string_with_cstring(fsenumerator->ftsent->fts_path);
+                *path = wi_string_with_utf8_string(fsenumerator->ftsent->fts_path);
 
                 return WI_FSENUMERATOR_PATH;
                 break;

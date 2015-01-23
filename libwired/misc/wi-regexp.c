@@ -37,6 +37,7 @@
 #include <wired/wi-regexp.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
+#include <wired/wi-system.h>
 
 struct _wi_regexp {
     wi_runtime_base_t                   base;
@@ -174,7 +175,7 @@ static wi_boolean_t _wi_regexp_compile(wi_regexp_t *regexp) {
     int             options, err;
     wi_boolean_t    result = false;
     
-    cstring = wi_string_cstring(regexp->string);
+    cstring = wi_string_utf8_string(regexp->string);
 
     if(cstring[0] != '/') {
         wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
@@ -182,7 +183,7 @@ static wi_boolean_t _wi_regexp_compile(wi_regexp_t *regexp) {
         goto end;
     }
     
-    s = ss = strdup(cstring);
+    s = ss = wi_strdup(cstring);
     ss++;
 
     if(!(p = strrchr(ss, '/'))) {
@@ -225,7 +226,7 @@ static wi_boolean_t _wi_regexp_compile(wi_regexp_t *regexp) {
 
 end:
     if(s)
-        free(s);
+        wi_free(s);
 
     return result;
 }
@@ -243,13 +244,7 @@ wi_string_t * wi_regexp_string(wi_regexp_t *regexp) {
 #pragma mark -
 
 wi_boolean_t wi_regexp_matches_string(wi_regexp_t *regexp, wi_string_t *string) {
-    return wi_regexp_matches_cstring(regexp, wi_string_cstring(string));
-}
-
-
-
-wi_boolean_t wi_regexp_matches_cstring(wi_regexp_t *regexp, const char *cstring) {
-    return (regexec(&regexp->regex, cstring, 0, NULL, 0) == 0);
+    return (regexec(&regexp->regex, wi_string_utf8_string(string), 0, NULL, 0) == 0);
 }
 
 
@@ -262,7 +257,7 @@ wi_string_t * wi_regexp_string_by_matching_string(wi_regexp_t *regexp, wi_string
 
     memset(matches, 0, sizeof(matches));
 
-    if(regexec(&regexp->regex, wi_string_cstring(string), 32, matches, 0) != 0)
+    if(regexec(&regexp->regex, wi_string_utf8_string(string), 32, matches, 0) != 0)
         return NULL;
 
     return wi_string_substring_with_range(string,

@@ -35,8 +35,10 @@
 #include <openssl/rand.h>
 #endif
 
+#include <wired/wi-data.h>
 #include <wired/wi-private.h>
 #include <wired/wi-random.h>
+#include <wired/wi-system.h>
 
 #ifdef HAVE_SRANDOM
 #define _WI_DATA_SRANDOM(n)             srandom((n))
@@ -76,10 +78,22 @@ void wi_random_initialize(void) {
 
 #pragma mark -
 
+wi_data_t * wi_random_data(wi_uinteger_t length) {
+    void    *buffer;
+    
+    buffer = wi_malloc(length);
+    
+    wi_random_get_bytes(buffer, length);
+    
+    return wi_data_with_bytes_no_copy(buffer, length, true);
+}
+
+
+
 void wi_random_get_bytes(void *buffer, wi_uinteger_t length) {
 #ifndef HAVE_OPENSSL_SHA_H
-    unsigned char        *p;
-    uint32_t            i;
+    unsigned char   *p;
+    uint32_t        i;
 #endif
     
 #ifdef HAVE_OPENSSL_SHA_H

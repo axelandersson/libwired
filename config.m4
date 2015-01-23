@@ -342,6 +342,7 @@ AC_DEFUN([WI_INCLUDE_ICONV_LIBRARY], [
         ])
 
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_ICONV])
+        WI_APPEND_FLAG([CPPFLAGS], [-DWI_ENCODING])
 
         wi_include_iconv_library_done="yes"
     fi

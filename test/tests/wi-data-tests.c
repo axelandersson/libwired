@@ -66,12 +66,7 @@ void wi_test_data_creation(void) {
     WI_TEST_ASSERT_EQUALS(wi_data_length(data), 1024U, "");
     WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), buffer, 1024), 0, "");
     
-    data = wi_data_with_random_bytes(1024);
-    
-    WI_TEST_ASSERT_NOT_NULL(data, "");
-    WI_TEST_ASSERT_EQUALS(wi_data_length(data), 1024U, "");
-    
-    data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     
     WI_TEST_ASSERT_NOT_NULL(data, "");
     WI_TEST_ASSERT_EQUALS(wi_data_length(data), 11U, "");
@@ -98,7 +93,7 @@ void wi_test_data_runtime_functions(void) {
     wi_data_t           *data1;
     wi_mutable_data_t   *data2;
     
-    data1 = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data1 = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     data2 = wi_autorelease(wi_mutable_copy(data1));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(data1, data2, "");
@@ -121,9 +116,9 @@ void wi_test_data_accessors(void) {
     wi_data_t   *data;
     char        *buffer;
     
-    data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     
-    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), wi_data_bytes(wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="))), wi_data_length(data)), 0, "");
+    WI_TEST_ASSERT_EQUALS(memcmp(wi_data_bytes(data), wi_data_bytes(wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="))), wi_data_length(data)), 0, "");
     
     buffer = wi_malloc(wi_data_length(data));
     
@@ -140,8 +135,8 @@ void wi_test_data_appending(void) {
     wi_data_t   *data1, *data2, *data3;
     char        *buffer;
     
-    data1 = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
-    data2 = wi_data_by_appending_data(data1, wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ=")));
+    data1 = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
+    data2 = wi_data_by_appending_data(data1, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")));
     
     WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(data1, data2, "");
     WI_TEST_ASSERT_TRUE(wi_data_length(data1) * 2 == wi_data_length(data2), "");
@@ -163,14 +158,14 @@ void wi_test_data_appending(void) {
 void wi_test_data_digests(void) {
     wi_data_t   *data;
     
-    data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
 
 #ifdef WI_DIGESTS
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_md5(data), WI_STR("5eb63bbbe01eeed093cb22bb8f5acdc3"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_sha1(data), WI_STR("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_md5_string(data), WI_STR("5eb63bbbe01eeed093cb22bb8f5acdc3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_sha1_string(data), WI_STR("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"), "");
 #endif
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_base64(data), WI_STR("aGVsbG8gd29ybGQ="), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_base64_string(data), WI_STR("aGVsbG8gd29ybGQ="), "");
 }
 
 
@@ -179,13 +174,13 @@ void wi_test_data_serialization(void) {
     wi_data_t       *data1, *data2;
     wi_string_t     *path;
 
-    data1 = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data1 = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     
-    WI_TEST_ASSERT_FALSE(wi_data_write_to_file(data1, WI_STR("/non/existing/file.data")), "");
+    WI_TEST_ASSERT_FALSE(wi_data_write_to_path(data1, WI_STR("/non/existing/file")), "");
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test.data.XXXXXXX"));
+    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-data.XXXXXXX"));
     
-    WI_TEST_ASSERT_TRUE(wi_data_write_to_file(data1, path), "");
+    WI_TEST_ASSERT_TRUE(wi_data_write_to_path(data1, path), "");
     
     data2 = wi_data_with_contents_of_file(path);
 
@@ -200,7 +195,7 @@ void wi_test_data_mutation(void) {
     wi_uinteger_t       i;
     
     data1 = wi_mutable_data();
-    data2 = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data2 = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     
     for(i = 0; i < 100; i++) {
         wi_mutable_data_append_data(data1, data2);

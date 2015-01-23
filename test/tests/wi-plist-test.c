@@ -35,7 +35,7 @@ void wi_test_plist(void) {
     wi_string_t         *string1, *string2;
     wi_dictionary_t     *dictionary1, *dictionary2;
     
-    string1 = wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-plist-tests-1.plist"))));
+    string1 = wi_string_with_utf8_contents_of_file(wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-plist-tests-1.plist")));
 
     dictionary1 = wi_plist_instance_for_string(string1);
     
@@ -54,7 +54,7 @@ void wi_test_plist(void) {
             WI_STR("real"),
         wi_date_with_rfc3339_string(WI_STR("2008-06-01T17:28:00Z")),
             WI_STR("date"),
-        wi_data_with_base64(wi_string_base64(WI_STR("hello world"))),
+        wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")),
             WI_STR("data"),
         wi_dictionary_with_data_and_keys(WI_STR("value1"), WI_STR("key1"), WI_STR("value2"), WI_STR("key2"), NULL),
             WI_STR("dict"),

@@ -71,7 +71,7 @@ void wi_test_digest_md5(void) {
     
     wi_md5_digest(wi_data_bytes(data), wi_data_length(data), buffer);
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_MD5_DIGEST_LENGTH), wi_data_with_base64(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_MD5_DIGEST_LENGTH), wi_data_with_base64_string(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_md5_digest_string(data), WI_STR("d41d8cd98f00b204e9800998ecf8427e"), "");
     
     md5 = wi_md5();
@@ -79,8 +79,8 @@ void wi_test_digest_md5(void) {
     wi_md5_close(md5);
     wi_md5_get_data(md5, buffer);
 
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_MD5_DIGEST_LENGTH), wi_data_with_base64(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_md5_data(md5), wi_data_with_base64(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_MD5_DIGEST_LENGTH), wi_data_with_base64_string(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_md5_data(md5), wi_data_with_base64_string(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
 }
 
 
@@ -94,7 +94,7 @@ void wi_test_digest_sha1(void) {
     
     wi_sha1_digest(wi_data_bytes(data), wi_data_length(data), buffer);
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_SHA1_DIGEST_LENGTH), wi_data_with_base64(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_SHA1_DIGEST_LENGTH), wi_data_with_base64_string(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_sha1_digest_string(data), WI_STR("da39a3ee5e6b4b0d3255bfef95601890afd80709"), "");
     
     sha1 = wi_sha1();
@@ -102,8 +102,8 @@ void wi_test_digest_sha1(void) {
     wi_sha1_close(sha1);
     wi_sha1_get_data(sha1, buffer);
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_SHA1_DIGEST_LENGTH), wi_data_with_base64(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_sha1_data(sha1), wi_data_with_base64(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_SHA1_DIGEST_LENGTH), wi_data_with_base64_string(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_sha1_data(sha1), wi_data_with_base64_string(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
 }
 
 
@@ -112,9 +112,9 @@ void wi_test_digest_base64(void) {
     wi_string_t     *string;
     wi_data_t       *data;
     
-    data = wi_string_data(WI_STR("hello world"));
+    data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     string = wi_base64_string_from_data(data);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("aGVsbG8gd29ybGQ="), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_from_base64_string(string), wi_string_data(WI_STR("hello world")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_from_base64_string(string), wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")), "");
 }

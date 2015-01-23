@@ -126,7 +126,7 @@ void wi_log_add_syslog_logger(int facility) {
     _wi_log_syslog_enabled = true;
     _wi_log_syslog_facility = facility;
     
-    openlog(wi_string_cstring(wi_process_name(wi_process())), LOG_PID | LOG_NDELAY, facility);
+    openlog(wi_string_utf8_string(wi_process_name(wi_process())), LOG_PID | LOG_NDELAY, facility);
 }
 
 
@@ -142,13 +142,13 @@ void wi_log_add_callback_logger(wi_log_callback_func_t function) {
 
 int wi_log_syslog_facility_with_name(wi_string_t *name) {
 #if HAVE_SYSLOG_FACILITYNAMES
-    const char  *cstring;
+    const char  *utf8string;
     int         i;
     
-    cstring = wi_string_cstring(name);
+    utf8string = wi_string_utf8_string(name);
     
     for(i = 0; facilitynames[i].c_name != NULL; i++) {
-        if(strcmp(cstring, facilitynames[i].c_name) == 0)
+        if(strcmp(utf8string, facilitynames[i].c_name) == 0)
             break;
     }
 
@@ -173,7 +173,7 @@ int wi_log_syslog_facility_with_name(wi_string_t *name) {
 static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
     wi_string_t     *string;
     FILE            *fp = NULL;
-    const char      *cstring, *name, *path, *prefix;
+    const char      *utf8string, *name, *path, *prefix;
     char            date[_WI_LOG_DATE_SIZE];
     int             priority;
     
@@ -181,8 +181,8 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
         return;
     
     string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
-    cstring = wi_string_cstring(string);
-    name = wi_string_cstring(wi_process_name(wi_process()));
+    utf8string = wi_string_utf8_string(string);
+    name = wi_string_utf8_string(wi_process_name(wi_process()));
     
     _wi_log_get_date(date);
     
@@ -217,11 +217,11 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
     if(_wi_log_stdout_enabled) {
         switch(_wi_log_stdout_style) {
             case WI_LOG_DAEMON:
-                printf("%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
+                printf("%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, utf8string);
                 break;
                 
             case WI_LOG_TOOL:
-                printf("%s: %s\n", name, cstring);
+                printf("%s: %s\n", name, utf8string);
                 break;
         }
         
@@ -229,17 +229,17 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
     }
 
     if(_wi_log_syslog_enabled)
-        syslog(priority, "%s", cstring);
+        syslog(priority, "%s", utf8string);
 
     if(_wi_log_file_enabled) {
         wi_recursive_lock_lock(_wi_log_file_lock);
 
-        path = wi_string_cstring(_wi_log_file_path);
+        path = wi_string_utf8_string(_wi_log_file_path);
 
         fp = fopen(path, "a");
 
         if(fp) {
-            fprintf(fp, "%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, cstring);
+            fprintf(fp, "%s %s[%u]: %s: %s\n", date, name, (uint32_t) getpid(), prefix, utf8string);
             fclose(fp);
             
             if(_wi_log_file_lines > 0 && _wi_log_file_limit > 0) {

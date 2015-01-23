@@ -44,8 +44,6 @@ WI_TEST_EXPORT void                     wi_test_string_searching(void);
 WI_TEST_EXPORT void                     wi_test_string_case(void);
 WI_TEST_EXPORT void                     wi_test_string_paths(void);
 WI_TEST_EXPORT void                     wi_test_string_conversion(void);
-WI_TEST_EXPORT void                     wi_test_string_digests(void);
-WI_TEST_EXPORT void                     wi_test_string_encodings(void);
 WI_TEST_EXPORT void                     wi_test_string_serialization(void);
 WI_TEST_EXPORT void                     wi_test_string_mutation_setting(void);
 WI_TEST_EXPORT void                     wi_test_string_mutation_appending(void);
@@ -53,7 +51,6 @@ WI_TEST_EXPORT void                     wi_test_string_mutation_inserting(void);
 WI_TEST_EXPORT void                     wi_test_string_mutation_replacing(void);
 WI_TEST_EXPORT void                     wi_test_string_mutation_deleting(void);
 WI_TEST_EXPORT void                     wi_test_string_mutation_paths(void);
-WI_TEST_EXPORT void                     wi_test_string_mutation_encodings(void);
 
 static wi_string_t *                    _wi_test_string_creation_with_arguments(wi_string_t *, ...);
 static wi_string_t *                    _wi_test_string_appending_with_arguments(wi_string_t *, wi_string_t *, ...);
@@ -69,78 +66,60 @@ void wi_test_string_creation(void) {
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 0U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), ""), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), ""), 0, "");
     
-    string = wi_string_with_cstring("hello world");
-    
-    WI_TEST_ASSERT_NOT_NULL(string, "");
-    WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
-    
-    string = wi_string_with_cstring_no_copy("hello world", false);
+    string = wi_string_with_utf8_string("hello world");
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
     
     string = wi_string_with_format(WI_STR("%s"), "hello world");
 
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
     
     string = _wi_test_string_creation_with_arguments(WI_STR("%s"), "hello world");
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
     
-    data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
-    string = wi_string_with_data(data);
-    
-    WI_TEST_ASSERT_NOT_NULL(string, "");
-    WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
-    
-    string = wi_string_with_bytes(wi_data_bytes(data), wi_data_length(data));
+    data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
+    string = wi_string_with_utf8_data(data);
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
     
-    string = wi_string_with_bytes_no_copy((void *) wi_data_bytes(data), wi_data_length(data), false);
-    
-    WI_TEST_ASSERT_NOT_NULL(string, "");
-    WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
-    
-    string = wi_string_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    string = wi_string_with_utf8_bytes(wi_data_bytes(data), wi_data_length(data));
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
     
-    string = wi_string_with_contents_of_file(WI_STR("/non/existing/file.txt"));
+    string = wi_string_with_utf8_contents_of_file(WI_STR("/non/existing/file.txt"));
     
     WI_TEST_ASSERT_NULL(string, "");
     
-    string = wi_string_with_contents_of_file(wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-string-tests-1.txt")));
+    string = wi_string_with_utf8_contents_of_file(wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-string-tests-1.txt")));
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 12U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world\n"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world\n"), 0, "");
     
     string = wi_mutable_string();
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 0U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), ""), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), ""), 0, "");
     
     string = wi_mutable_string_with_format(WI_STR("%s"), "hello world");
     
     WI_TEST_ASSERT_NOT_NULL(string, "");
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
 }
 
 
@@ -162,7 +141,7 @@ void wi_test_string_runtime_functions(void) {
     wi_string_t             *string1;
     wi_mutable_string_t     *string2;
     
-    string1 = wi_string_with_cstring("hello world");
+    string1 = wi_string_with_utf8_string("hello world");
     string2 = wi_autorelease(wi_mutable_copy(string1));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string1, string2, "");
@@ -172,7 +151,7 @@ void wi_test_string_runtime_functions(void) {
     WI_TEST_ASSERT_TRUE(wi_runtime_options(string1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
     WI_TEST_ASSERT_TRUE(wi_runtime_options(string2) & WI_RUNTIME_OPTION_MUTABLE, "");
     
-    wi_mutable_string_append_cstring(string2, "hello world");
+    wi_mutable_string_append_string(string2, WI_STR("hello world"));
     
     WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(string1, string2, "");
     
@@ -229,10 +208,11 @@ void wi_test_string_formatting(void) {
 void wi_test_string_accessors(void) {
     wi_string_t     *string;
     
-    string = wi_string_with_cstring("hello world");
+    string = wi_string_with_utf8_string("hello world");
 
     WI_TEST_ASSERT_EQUALS(wi_string_length(string), 11U, "");
-    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_cstring(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUALS(strcmp(wi_string_utf8_string(string), "hello world"), 0, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_utf8_data(string), wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")), "");
     WI_TEST_ASSERT_EQUALS(wi_string_character_at_index(string, 0), 'h', "");
     WI_TEST_ASSERT_EQUALS(wi_string_character_at_index(string, 6), 'w', "");
 }
@@ -242,12 +222,8 @@ void wi_test_string_accessors(void) {
 void wi_test_string_appending(void) {
     wi_data_t   *data;
     
-    data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ="));
+    data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_appending_cstring(WI_STR("hello world"), "hello world"),
-                                   WI_STR("hello worldhello world"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_appending_bytes(WI_STR("hello world"), wi_data_bytes(data), wi_data_length(data)),
-                                   WI_STR("hello worldhello world"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_appending_string(WI_STR("hello world"), WI_STR("hello world")),
                                    WI_STR("hello worldhello world"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_appending_format(WI_STR("hello world"), WI_STR("%s"), "hello world"),
@@ -450,78 +426,18 @@ void wi_test_string_conversion(void) {
 
 
 
-void wi_test_string_digests(void) {
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_data(WI_STR("hello world")), wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQ=")), "");
-    
-#ifdef WI_DIGESTS
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_md5(WI_STR("hello world")), WI_STR("5eb63bbbe01eeed093cb22bb8f5acdc3"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_sha1(WI_STR("hello world")), WI_STR("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"), "");
-#endif
-
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_base64(WI_STR("hello world")), WI_STR("aGVsbG8gd29ybGQ="), "");
-}
-
-
-
-void wi_test_string_encodings(void) {
-#ifdef WI_ICONV
-    wi_string_encoding_t    *ascii_encoding, *utf8_encoding;
-    wi_string_t             *ascii_string, *utf8_string;
-    
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("non existing charset"), 0);
-    
-    WI_TEST_ASSERT_NULL(ascii_encoding, "");
-    
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), 0);
-    
-    WI_TEST_ASSERT_NOT_NULL(ascii_encoding, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(ascii_encoding), wi_string_encoding_runtime_id(), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_encoding_charset(ascii_encoding), WI_STR("ASCII"), "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(ascii_encoding), WI_STR("ASCII"), 0), WI_NOT_FOUND, "");
-    
-    utf8_encoding = wi_string_encoding_with_charset(WI_STR("UTF-8"), 0);
-    
-    WI_TEST_ASSERT_NOT_NULL(utf8_encoding, "");
-    WI_TEST_ASSERT_EQUALS(wi_runtime_id(ascii_encoding), wi_string_encoding_runtime_id(), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_encoding_charset(utf8_encoding), WI_STR("UTF-8"), "");
-    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(utf8_encoding), WI_STR("UTF-8"), 0), WI_NOT_FOUND, "");
-    
-    ascii_string = WI_STR("hello world");
-    utf8_string = wi_string_by_converting_encoding(ascii_string, ascii_encoding, utf8_encoding);
-    
-    WI_TEST_ASSERT_EQUAL_INSTANCES(utf8_string, WI_STR("hello world"), "");
-    
-    utf8_string = wi_string_with_contents_of_file(wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-string-tests-2.txt")));
-    ascii_string = wi_string_by_converting_encoding(utf8_string, utf8_encoding, ascii_encoding);
-
-    WI_TEST_ASSERT_NULL(ascii_string, "");
-    
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), WI_STRING_ENCODING_TRANSLITERATE);
-    ascii_string = wi_string_by_converting_encoding(utf8_string, utf8_encoding, ascii_encoding);
-    
-    WI_TEST_ASSERT_NULL(ascii_string, "");
-
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), WI_STRING_ENCODING_IGNORE);
-    ascii_string = wi_string_by_converting_encoding(utf8_string, utf8_encoding, ascii_encoding);
-    
-    WI_TEST_ASSERT_EQUAL_INSTANCES(ascii_string, WI_STR("\n"), "");
-#endif
-}
-
-
-
 void wi_test_string_serialization(void) {
     wi_string_t     *string1, *string2, *path;
     
-    string1 = wi_string_with_cstring("hello world");
+    string1 = wi_string_with_utf8_string("hello world");
     
-    WI_TEST_ASSERT_FALSE(wi_string_write_to_file(string1, WI_STR("/non/existing/file.string")), "");
+    WI_TEST_ASSERT_FALSE(wi_string_write_utf8_string_to_path(string1, WI_STR("/non/existing/file.string")), "");
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test.string.XXXXXXX"));
+    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-string.XXXXXXX"));
     
-    WI_TEST_ASSERT_TRUE(wi_string_write_to_file(string1, path), "");
+    WI_TEST_ASSERT_TRUE(wi_string_write_utf8_string_to_path(string1, path), "");
     
-    string2 = wi_string_with_contents_of_file(path);
+    string2 = wi_string_with_utf8_contents_of_file(path);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string1, string2, "");
 }
@@ -533,21 +449,17 @@ void wi_test_string_mutation_setting(void) {
     
     string = wi_mutable_string();
     
-    wi_mutable_string_set_cstring(string, "hello world 1");
+    wi_mutable_string_set_string(string, WI_STR("hello world 1"));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1"), "");
     
-    wi_mutable_string_set_string(string, WI_STR("hello world 2"));
+    wi_mutable_string_set_format(string, WI_STR("hello world %d"), 2);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 2"), "");
     
-    wi_mutable_string_set_format(string, WI_STR("hello world %d"), 3);
+    _wi_test_string_mutation_setting_with_arguments(string, WI_STR("hello world %d"), 3);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 3"), "");
-    
-    _wi_test_string_mutation_setting_with_arguments(string, WI_STR("hello world %d"), 4);
-    
-    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 4"), "");
 }
 
 
@@ -568,27 +480,17 @@ void wi_test_string_mutation_appending(void) {
     
     string = wi_mutable_string();
     
-    wi_mutable_string_append_cstring(string, "hello world 1");
+    wi_mutable_string_append_string(string, WI_STR("hello world 1"));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1"), "");
     
-    data = wi_data_with_base64(WI_STR("aGVsbG8gd29ybGQgMg=="));
-
-    wi_mutable_string_append_bytes(string, wi_data_bytes(data), wi_data_length(data));
-
+    wi_mutable_string_append_format(string, WI_STR("hello world %d"), 2);
+    
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1hello world 2"), "");
     
-    wi_mutable_string_append_string(string, WI_STR("hello world 3"));
+    _wi_test_string_mutation_appending_with_arguments(string, WI_STR("hello world %d"), 3);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1hello world 2hello world 3"), "");
-    
-    wi_mutable_string_append_format(string, WI_STR("hello world %d"), 4);
-    
-    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1hello world 2hello world 3hello world 4"), "");
-    
-    _wi_test_string_mutation_appending_with_arguments(string, WI_STR("hello world %d"), 5);
-    
-    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1hello world 2hello world 3hello world 4hello world 5"), "");
 }
 
 
@@ -608,7 +510,7 @@ void wi_test_string_mutation_inserting(void) {
     
     string = wi_mutable_string();
     
-    wi_mutable_string_insert_cstring_at_index(string, "hello world 1", 0);
+    wi_mutable_string_insert_string_at_index(string, WI_STR("hello world 1"), 0);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world 1"), "");
     
@@ -749,39 +651,4 @@ void wi_test_string_mutation_paths(void) {
     wi_mutable_string_delete_path_extension(path);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(path, WI_STR("wired"), "");
-}
-
-
-
-void wi_test_string_mutation_encodings(void) {
-#ifdef WI_ICONV
-    wi_string_encoding_t    *ascii_encoding, *utf8_encoding;
-    wi_mutable_string_t     *string;
-    wi_boolean_t            result;
-    
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), 0);
-    utf8_encoding = wi_string_encoding_with_charset(WI_STR("UTF-8"), 0);
-    
-    string = wi_mutable_string_with_format(WI_STR("hello world"));
-    result = wi_mutable_string_convert_encoding(string, ascii_encoding, utf8_encoding);
-    
-    WI_TEST_ASSERT_TRUE(result, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world"), "");
-    
-    string = wi_autorelease(wi_mutable_copy(wi_string_with_contents_of_file(wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-string-tests-2.txt")))));
-    result = wi_mutable_string_convert_encoding(string, utf8_encoding, ascii_encoding);
-    
-    WI_TEST_ASSERT_FALSE(result, "");
-    
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), WI_STRING_ENCODING_TRANSLITERATE);
-    result = wi_mutable_string_convert_encoding(string, utf8_encoding, ascii_encoding);
-    
-    WI_TEST_ASSERT_FALSE(result, "");
-    
-    ascii_encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), WI_STRING_ENCODING_IGNORE);
-    result = wi_mutable_string_convert_encoding(string, utf8_encoding, ascii_encoding);
-    
-    WI_TEST_ASSERT_TRUE(result, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("\n"), "");
-#endif
 }

@@ -329,7 +329,7 @@ wi_string_t * wi_md5_string(wi_md5_t *md5) {
 
     md5_hex[i+i] = '\0';
 
-    return wi_string_with_cstring(md5_hex);
+    return wi_string_with_utf8_string(md5_hex);
 }
 
 
@@ -443,7 +443,7 @@ wi_string_t * wi_sha1_string(wi_sha1_t *sha1) {
 
     sha1_hex[i+i] = '\0';
 
-    return wi_string_with_cstring(sha1_hex);
+    return wi_string_with_utf8_string(sha1_hex);
 }
 
 #endif
@@ -490,10 +490,10 @@ wi_string_t * wi_base64_string_from_data(wi_data_t *data) {
             count = 4;
 
         for(i = 0; i < count; i++)
-            wi_mutable_string_append_bytes(base64, &base64_table[outbuffer[i]], 1);
+            wi_mutable_string_append_format(base64, WI_STR("%c"), base64_table[outbuffer[i]]);
 
         for(i = count; i < 4; i++)
-            wi_mutable_string_append_bytes(base64, "=", 1);
+            wi_mutable_string_append_string(base64, WI_STR("="));
 
         position += 3;
     }
@@ -513,7 +513,7 @@ wi_data_t * wi_data_from_base64_string(wi_string_t *string) {
     wi_boolean_t        ignore, stop, end;
     
     length          = wi_string_length(string);
-    buffer          = wi_string_cstring(string);
+    buffer          = wi_string_utf8_string(string);
     position        = 0;
     offset          = 0;
     data            = wi_data_init_with_capacity(wi_mutable_data_alloc(), length);

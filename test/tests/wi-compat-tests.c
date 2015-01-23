@@ -40,7 +40,7 @@ void wi_test_compat_strings_separating(void) {
     char            *s, *ss, *string;
     wi_uinteger_t   i = 0;
 
-    s = ss = strdup("foo.bar.baz");
+    s = ss = wi_strdup("foo.bar.baz");
     
     while((string = wi_strsep(&s, "."))) {
         if(i == 0)

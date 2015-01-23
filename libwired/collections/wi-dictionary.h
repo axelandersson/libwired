@@ -79,7 +79,7 @@ WI_EXPORT wi_array_t *                              wi_dictionary_keys_sorted_by
 WI_EXPORT wi_enumerator_t *                         wi_dictionary_key_enumerator(wi_dictionary_t *);
 WI_EXPORT wi_enumerator_t *                         wi_dictionary_data_enumerator(wi_dictionary_t *);
 
-WI_EXPORT wi_boolean_t                              wi_dictionary_write_to_file(wi_dictionary_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                              wi_dictionary_write_to_path(wi_dictionary_t *, wi_string_t *);
 
 WI_EXPORT void                                      wi_mutable_dictionary_set_data_for_key(wi_mutable_dictionary_t *, void *, void *);
 WI_EXPORT void                                      wi_mutable_dictionary_add_entries_from_dictionary(wi_mutable_dictionary_t *, wi_dictionary_t *);

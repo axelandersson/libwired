@@ -33,6 +33,7 @@
 #include <wired/wi-array.h>
 #include <wired/wi-assert.h>
 #include <wired/wi-base.h>
+#include <wired/wi-data.h>
 #include <wired/wi-enumerator.h>
 #include <wired/wi-error.h>
 #include <wired/wi-fsenumerator.h>
@@ -66,6 +67,7 @@ WI_EXPORT void                              wi_data_register(void);
 WI_EXPORT void                              wi_date_register(void);
 WI_EXPORT void                              wi_dictionary_register(void);
 WI_EXPORT void                              wi_digest_register(void);
+WI_EXPORT void                              wi_encoding_register(void);
 WI_EXPORT void                              wi_enumerator_register(void);
 WI_EXPORT void                              wi_error_register(void);
 WI_EXPORT void                              wi_file_register(void);
@@ -101,6 +103,7 @@ WI_EXPORT void                              wi_data_initialize(void);
 WI_EXPORT void                              wi_date_initialize(void);
 WI_EXPORT void                              wi_dictionary_initialize(void);
 WI_EXPORT void                              wi_digest_initialize(void);
+WI_EXPORT void                              wi_encoding_initialize(void);
 WI_EXPORT void                              wi_enumerator_initialize(void);
 WI_EXPORT void                              wi_error_initialize(void);
 WI_EXPORT void                              wi_file_initialize(void);
@@ -131,12 +134,16 @@ WI_EXPORT void                              wi_x509_initialize(void);
 
 WI_EXPORT void                              wi_process_load(int, const char **);
 
-WI_EXPORT wi_hash_code_t                    wi_hash_cstring(const char *, wi_uinteger_t);
+WI_EXPORT wi_hash_code_t                    wi_hash_utf8_string(const char *);
 WI_EXPORT wi_hash_code_t                    wi_hash_pointer(const void *);
 WI_EXPORT wi_hash_code_t                    wi_hash_int(int);
 WI_EXPORT wi_hash_code_t                    wi_hash_double(double);
 WI_EXPORT wi_hash_code_t                    wi_hash_data(const unsigned char *, wi_uinteger_t);
 
+WI_EXPORT wi_string_t *                     wi_encoding_utf8_string_from_data(wi_encoding_t *, wi_data_t *);
+WI_EXPORT wi_string_t *                     wi_encoding_utf8_string_from_bytes(wi_encoding_t *, const char *, wi_uinteger_t);
+WI_EXPORT wi_data_t *                       wi_encoding_data_from_utf8_bytes(wi_encoding_t *, const char *, wi_uinteger_t);
+    
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_alloc(void);
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
 

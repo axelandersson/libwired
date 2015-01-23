@@ -33,11 +33,8 @@
 #include <wired/wi-pool.h>
 #include <wired/wi-runtime.h>
 
-#define WI_STR(cstring) \
-    _wi_string_constant_string((cstring))
-
-
-typedef struct _wi_string_encoding          wi_string_encoding_t;
+#define WI_STR(utf8_string) \
+    _wi_string_constant_utf8_string((utf8_string))
 
 
 enum _wi_string_options {
@@ -51,15 +48,16 @@ typedef enum _wi_string_options             wi_string_options_t;
 WI_EXPORT wi_runtime_id_t                   wi_string_runtime_id(void);
 
 WI_EXPORT wi_string_t *                     wi_string(void);
-WI_EXPORT wi_string_t *                     wi_string_with_cstring(const char *);
-WI_EXPORT wi_string_t *                     wi_string_with_cstring_no_copy(char *, wi_boolean_t);
+WI_EXPORT wi_string_t *                     wi_string_with_utf8_string(const char *);
+WI_EXPORT wi_string_t *                     wi_string_with_c_string(const char *, wi_encoding_t *);
 WI_EXPORT wi_string_t *                     wi_string_with_format(wi_string_t *, ...);
 WI_EXPORT wi_string_t *                     wi_string_with_format_and_arguments(wi_string_t *, va_list);
-WI_EXPORT wi_string_t *                     wi_string_with_data(wi_data_t *);
-WI_EXPORT wi_string_t *                     wi_string_with_bytes(const void *, wi_uinteger_t);
-WI_EXPORT wi_string_t *                     wi_string_with_bytes_no_copy(void *, wi_uinteger_t, wi_boolean_t);
-WI_EXPORT wi_string_t *                     wi_string_with_base64(wi_string_t *);
-WI_EXPORT wi_string_t *                     wi_string_with_contents_of_file(wi_string_t *);
+WI_EXPORT wi_string_t *                     wi_string_with_data(wi_data_t *, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_with_utf8_data(wi_data_t *);
+WI_EXPORT wi_string_t *                     wi_string_with_bytes(const void *, wi_uinteger_t, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_with_utf8_bytes(const void *, wi_uinteger_t);
+WI_EXPORT wi_string_t *                     wi_string_with_contents_of_file(wi_string_t *, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_with_utf8_contents_of_file(wi_string_t *);
 WI_EXPORT wi_mutable_string_t *             wi_mutable_string(void);
 WI_EXPORT wi_mutable_string_t *             wi_mutable_string_with_format(wi_string_t *, ...);
 
@@ -67,27 +65,28 @@ WI_EXPORT wi_string_t *                     wi_string_alloc(void);
 WI_EXPORT wi_mutable_string_t *             wi_mutable_string_alloc(void);
 WI_EXPORT wi_string_t *                     wi_string_init(wi_string_t *);
 WI_EXPORT wi_string_t *                     wi_string_init_with_capacity(wi_string_t *, wi_uinteger_t);
-WI_EXPORT wi_string_t *                     wi_string_init_with_cstring(wi_string_t *, const char *);
-WI_EXPORT wi_string_t *                     wi_string_init_with_cstring_no_copy(wi_string_t *, char *, wi_boolean_t);
-WI_EXPORT wi_string_t *                     wi_string_init_with_data(wi_string_t *, wi_data_t *);
-WI_EXPORT wi_string_t *                     wi_string_init_with_bytes(wi_string_t *, const void *, wi_uinteger_t);
-WI_EXPORT wi_string_t *                     wi_string_init_with_bytes_no_copy(wi_string_t *, void *, wi_uinteger_t, wi_boolean_t);
+WI_EXPORT wi_string_t *                     wi_string_init_with_utf8_string(wi_string_t *, const char *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_c_string(wi_string_t *, const char *, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_data(wi_string_t *, wi_data_t *, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_utf8_data(wi_string_t *, wi_data_t *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_bytes(wi_string_t *, const void *, wi_uinteger_t, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_utf8_bytes(wi_string_t *, const void *, wi_uinteger_t);
 WI_EXPORT wi_string_t *                     wi_string_init_with_format(wi_string_t *, wi_string_t *, ...);
 WI_EXPORT wi_string_t *                     wi_string_init_with_format_and_arguments(wi_string_t *, wi_string_t *, va_list);
-WI_EXPORT wi_string_t *                     wi_string_init_with_base64(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_string_t *                     wi_string_init_with_contents_of_file(wi_string_t *, wi_string_t *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_contents_of_file(wi_string_t *, wi_string_t *, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_string_init_with_utf8_contents_of_file(wi_string_t *, wi_string_t *);
 
 WI_EXPORT wi_integer_t                      wi_string_compare(wi_runtime_instance_t *, wi_runtime_instance_t *);
 WI_EXPORT wi_integer_t                      wi_string_case_insensitive_compare(wi_runtime_instance_t *, wi_runtime_instance_t *);
 
 WI_EXPORT wi_uinteger_t                     wi_string_length(wi_string_t *);
-WI_EXPORT const char *                      wi_string_cstring(wi_string_t *);
+WI_EXPORT const char *                      wi_string_utf8_string(wi_string_t *);
+WI_EXPORT wi_data_t *                       wi_string_data(wi_string_t *, wi_encoding_t *);
+WI_EXPORT wi_data_t *                       wi_string_utf8_data(wi_string_t *);
 WI_EXPORT char                              wi_string_character_at_index(wi_string_t *, wi_uinteger_t);
 
-WI_EXPORT wi_string_t *                     _wi_string_constant_string(const char *);
+WI_EXPORT wi_string_t *                     _wi_string_constant_utf8_string(const char *);
 
-WI_EXPORT wi_string_t *                     wi_string_by_appending_cstring(wi_string_t *, const char *);
-WI_EXPORT wi_string_t *                     wi_string_by_appending_bytes(wi_string_t *, const void *, wi_uinteger_t);
 WI_EXPORT wi_string_t *                     wi_string_by_appending_string(wi_string_t *, wi_string_t *);
 WI_EXPORT wi_string_t *                     wi_string_by_appending_format(wi_string_t *, wi_string_t *, ...);
 WI_EXPORT wi_string_t *                     wi_string_by_appending_format_and_arguments(wi_string_t *, wi_string_t *, va_list);
@@ -140,28 +139,18 @@ WI_EXPORT wi_uinteger_t                     wi_string_uinteger(wi_string_t *);
 WI_EXPORT float                             wi_string_float(wi_string_t *);
 WI_EXPORT double                            wi_string_double(wi_string_t *);
 
-WI_EXPORT wi_data_t *                       wi_string_data(wi_string_t *);
-WI_EXPORT wi_string_t *                     wi_string_md5(wi_string_t *);
-WI_EXPORT wi_string_t *                     wi_string_sha1(wi_string_t *);
-WI_EXPORT wi_string_t *                     wi_string_base64(wi_string_t *);
+WI_EXPORT wi_boolean_t                      wi_string_write_string_to_path(wi_string_t *, wi_string_t *, wi_encoding_t *);
+WI_EXPORT wi_boolean_t                      wi_string_write_utf8_string_to_path(wi_string_t *, wi_string_t *);
 
-WI_EXPORT wi_string_t *                     wi_string_by_converting_encoding(wi_string_t *, wi_string_encoding_t *, wi_string_encoding_t *);
-
-WI_EXPORT wi_boolean_t                      wi_string_write_to_file(wi_string_t *, wi_string_t *);
-
-WI_EXPORT void                              wi_mutable_string_set_cstring(wi_string_t *, const char *);
 WI_EXPORT void                              wi_mutable_string_set_string(wi_string_t *, wi_string_t *);
 WI_EXPORT void                              wi_mutable_string_set_format(wi_string_t *, wi_string_t *, ...);
 WI_EXPORT void                              wi_mutable_string_set_format_and_arguments(wi_string_t *, wi_string_t *, va_list);
 
-WI_EXPORT void                              wi_mutable_string_append_cstring(wi_mutable_string_t *, const char *);
-WI_EXPORT void                              wi_mutable_string_append_bytes(wi_mutable_string_t *, const void *, wi_uinteger_t);
 WI_EXPORT void                              wi_mutable_string_append_string(wi_mutable_string_t *, wi_string_t *);
 WI_EXPORT void                              wi_mutable_string_append_format(wi_mutable_string_t *, wi_string_t *, ...);
 WI_EXPORT void                              wi_mutable_string_append_format_and_arguments(wi_mutable_string_t *, wi_string_t *, va_list);
 
 WI_EXPORT void                              wi_mutable_string_insert_string_at_index(wi_mutable_string_t *, wi_string_t *, wi_uinteger_t);
-WI_EXPORT void                              wi_mutable_string_insert_cstring_at_index(wi_mutable_string_t *, const char *, wi_uinteger_t);
 
 WI_EXPORT void                              wi_mutable_string_replace_characters_in_range_with_string(wi_mutable_string_t *, wi_range_t, wi_string_t *);
 WI_EXPORT void                              wi_mutable_string_replace_string_with_string(wi_mutable_string_t *, wi_string_t *, wi_string_t *, wi_uinteger_t);
@@ -178,25 +167,5 @@ WI_EXPORT void                              wi_mutable_string_append_path_compon
 WI_EXPORT void                              wi_mutable_string_delete_last_path_component(wi_mutable_string_t *);
 WI_EXPORT void                              wi_mutable_string_append_path_extension(wi_mutable_string_t *, wi_string_t *);
 WI_EXPORT void                              wi_mutable_string_delete_path_extension(wi_mutable_string_t *);
-
-WI_EXPORT wi_boolean_t                      wi_mutable_string_convert_encoding(wi_mutable_string_t *, wi_string_encoding_t *, wi_string_encoding_t *);
-
-
-enum _wi_string_encoding_options {
-    WI_STRING_ENCODING_IGNORE               = (1 << 0),
-    WI_STRING_ENCODING_TRANSLITERATE        = (1 << 1),
-    WI_STRING_ENCODING_ALL                  = (WI_STRING_ENCODING_IGNORE | WI_STRING_ENCODING_TRANSLITERATE)
-};
-typedef enum _wi_string_encoding_options    wi_string_encoding_options_t;
-
-
-WI_EXPORT wi_runtime_id_t                   wi_string_encoding_runtime_id(void);
-
-WI_EXPORT wi_string_encoding_t *            wi_string_encoding_with_charset(wi_string_t *, wi_string_encoding_options_t);
-
-WI_EXPORT wi_string_encoding_t *            wi_string_encoding_alloc(void);
-WI_EXPORT wi_string_encoding_t *            wi_string_encoding_init_with_charset(wi_string_encoding_t *, wi_string_t *, wi_string_encoding_options_t);
-
-WI_EXPORT wi_string_t *                     wi_string_encoding_charset(wi_string_encoding_t *);
 
 #endif /* WI_STRING_H */

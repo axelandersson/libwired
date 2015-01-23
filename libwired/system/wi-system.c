@@ -100,7 +100,7 @@ wi_string_t * wi_user_name(void) {
     if(!user)
         return NULL;
     
-    return wi_string_with_cstring(user->pw_name);
+    return wi_string_with_utf8_string(user->pw_name);
 }
 
 
@@ -113,7 +113,7 @@ wi_string_t * wi_user_home(void) {
     if(!user)
         return NULL;
     
-    return wi_string_with_cstring(user->pw_dir);
+    return wi_string_with_utf8_string(user->pw_dir);
 }
 
 
@@ -132,7 +132,7 @@ wi_string_t * wi_group_name(void) {
     if(!group)
         return NULL;
     
-    return wi_string_with_cstring(group->gr_name);
+    return wi_string_with_utf8_string(group->gr_name);
 }
 
 
@@ -181,10 +181,10 @@ wi_boolean_t wi_execv(wi_string_t *program, wi_array_t *arguments) {
     wi_uinteger_t   i;
     
     argv = wi_malloc((wi_array_count(arguments) + 2) * sizeof(char *));
-    argv[0] = strdup(wi_string_cstring(program));
+    argv[0] = wi_strdup(wi_string_utf8_string(program));
     
     for(i = 0; i < wi_array_count(arguments); i++)
-        argv[i + 1] = strdup(wi_string_cstring(wi_description(WI_ARRAY(arguments, i))));
+        argv[i + 1] = wi_strdup(wi_string_utf8_string(WI_ARRAY(arguments, i)));
     
     if(execv(argv[0], (char * const *) argv) < 0) {
         wi_error_set_errno(errno);
@@ -207,7 +207,7 @@ void * wi_malloc(size_t size) {
     
     pointer = calloc(1, size);
     
-    if(pointer == NULL)
+    if(!pointer)
         wi_crash();
 
     return pointer;
@@ -220,10 +220,23 @@ void * wi_realloc(void *pointer, size_t size) {
     
     newpointer = realloc(pointer, size);
     
-    if(newpointer == NULL)
+    if(!newpointer)
         wi_crash();
     
     return newpointer;
+}
+
+
+
+char * wi_strdup(const char *string) {
+    char    *newstring;
+    
+    newstring = strdup(string);
+    
+    if(!newstring)
+        wi_crash();
+    
+    return newstring;
 }
 
 
@@ -249,7 +262,7 @@ wi_array_t * wi_backtrace(void) {
     array       = wi_array_init_with_capacity(wi_mutable_array_alloc(), frames);
     
     for(i = 0; i < frames; i++)
-        wi_mutable_array_add_data(array, wi_string_with_cstring(symbols[i]));
+        wi_mutable_array_add_data(array, wi_string_with_utf8_string(symbols[i]));
     
     free(symbols);
     
@@ -268,12 +281,12 @@ wi_array_t * wi_backtrace(void) {
 wi_string_t * wi_getenv(wi_string_t *name) {
     char    *value;
     
-    value = getenv(wi_string_cstring(name));
+    value = getenv(wi_string_utf8_string(name));
     
     if(!value)
         return NULL;
     
-    return wi_string_with_cstring(value);
+    return wi_string_with_utf8_string(value);
 }
 
 

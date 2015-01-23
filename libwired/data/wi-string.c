@@ -46,17 +46,15 @@
 #include <inttypes.h>
 #endif
 
-#ifdef WI_ICONV
-#include <iconv.h>
-#endif
-
 #include <wired/wi-array.h>
 #include <wired/wi-assert.h>
 #include <wired/wi-compat.h>
 #include <wired/wi-data.h>
 #include <wired/wi-dictionary.h>
 #include <wired/wi-digest.h>
+#include <wired/wi-encoding.h>
 #include <wired/wi-file.h>
+#include <wired/wi-fs.h>
 #include <wired/wi-lock.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-private.h>
@@ -92,7 +90,6 @@ struct _wi_string {
     char                                *string;
     wi_uinteger_t                       length;
     wi_uinteger_t                       capacity;
-    wi_boolean_t                        free;
 };
 
 
@@ -104,8 +101,8 @@ static wi_hash_code_t                   _wi_string_hash(wi_runtime_instance_t *)
 
 static void                             _wi_string_grow(wi_string_t *, wi_uinteger_t);
 static void                             _wi_string_append_arguments(wi_string_t *, const char *, va_list);
-static void                             _wi_string_append_cstring(wi_string_t *, const char *);
-static void                             _wi_string_append_bytes(wi_string_t *, const void *, wi_uinteger_t);
+static void                             _wi_string_append_utf8_string(wi_string_t *, const char *);
+static void                             _wi_string_append_utf8_bytes(wi_string_t *, const void *, wi_uinteger_t);
 
 static wi_boolean_t                     _wi_mutable_string_char_is_whitespace(char);
 
@@ -127,42 +124,8 @@ static wi_runtime_class_t               _wi_string_runtime_class = {
 
 
 
-#ifdef WI_ICONV
-
-struct _wi_string_encoding {
-    wi_runtime_base_t                   base;
-    
-    wi_string_t                         *charset;
-    wi_mutable_string_t                 *encoding;
-
-    wi_uinteger_t                       options;
-};
-
-
-static void                             _wi_string_encoding_dealloc(wi_runtime_instance_t *);
-static wi_string_t *                    _wi_string_encoding_description(wi_runtime_instance_t *);
-
-
-static wi_runtime_id_t                  _wi_string_encoding_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t               _wi_string_encoding_runtime_class = {
-    "wi_string_encoding_t",
-    _wi_string_encoding_dealloc,
-    NULL,
-    NULL,
-    _wi_string_encoding_description,
-    NULL
-};
-
-#endif
-
-
-
 void wi_string_register(void) {
     _wi_string_runtime_id = wi_runtime_register_class(&_wi_string_runtime_class);
-    
-#ifdef WI_ICONV
-    _wi_string_encoding_runtime_id = wi_runtime_register_class(&_wi_string_encoding_runtime_class);
-#endif
 }
 
 
@@ -191,15 +154,19 @@ wi_string_t * wi_string(void) {
 
 
 
-wi_string_t * wi_string_with_cstring(const char *cstring) {
-    return wi_autorelease(wi_string_init_with_cstring(wi_string_alloc(), cstring));
+wi_string_t * wi_string_with_utf8_string(const char *c_string) {
+    return wi_autorelease(wi_string_init_with_utf8_string(wi_string_alloc(), c_string));
 }
 
 
 
-wi_string_t * wi_string_with_cstring_no_copy(char *cstring, wi_boolean_t free) {
-    return wi_autorelease(wi_string_init_with_cstring_no_copy(wi_string_alloc(), cstring, free));
+#ifdef WI_ENCODING
+
+wi_string_t * wi_string_with_c_string(const char *c_string, wi_encoding_t *encoding) {
+    return wi_autorelease(wi_string_init_with_c_string(wi_string_alloc(), c_string, encoding));
 }
+
+#endif
 
 
 
@@ -222,32 +189,50 @@ wi_string_t * wi_string_with_format_and_arguments(wi_string_t *fmt, va_list ap) 
 
 
 
-wi_string_t * wi_string_with_data(wi_data_t *data) {
-    return wi_autorelease(wi_string_init_with_data(wi_string_alloc(), data));
+#ifdef WI_ENCODING
+
+wi_string_t * wi_string_with_data(wi_data_t *data, wi_encoding_t *encoding) {
+    return wi_encoding_utf8_string_from_data(encoding, data);
+}
+
+#endif
+
+
+
+wi_string_t * wi_string_with_utf8_data(wi_data_t *data) {
+    return wi_autorelease(wi_string_init_with_utf8_data(wi_string_alloc(), data));
 }
 
 
 
-wi_string_t * wi_string_with_bytes(const void *buffer, wi_uinteger_t size) {
-    return wi_autorelease(wi_string_init_with_bytes(wi_string_alloc(), buffer, size));
+#ifdef WI_ENCODING
+
+wi_string_t * wi_string_with_bytes(const void *buffer, wi_uinteger_t size, wi_encoding_t *encoding) {
+    return wi_encoding_utf8_string_from_bytes(encoding, buffer, size);
+}
+
+#endif
+
+
+
+wi_string_t * wi_string_with_utf8_bytes(const void *buffer, wi_uinteger_t size) {
+    return wi_autorelease(wi_string_init_with_utf8_bytes(wi_string_alloc(), buffer, size));
 }
 
 
 
-wi_string_t * wi_string_with_bytes_no_copy(void *buffer, wi_uinteger_t size, wi_boolean_t free) {
-    return wi_autorelease(wi_string_init_with_bytes_no_copy(wi_string_alloc(), buffer, size, free));
+#ifdef WI_ENCODING
+
+wi_string_t * wi_string_with_contents_of_file(wi_string_t *path, wi_encoding_t *encoding) {
+    return wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), path, encoding));
 }
 
-
-
-wi_string_t * wi_string_with_base64(wi_string_t *base64) {
-    return wi_autorelease(wi_string_init_with_base64(wi_string_alloc(), base64));
-}
+#endif
 
 
 
-wi_string_t * wi_string_with_contents_of_file(wi_string_t *path) {
-    return wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), path));
+wi_string_t * wi_string_with_utf8_contents_of_file(wi_string_t *path) {
+    return wi_autorelease(wi_string_init_with_utf8_contents_of_file(wi_string_alloc(), path));
 }
 
 
@@ -295,55 +280,67 @@ wi_string_t * wi_string_init_with_capacity(wi_string_t *string, wi_uinteger_t ca
     string->capacity    = WI_MAX(wi_exp2m1(wi_log2(capacity) + 1), _WI_STRING_MIN_SIZE);
     string->string      = wi_malloc(string->capacity);
     string->length      = 0;
-    string->free        = true;
     
     return string;
 }
 
 
 
-wi_string_t * wi_string_init_with_cstring_no_copy(wi_string_t *string, char *cstring, wi_boolean_t free) {
-    string->length      = strlen(cstring);
-    string->capacity    = string->length + 1;
-    string->string      = cstring;
-    string->free        = free;
+wi_string_t * wi_string_init_with_utf8_string(wi_string_t *string, const char *utf8_string) {
+    string = wi_string_init_with_capacity(string, strlen(utf8_string));
+    
+    _wi_string_append_utf8_string(string, utf8_string);
     
     return string;
 }
 
 
+#ifdef WI_ENCODING
 
-wi_string_t * wi_string_init_with_cstring(wi_string_t *string, const char *cstring) {
-    string = wi_string_init_with_capacity(string, strlen(cstring));
+wi_string_t * wi_string_init_with_c_string(wi_string_t *string, const char *c_string, wi_encoding_t *encoding) {
+    wi_release(string);
     
-    _wi_string_append_cstring(string, cstring);
+    return wi_encoding_utf8_string_from_bytes(encoding, c_string, strlen(c_string));
+}
 
-    return string;
+#endif
+
+
+
+#ifdef WI_ENCODING
+
+wi_string_t * wi_string_init_with_data(wi_string_t *string, wi_data_t *data, wi_encoding_t *encoding) {
+    wi_release(string);
+    
+    return wi_encoding_utf8_string_from_data(encoding, data);
+}
+
+#endif
+
+
+
+wi_string_t * wi_string_init_with_utf8_data(wi_string_t *string, wi_data_t *data) {
+    return wi_string_init_with_utf8_bytes(string, wi_data_bytes(data), wi_data_length(data));
 }
 
 
 
-wi_string_t * wi_string_init_with_data(wi_string_t *string, wi_data_t *data) {
-    return wi_string_init_with_bytes(string, wi_data_bytes(data), wi_data_length(data));
+#ifdef WI_ENCODING
+
+wi_string_t * wi_string_init_with_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t size, wi_encoding_t *encoding) {
+    wi_release(string);
+    
+    return wi_encoding_utf8_string_from_bytes(encoding, buffer, size);
 }
 
+#endif
 
 
-wi_string_t * wi_string_init_with_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t size) {
+
+wi_string_t * wi_string_init_with_utf8_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t size) {
     string = wi_string_init_with_capacity(string, size);
     
-    _wi_string_append_bytes(string, buffer, size);
-
-    return string;
-}
-
-
-
-wi_string_t * wi_string_init_with_bytes_no_copy(wi_string_t *string, void *buffer, wi_uinteger_t size, wi_boolean_t free) {
-    string->length      = size;
-    string->capacity    = string->length + 1;
-    string->string      = buffer;
-    string->free        = free;
+    _wi_string_append_utf8_bytes(string, buffer, size);
     
     return string;
 }
@@ -365,34 +362,39 @@ wi_string_t * wi_string_init_with_format(wi_string_t *string, wi_string_t *fmt, 
 wi_string_t * wi_string_init_with_format_and_arguments(wi_string_t *string, wi_string_t *fmt, va_list ap) {
     string = wi_string_init(string);
     
-    _wi_string_append_arguments(string, wi_string_cstring(fmt), ap);
+    _wi_string_append_arguments(string, wi_string_utf8_string(fmt), ap);
     
     return string;
 }
 
 
 
-wi_string_t * wi_string_init_with_base64(wi_string_t *string, wi_string_t *base64) {
-    return wi_string_init_with_data(string, wi_data_from_base64_string(base64));
-}
+#ifdef WI_ENCODING
 
-
-
-wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_string_t *path) {
-    wi_file_t   *file;
+wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_string_t *path, wi_encoding_t *encoding) {
+    wi_data_t   *data;
     
-    wi_release(string);
-        
-    file = wi_file_for_reading(path);
+    data = wi_data_with_contents_of_file(path);
     
-    if(!file)
+    if(!data)
         return NULL;
     
-    string = wi_file_read_to_end_of_file(file);
+    return wi_string_with_data(data, encoding);
+}
+
+#endif
+
+
+
+wi_string_t * wi_string_init_with_utf8_contents_of_file(wi_string_t *string, wi_string_t *path) {
+    wi_data_t   *data;
     
-    wi_file_close(file);
+    data = wi_data_with_contents_of_file(path);
     
-    return wi_retain(string);
+    if(!data)
+        return NULL;
+    
+    return wi_retain(wi_string_with_utf8_data(data));
 }
 
 
@@ -400,7 +402,7 @@ wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_strin
 static void _wi_string_dealloc(wi_runtime_instance_t *instance) {
     wi_string_t     *string = instance;
     
-    if(string->string && string->free)
+    if(string->string)
         wi_free(string->string);
 }
 
@@ -409,7 +411,7 @@ static void _wi_string_dealloc(wi_runtime_instance_t *instance) {
 static wi_runtime_instance_t * _wi_string_copy(wi_runtime_instance_t *instance) {
     wi_string_t     *string = instance;
     
-    return wi_string_init_with_cstring(wi_string_alloc(), string->string);
+    return wi_string_init_with_utf8_string(wi_string_alloc(), string->string);
 }
 
 
@@ -431,7 +433,7 @@ static wi_string_t * _wi_string_description(wi_runtime_instance_t *instance) {
 static wi_hash_code_t _wi_string_hash(wi_runtime_instance_t *instance) {
     wi_string_t     *string = instance;
     
-    return wi_hash_cstring(string->string, string->length);
+    return wi_hash_utf8_string(string->string);
 }
 
 
@@ -465,8 +467,24 @@ wi_uinteger_t wi_string_length(wi_string_t *string) {
 
 
 
-const char * wi_string_cstring(wi_string_t *string) {
+const char * wi_string_utf8_string(wi_string_t *string) {
     return string->string;
+}
+
+
+
+#ifdef WI_ENCODING
+
+wi_data_t * wi_string_data(wi_string_t *string, wi_encoding_t *encoding) {
+    return wi_encoding_data_from_utf8_bytes(encoding, string->string, string->length);
+}
+
+#endif
+
+
+
+wi_data_t * wi_string_utf8_data(wi_string_t *string) {
+    return wi_data_with_bytes(string->string, string->length);
 }
 
 
@@ -481,15 +499,15 @@ char wi_string_character_at_index(wi_string_t *string, wi_uinteger_t index) {
 
 #pragma mark -
 
-wi_string_t * _wi_string_constant_string(const char *cstring) {
+wi_string_t * _wi_string_constant_utf8_string(const char *utf8_string) {
     wi_string_t     *string;
     
     wi_lock_lock(_wi_string_constant_string_lock);
-    string = wi_dictionary_data_for_key(_wi_string_constant_string_table, (void *) cstring);
+    string = wi_dictionary_data_for_key(_wi_string_constant_string_table, (void *) utf8_string);
     
     if(!string) {
-        string = wi_string_init_with_cstring(wi_string_alloc(), cstring);
-        wi_mutable_dictionary_set_data_for_key(_wi_string_constant_string_table, string, (void *) cstring);
+        string = wi_string_init_with_utf8_string(wi_string_alloc(), utf8_string);
+        wi_mutable_dictionary_set_data_for_key(_wi_string_constant_string_table, string, (void *) utf8_string);
         wi_release(string);
     }
     
@@ -505,13 +523,7 @@ wi_string_t * _wi_string_constant_string(const char *cstring) {
 static void _wi_string_grow(wi_string_t *string, wi_uinteger_t capacity) {
     capacity = WI_MAX(wi_exp2m1(wi_log2(capacity) + 1), _WI_STRING_MIN_SIZE);
 
-    if(string->free) {
-        string->string = wi_realloc(string->string, capacity);
-    } else {
-        string->string = wi_malloc(capacity);
-        string->free = true;
-    }
-
+    string->string = wi_realloc(string->string, capacity);
     string->capacity = capacity;
 }
 
@@ -538,7 +550,7 @@ static void _wi_string_append_arguments(wi_string_t *string, const char *fmt, va
         size = pfmt - p;
         
         if(size > 0)
-            _wi_string_append_bytes(string, p, size);
+            _wi_string_append_utf8_bytes(string, p, size);
         
         if(!*pfmt)
             return;
@@ -564,11 +576,11 @@ nextflag:
                 description = wi_description(va_arg(ap, wi_runtime_instance_t *));
                 
                 if(description) {
-                    _wi_string_append_cstring(string, description->string);
+                    _wi_string_append_utf8_string(string, description->string);
                     totalsize += description->length;
                 }
                 else if(!alt) {
-                    _wi_string_append_cstring(string, "(null)");
+                    _wi_string_append_utf8_string(string, "(null)");
                     totalsize += 6;
                 }
                 break;
@@ -646,7 +658,7 @@ nextflag:
                 else
                     size = snprintf(buffer, sizeof(buffer), cfmt, va_arg(ap, double));
                 
-                _wi_string_append_bytes(string, buffer, size);
+                _wi_string_append_utf8_bytes(string, buffer, size);
                 totalsize += size;
                 break;
                 
@@ -680,13 +692,13 @@ nextflag:
                 else
                     size = snprintf(buffer, sizeof(buffer), cfmt, va_arg(ap, int));
                 
-                _wi_string_append_bytes(string, buffer, size);
+                _wi_string_append_utf8_bytes(string, buffer, size);
                 totalsize += size;
                 break;
             
             case 'm':
                 description = wi_error_string();
-                _wi_string_append_cstring(string, description->string);
+                _wi_string_append_utf8_string(string, description->string);
                 totalsize += description->length;
                 break;
             
@@ -723,13 +735,13 @@ nextflag:
                         size = wi_asprintf(&vbuffer, cfmt, s);
                     
                     if(size > 0 && vbuffer) {
-                        _wi_string_append_bytes(string, vbuffer, size);
+                        _wi_string_append_utf8_bytes(string, vbuffer, size);
                         totalsize += size;
                         free(vbuffer);
                     }
                 }
                 else if(!alt) {
-                    _wi_string_append_cstring(string, "(null)");
+                    _wi_string_append_utf8_string(string, "(null)");
                     totalsize += 6;
                 }
                 break;
@@ -746,7 +758,7 @@ nextflag:
                 
                 buffer[0] = ch;
 
-                _wi_string_append_bytes(string, buffer, 1);
+                _wi_string_append_utf8_bytes(string, buffer, 1);
                 totalsize += 1;
                 break;
         }
@@ -755,13 +767,13 @@ nextflag:
 
 
 
-static void _wi_string_append_cstring(wi_string_t *string, const char *cstring) {
-    _wi_string_append_bytes(string, cstring, strlen(cstring));
+static void _wi_string_append_utf8_string(wi_string_t *string, const char *utf8_string) {
+    _wi_string_append_utf8_bytes(string, utf8_string, strlen(utf8_string));
 }
 
 
 
-static void _wi_string_append_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t length) {
+static void _wi_string_append_utf8_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t length) {
     _WI_STRING_GROW(string, length);
     
     memmove(string->string + string->length, buffer, length);
@@ -774,40 +786,12 @@ static void _wi_string_append_bytes(wi_string_t *string, const void *buffer, wi_
 
 #pragma mark -
 
-wi_string_t * wi_string_by_appending_cstring(wi_string_t *string, const char *cstring) {
-    wi_mutable_string_t     *newstring;
-    
-    newstring = wi_mutable_copy(string);
-    
-    wi_mutable_string_append_cstring(newstring, cstring);
-    
-    wi_runtime_make_immutable(newstring);
-    
-    return wi_autorelease(newstring);
-}
-
-
-
-wi_string_t * wi_string_by_appending_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t length) {
-    wi_mutable_string_t     *newstring;
-    
-    newstring = wi_mutable_copy(string);
-
-    wi_mutable_string_append_bytes(newstring, buffer, length);
-    
-    wi_runtime_make_immutable(newstring);
-    
-    return wi_autorelease(newstring);
-}
-
-
-
 wi_string_t * wi_string_by_appending_string(wi_string_t *string, wi_string_t *otherstring) {
     wi_mutable_string_t     *newstring;
     
     newstring = wi_mutable_copy(string);
 
-    wi_mutable_string_append_cstring(newstring, otherstring->string);
+    wi_mutable_string_append_string(newstring, otherstring);
     
     wi_runtime_make_immutable(newstring);
     
@@ -956,7 +940,7 @@ wi_string_t * wi_string_by_deleting_surrounding_whitespace(wi_string_t *string) 
 wi_string_t * wi_string_substring_with_range(wi_string_t *string, wi_range_t range) {
     _WI_STRING_RANGE_ASSERT(string, range);
     
-    return wi_autorelease(wi_string_init_with_bytes(wi_string_alloc(), string->string + range.location, range.length));
+    return wi_autorelease(wi_string_init_with_utf8_bytes(wi_string_alloc(), string->string + range.location, range.length));
 }
 
 
@@ -976,21 +960,21 @@ wi_string_t * wi_string_substring_to_index(wi_string_t *string, wi_uinteger_t in
 wi_array_t * wi_string_components_separated_by_string(wi_string_t *string, wi_string_t *separator) {
     wi_string_t     *component;
     wi_array_t      *array;
-    const char      *cstring;
+    const char      *utf8string;
     char            *s, *ss, *ap;
     
     array       = wi_array_init(wi_mutable_array_alloc());
-    cstring     = wi_string_cstring(separator);
+    utf8string  = wi_string_utf8_string(separator);
     
-    s = ss = strdup(string->string);
+    s = ss = wi_strdup(string->string);
     
-    while((ap = wi_strsep(&s, cstring))) {
-        component = wi_string_init_with_cstring(wi_string_alloc(), ap);
+    while((ap = wi_strsep(&s, utf8string))) {
+        component = wi_string_init_with_utf8_string(wi_string_alloc(), ap);
         wi_mutable_array_add_data(array, component);
         wi_release(component);
     }
     
-    free(ss);
+    wi_free(ss);
     
     wi_runtime_make_immutable(array);
     
@@ -1478,109 +1462,31 @@ double wi_string_double(wi_string_t *string) {
 
 #pragma mark -
 
-wi_data_t * wi_string_data(wi_string_t *string) {
-    return wi_autorelease(wi_data_init_with_bytes(wi_data_alloc(), string->string, string->length));
-}
+#ifdef WI_ENCODING
 
-
-
-#ifdef WI_DIGESTS
-
-wi_string_t * wi_string_md5(wi_string_t *string) {
-    return wi_md5_digest_string(wi_string_data(string));
-}
-
-
-
-wi_string_t * wi_string_sha1(wi_string_t *string) {
-    return wi_sha1_digest_string(wi_string_data(string));
+wi_boolean_t wi_string_write_string_to_path(wi_string_t *string, wi_string_t *path, wi_encoding_t *encoding) {
+    return wi_data_write_to_path(wi_encoding_data_from_utf8_bytes(encoding, string->string, string->length), path);
 }
 
 #endif
 
 
 
-wi_string_t * wi_string_base64(wi_string_t *string) {
-    return wi_base64_string_from_data(wi_string_data(string));
+wi_boolean_t wi_string_write_utf8_string_to_path(wi_string_t *string, wi_string_t *path) {
+    return wi_data_write_to_path(wi_string_utf8_data(string), path);
 }
 
 
 
 #pragma mark -
-
-#ifdef WI_ICONV
-
-wi_string_t * wi_string_by_converting_encoding(wi_string_t *string, wi_string_encoding_t *from, wi_string_encoding_t *to) {
-    wi_string_t     *newstring;
-    
-    newstring = wi_mutable_copy(string);
-    
-    if(!wi_mutable_string_convert_encoding(newstring, from, to)) {
-        wi_release(newstring);
-        
-        return NULL;
-    }
-    
-    wi_runtime_make_immutable(newstring);
-    
-    return wi_autorelease(newstring);
-}
-
-#endif
-
-
-
-#pragma mark -
-
-wi_boolean_t wi_string_write_to_file(wi_string_t *string, wi_string_t *path) {
-    FILE    *fp;
-    char    fullpath[WI_PATH_SIZE];
-    
-    snprintf(fullpath, sizeof(fullpath), "%s~", path->string);
-
-    fp = fopen(fullpath, "w");
-
-    if(!fp) {
-        wi_error_set_errno(errno);
-
-        return false;
-    }
-    
-    fprintf(fp, "%s", string->string);
-    fclose(fp);
-    
-    if(rename(fullpath, path->string) < 0) {
-        wi_error_set_errno(errno);
-
-        (void) unlink(fullpath);
-        
-        return false;
-    }
-    
-    return true;
-}
-
-
-
-#pragma mark -
-
-void wi_mutable_string_set_cstring(wi_mutable_string_t *string, const char *othercstring) {
-    WI_RUNTIME_ASSERT_MUTABLE(string);
-    
-    if(string->string != othercstring) {
-        string->string[0]   = '\0';
-        string->length      = 0;
-
-        wi_mutable_string_append_cstring(string, othercstring);
-    }
-}
-
-
 
 void wi_mutable_string_set_string(wi_mutable_string_t *string, wi_string_t *otherstring) {
     WI_RUNTIME_ASSERT_MUTABLE(string);
     
-    wi_mutable_string_set_cstring(string, otherstring->string);
+    string->string[0] = '\0';
+    string->length = 0;
+    
+    _wi_string_append_utf8_string(string, otherstring->string);
 }
 
 
@@ -1609,26 +1515,10 @@ void wi_mutable_string_set_format_and_arguments(wi_mutable_string_t *string, wi_
 
 #pragma mark -
 
-void wi_mutable_string_append_cstring(wi_mutable_string_t *string, const char *cstring) {
-    WI_RUNTIME_ASSERT_MUTABLE(string);
-    
-    _wi_string_append_bytes(string, cstring, strlen(cstring));
-}
-
-
-
-void wi_mutable_string_append_bytes(wi_mutable_string_t *string, const void *buffer, wi_uinteger_t length) {
-    WI_RUNTIME_ASSERT_MUTABLE(string);
-    
-    _wi_string_append_bytes(string, buffer, length);
-}
-
-
-
 void wi_mutable_string_append_string(wi_mutable_string_t *string, wi_string_t *otherstring) {
     WI_RUNTIME_ASSERT_MUTABLE(string);
     
-    wi_mutable_string_append_cstring(string, otherstring->string);
+    _wi_string_append_utf8_string(string, otherstring->string);
 }
 
 
@@ -1639,7 +1529,7 @@ void wi_mutable_string_append_format(wi_mutable_string_t *string, wi_string_t *f
     WI_RUNTIME_ASSERT_MUTABLE(string);
     
     va_start(ap, fmt);
-    _wi_string_append_arguments(string, wi_string_cstring(fmt), ap);
+    _wi_string_append_arguments(string, wi_string_utf8_string(fmt), ap);
     va_end(ap);
 }
 
@@ -1648,7 +1538,7 @@ void wi_mutable_string_append_format(wi_mutable_string_t *string, wi_string_t *f
 void wi_mutable_string_append_format_and_arguments(wi_mutable_string_t *string, wi_string_t *fmt, va_list ap) {
     WI_RUNTIME_ASSERT_MUTABLE(string);
     
-    _wi_string_append_arguments(string, wi_string_cstring(fmt), ap);
+    _wi_string_append_arguments(string, wi_string_utf8_string(fmt), ap);
 }
 
 
@@ -1656,20 +1546,12 @@ void wi_mutable_string_append_format_and_arguments(wi_mutable_string_t *string, 
 #pragma mark -
 
 void wi_mutable_string_insert_string_at_index(wi_mutable_string_t *string, wi_string_t *otherstring, wi_uinteger_t index) {
-    WI_RUNTIME_ASSERT_MUTABLE(string);
-    
-    wi_mutable_string_insert_cstring_at_index(string, otherstring->string, index);
-}
-
-
-
-void wi_mutable_string_insert_cstring_at_index(wi_mutable_string_t *string, const char *otherstring, wi_uinteger_t index) {
     wi_uinteger_t   length;
     
     WI_RUNTIME_ASSERT_MUTABLE(string);
     _WI_STRING_INDEX_ASSERT(string, index);
     
-    length = strlen(otherstring);
+    length = otherstring->length;
     
     _WI_STRING_GROW(string, length);
     
@@ -1677,7 +1559,7 @@ void wi_mutable_string_insert_cstring_at_index(wi_mutable_string_t *string, cons
             string->string + index,
             string->length);
     
-    memmove(string->string + index, otherstring, length);
+    memmove(string->string + index, otherstring->string, length);
     
     string->length += length;
     string->string[string->length] = '\0';
@@ -1840,13 +1722,13 @@ void wi_mutable_string_expand_tilde_in_path(wi_mutable_string_t *path) {
     } else {
         wi_mutable_string_delete_characters_to_index(component, 1);
         
-        user = getpwnam(wi_string_cstring(component));
+        user = getpwnam(wi_string_utf8_string(component));
     }
     
     if(user) {
         wi_mutable_string_delete_characters_to_index(path, length);
         
-        string = wi_string_init_with_cstring(wi_string_alloc(), user->pw_dir);
+        string = wi_string_init_with_utf8_string(wi_string_alloc(), user->pw_dir);
         wi_mutable_string_insert_string_at_index(path, string, 0);
         wi_release(string);
     }
@@ -1928,141 +1810,3 @@ void wi_mutable_string_delete_path_extension(wi_mutable_string_t *path) {
     if(index != WI_NOT_FOUND)
         wi_mutable_string_delete_characters_from_index(path, index);
 }
-
-
-
-#pragma mark -
-
-#ifdef WI_ICONV
-
-wi_boolean_t wi_mutable_string_convert_encoding(wi_mutable_string_t *string, wi_string_encoding_t *from, wi_string_encoding_t *to) {
-    char            *in, *out, *buffer;
-    size_t          bytes, inbytes, outbytes, inbytesleft, outbytesleft;
-    iconv_t         conv;
-    wi_boolean_t    status;
-    
-    WI_RUNTIME_ASSERT_MUTABLE(string);
-    
-    conv = iconv_open(wi_string_cstring(to->encoding), wi_string_cstring(from->encoding));
-    
-    if(conv == (iconv_t) -1) {
-        wi_error_set_errno(errno);
-        
-        return false;
-    }
-    
-    inbytes = inbytesleft = string->length;
-    outbytes = outbytesleft = string->length * 4;
-    
-    buffer = wi_malloc(outbytes);
-    
-    in = string->string;
-    out = buffer;
-
-    bytes = iconv(conv, (void *) &in, &inbytesleft, (void *) &out, &outbytesleft);
-
-    if(bytes == (size_t) -1) {
-        wi_error_set_errno(errno);
-        
-        status = false;
-    } else {
-        string->string[0]   = '\0';
-        string->length      = 0;
-
-        _wi_string_append_bytes(string, buffer, outbytes - outbytesleft);
-        
-        status = true;
-    }
-    
-    wi_free(buffer);
-    
-    iconv_close(conv);
-    
-    return status;
-}
-
-#endif
-
-#pragma mark -
-
-#ifdef WI_ICONV
-
-wi_runtime_id_t wi_string_encoding_runtime_id(void) {
-    return _wi_string_encoding_runtime_id;
-}
-
-
-
-#pragma mark -
-
-wi_string_encoding_t * wi_string_encoding_with_charset(wi_string_t *charset, wi_string_encoding_options_t options) {
-    return wi_autorelease(wi_string_encoding_init_with_charset(wi_string_encoding_alloc(), charset, options));
-}
-
-
-
-#pragma mark -
-
-wi_string_encoding_t * wi_string_encoding_alloc(void) {
-    return wi_runtime_create_instance_with_options(_wi_string_encoding_runtime_id, sizeof(wi_string_encoding_t), WI_RUNTIME_OPTION_IMMUTABLE);
-}
-
-
-
-wi_string_encoding_t * wi_string_encoding_init_with_charset(wi_string_encoding_t *encoding, wi_string_t *charset, wi_string_encoding_options_t options) {
-    iconv_t     iconv;
-    
-    encoding->charset       = wi_copy(charset);
-    encoding->encoding      = wi_mutable_copy(charset);
-    encoding->options       = options;
-    
-    if(options & WI_STRING_ENCODING_IGNORE)
-        wi_mutable_string_append_string(encoding->encoding, WI_STR("//IGNORE"));
-        
-    if(options & WI_STRING_ENCODING_TRANSLITERATE)
-        wi_mutable_string_append_string(encoding->encoding, WI_STR("//TRANSLIT"));
-    
-    iconv = iconv_open(wi_string_cstring(encoding->encoding), wi_string_cstring(encoding->encoding));
-    
-    if(iconv == (iconv_t) -1) {
-        wi_error_set_errno(errno);
-
-        wi_release(encoding);
-        
-        return NULL;
-    }
-    
-    iconv_close(iconv);
-    
-    return encoding;
-}
-
-
-
-static void _wi_string_encoding_dealloc(wi_runtime_instance_t *instance) {
-    wi_string_encoding_t    *encoding = instance;
-    
-    wi_release(encoding->charset);
-    wi_release(encoding->encoding);
-}
-
-
-
-static wi_string_t * _wi_string_encoding_description(wi_runtime_instance_t *instance) {
-    wi_string_encoding_t    *encoding = instance;
-    
-    return wi_string_with_format(WI_STR("<%@ %p>{encoding = %@}"),
-        wi_runtime_class_name(encoding),
-        encoding,
-        encoding->encoding);
-}
-
-
-
-#pragma mark -
-
-wi_string_t * wi_string_encoding_charset(wi_string_encoding_t *encoding) {
-    return encoding->charset;
-}
-
-#endif /* WI_ICONV */

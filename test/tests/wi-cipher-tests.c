@@ -75,24 +75,24 @@ void wi_test_cipher_runtime_functions(void) {
 void wi_test_cipher_suites(void) {
 #ifdef WI_CIPHERS
     _wi_test_cipher_suite(WI_CIPHER_AES128, WI_STR("AES"), 128,
-                          wi_data_with_base64(WI_STR("ThMdgpVRxOZ+tgJQSmp84w==")),
-                          wi_data_with_base64(WI_STR("bHHG4L6aGKGsGIzA82DVvQ==")));
+                          wi_data_with_base64_string(WI_STR("ThMdgpVRxOZ+tgJQSmp84w==")),
+                          wi_data_with_base64_string(WI_STR("bHHG4L6aGKGsGIzA82DVvQ==")));
     
     _wi_test_cipher_suite(WI_CIPHER_AES192, WI_STR("AES"), 192,
-                          wi_data_with_base64(WI_STR("DOBad099mTPH6lagfKPRsJAb46fVaiol")),
-                          wi_data_with_base64(WI_STR("QoJeh/+7zxVAQAX8h88QgA==")));
+                          wi_data_with_base64_string(WI_STR("DOBad099mTPH6lagfKPRsJAb46fVaiol")),
+                          wi_data_with_base64_string(WI_STR("QoJeh/+7zxVAQAX8h88QgA==")));
     
     _wi_test_cipher_suite(WI_CIPHER_AES256, WI_STR("AES"), 256,
-                          wi_data_with_base64(WI_STR("BZofvj2yZm+pF0Lu+ebDP65XPv1Qbj3eLEIOx9dOLT4=")),
-                          wi_data_with_base64(WI_STR("1qq13sv6H+sA8vn72Vs1hQ==")));
+                          wi_data_with_base64_string(WI_STR("BZofvj2yZm+pF0Lu+ebDP65XPv1Qbj3eLEIOx9dOLT4=")),
+                          wi_data_with_base64_string(WI_STR("1qq13sv6H+sA8vn72Vs1hQ==")));
     
     _wi_test_cipher_suite(WI_CIPHER_BF128, WI_STR("Blowfish"), 128,
-                          wi_data_with_base64(WI_STR("k96E++BNrz/nvEqRKfK2DA==")),
-                          wi_data_with_base64(WI_STR("k4NWyhAd0F0=")));
+                          wi_data_with_base64_string(WI_STR("k96E++BNrz/nvEqRKfK2DA==")),
+                          wi_data_with_base64_string(WI_STR("k4NWyhAd0F0=")));
     
     _wi_test_cipher_suite(WI_CIPHER_3DES192, WI_STR("Triple DES"), 192,
-                          wi_data_with_base64(WI_STR("bqXg+ZSQxitsx5ynTe04m7tNq6PDNQoF")),
-                          wi_data_with_base64(WI_STR("mY2Zs19VJeE=")));
+                          wi_data_with_base64_string(WI_STR("bqXg+ZSQxitsx5ynTe04m7tNq6PDNQoF")),
+                          wi_data_with_base64_string(WI_STR("mY2Zs19VJeE=")));
 #endif
 }
 
@@ -113,9 +113,8 @@ static void _wi_test_cipher_suite(wi_cipher_type_t type, wi_string_t *name, wi_u
     WI_TEST_ASSERT_EQUALS(wi_cipher_bits(cipher), bits, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_name(cipher), name, "");
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_decrypt(cipher, wi_cipher_encrypt(cipher, wi_string_data(WI_STR("hello world")))),
-                                   wi_string_data(WI_STR("hello world")),
-                                   "%m");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_decrypt(cipher, wi_cipher_encrypt(cipher, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")))),
+                                   wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")), "");
     
     cipher = wi_autorelease(wi_cipher_init_with_random_key(wi_cipher_alloc(), type));
 
@@ -124,9 +123,8 @@ static void _wi_test_cipher_suite(wi_cipher_type_t type, wi_string_t *name, wi_u
     WI_TEST_ASSERT_EQUALS(wi_cipher_bits(cipher), bits, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_name(cipher), name, "");
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_decrypt(cipher, wi_cipher_encrypt(cipher, wi_string_data(WI_STR("hello world")))),
-                                   wi_string_data(WI_STR("hello world")),
-                                   "%m");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_cipher_decrypt(cipher, wi_cipher_encrypt(cipher, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")))),
+                                   wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")), "");
 }
 
 #endif

@@ -53,7 +53,7 @@ void wi_test_fsevents(void) {
         return;
     }
     
-    directory = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-fsevents.XXXXXXXX"));
+    directory = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-fsevents.XXXXXXXX"));
     
     wi_fs_create_directory(directory, 0700);
     
@@ -70,7 +70,8 @@ void wi_test_fsevents(void) {
     else
         WI_TEST_FAIL("Timed out waiting for fsevents thread");
     
-    wi_string_write_to_file(WI_STR("foo"), wi_string_by_appending_path_component(directory, WI_STR("file")));
+    wi_data_write_to_path(wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK")),
+                          wi_string_by_appending_path_component(directory, WI_STR("file")));
     
     if(wi_condition_lock_lock_when_condition(wi_test_fsevents_lock, 2, 1.0)) {
         wi_fs_delete_path(directory);

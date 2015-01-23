@@ -37,6 +37,7 @@ int wi_plist_dummy = 0;
 #include <wired/wi-data.h>
 #include <wired/wi-date.h>
 #include <wired/wi-dictionary.h>
+#include <wired/wi-encoding.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-number.h>
 #include <wired/wi-plist.h>
@@ -64,7 +65,7 @@ wi_runtime_instance_t * wi_plist_read_instance_from_file(wi_string_t *path) {
     wi_runtime_instance_t   *instance;
     xmlDocPtr               doc;
     
-    doc = xmlReadFile(wi_string_cstring(path), NULL, 0);
+    doc = xmlReadFile(wi_string_utf8_string(path), NULL, 0);
     
     if(!doc) {
         wi_error_set_libxml2_error();
@@ -85,7 +86,7 @@ wi_runtime_instance_t * wi_plist_instance_for_string(wi_string_t *string) {
     wi_runtime_instance_t   *instance;
     xmlDocPtr               doc;
     
-    doc = xmlReadMemory(wi_string_cstring(string), wi_string_length(string), NULL, NULL, 0);
+    doc = xmlReadMemory(wi_string_utf8_string(string), wi_string_length(string), NULL, NULL, 0);
     
     if(!doc) {
         wi_error_set_libxml2_error();
@@ -104,7 +105,7 @@ wi_runtime_instance_t * wi_plist_instance_for_string(wi_string_t *string) {
 
 #pragma mark -
 
-wi_boolean_t wi_plist_write_instance_to_file(wi_runtime_instance_t *instance, wi_string_t *path) {
+wi_boolean_t wi_plist_write_instance_to_path(wi_runtime_instance_t *instance, wi_string_t *path) {
     wi_string_t     *string;
     
     string = wi_plist_string_for_instance(instance);
@@ -112,7 +113,7 @@ wi_boolean_t wi_plist_write_instance_to_file(wi_runtime_instance_t *instance, wi
     if(!string)
         return false;
     
-    return wi_string_write_to_file(string, path);
+    return wi_string_write_utf8_string_to_path(string, path);
 }
 
 
@@ -137,7 +138,7 @@ wi_string_t * wi_plist_string_for_instance(wi_runtime_instance_t *instance) {
     if(_wi_plist_write_instance_to_node(instance, root_node)) {
         xmlDocDumpFormatMemoryEnc(doc, &buffer, &length, "UTF-8", 1);
     
-        string = wi_string_with_bytes(buffer, length);
+        string = wi_string_with_utf8_string((char *) buffer);
         
         xmlFree(buffer);
     }
@@ -250,7 +251,7 @@ static wi_boolean_t _wi_plist_read_node_to_instance(xmlNodePtr content_node, wi_
             else if(strcmp((const char *) node->name, "date") == 0)
                 instance = wi_date_with_rfc3339_string(_wi_libxml2_node_content(node));
             else if(strcmp((const char *) node->name, "data") == 0)
-                instance = wi_data_with_base64(_wi_libxml2_node_content(node));
+                instance = wi_data_with_base64_string(_wi_libxml2_node_content(node));
             else if(strcmp((const char *) node->name, "dict") == 0) {
                 instance = wi_mutable_dictionary();
                 
@@ -318,7 +319,7 @@ static wi_boolean_t _wi_plist_write_instance_to_node(wi_runtime_instance_t *inst
         }
     }
     else if(id == wi_data_runtime_id()) {
-        _wi_libxml2_node_new_child(node, WI_STR("data"), wi_data_base64(instance));
+        _wi_libxml2_node_new_child(node, WI_STR("data"), wi_data_base64_string(instance));
     }
     else if(id == wi_date_runtime_id()) {
         _wi_libxml2_node_new_child(node, WI_STR("date"), wi_date_string_with_format(instance, WI_STR("%Y-%m-%dT%H:%M:%SZ")));
@@ -372,39 +373,52 @@ static wi_boolean_t _wi_plist_write_instance_to_node(wi_runtime_instance_t *inst
 #pragma mark -
 
 static wi_string_t * _wi_libxml2_node_name(xmlNodePtr node) {
-    return wi_string_with_cstring((const char *) ((xmlNodePtr) node)->name);
+    return wi_string_with_utf8_string((const char *) ((xmlNodePtr) node)->name);
 }
 
 
 
 static wi_string_t * _wi_libxml2_node_attribute_with_name(xmlNodePtr node, wi_string_t *attribute) {
-    xmlChar     *prop;
+    wi_string_t     *string;
+    xmlChar         *prop;
     
-    prop = xmlGetProp(node, (xmlChar *) wi_string_cstring(attribute));
+    prop = xmlGetProp(node, (xmlChar *) wi_string_utf8_string(attribute));
     
     if(!prop)
         return NULL;
     
-    return wi_string_with_cstring_no_copy((char *) prop, true);
+    string = wi_string_with_utf8_string((char *) prop);
+    
+    xmlFree(prop);
+    
+    return string;
 }
 
 
 
 static wi_string_t * _wi_libxml2_node_content(xmlNodePtr node) {
-    xmlChar     *content;
+    wi_string_t     *string;
+    xmlChar         *content;
     
     content = xmlNodeGetContent(node);
     
     if(!content)
         return NULL;
     
-    return wi_string_with_cstring_no_copy((char *) content, true);
+    string = wi_string_with_utf8_string((char *) content);
+    
+    xmlFree(content);
+    
+    return string;
 }
 
 
 
 static xmlNodePtr _wi_libxml2_node_new_child(xmlNodePtr node, wi_string_t *name, wi_string_t *content) {
-    return xmlNewTextChild(node, NULL, (xmlChar *) wi_string_cstring(name), content ? (xmlChar *) wi_string_cstring(content) : NULL);
+    return xmlNewTextChild(node,
+                           NULL,
+                           (xmlChar *) wi_string_utf8_string(name),
+                           content ? (xmlChar *) wi_string_utf8_string(content) : NULL);
 }
 
 #endif

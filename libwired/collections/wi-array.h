@@ -80,7 +80,7 @@ WI_EXPORT wi_array_t *                  wi_array_by_adding_data_from_array(wi_ar
 
 WI_EXPORT wi_array_t *                  wi_array_by_sorting(wi_array_t *, wi_compare_func_t *);
 
-WI_EXPORT wi_boolean_t                  wi_array_write_to_file(wi_array_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_array_write_to_path(wi_array_t *, wi_string_t *);
 
 WI_EXPORT void                          wi_mutable_array_add_data(wi_mutable_array_t *, void *);
 WI_EXPORT void                          wi_mutable_array_add_data_sorted(wi_mutable_array_t *, void *, wi_compare_func_t *);

@@ -55,11 +55,11 @@ wi_ip_version_t wi_ip_version(wi_string_t *ip) {
     struct sockaddr_in6     sa_in6;
 
     if(wi_string_contains_string(ip, WI_STR("."), 0)) {
-        if(inet_pton(AF_INET, wi_string_cstring(ip), &sa_in.sin_addr) > 0)
+        if(inet_pton(AF_INET, wi_string_utf8_string(ip), &sa_in.sin_addr) > 0)
             return WI_IP_IPV4;
     }
     else if(wi_string_contains_string(ip, WI_STR(":"), 0)) {
-        if(inet_pton(AF_INET6, wi_string_cstring(ip), &sa_in6.sin6_addr) > 0)
+        if(inet_pton(AF_INET6, wi_string_utf8_string(ip), &sa_in6.sin6_addr) > 0)
             return WI_IP_IPV6;
     }
 
@@ -168,12 +168,9 @@ static wi_boolean_t _wi_ipv6_match_literal(wi_string_t *ip, wi_string_t *pattern
 #pragma mark -
 
 static uint32_t _wi_ipv4_uint32(wi_string_t *ip) {
-    const char      *cstring;
-    uint32_t        a, b, c, d;
+    uint32_t    a, b, c, d;
     
-    cstring = wi_string_cstring(ip);
-
-    if(sscanf(cstring, "%u.%u.%u.%u", &a, &b, &c, &d) == 4)
+    if(sscanf(wi_string_utf8_string(ip), "%u.%u.%u.%u", &a, &b, &c, &d) == 4)
         return (a << 24) + (b << 16) + (c << 8) + d;
 
     return 0;

@@ -624,9 +624,9 @@ wi_array_t * wi_array_by_adding_data_from_array(wi_array_t *array, wi_array_t *o
 
 #pragma mark -
 
-wi_boolean_t wi_array_write_to_file(wi_array_t *array, wi_string_t *path) {
+wi_boolean_t wi_array_write_to_path(wi_array_t *array, wi_string_t *path) {
 #ifdef WI_PLIST
-    return wi_plist_write_instance_to_file(array, path);
+    return wi_plist_write_instance_to_path(array, path);
 #else
     return false;
 #endif

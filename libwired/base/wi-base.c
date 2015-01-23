@@ -63,6 +63,11 @@ void wi_initialize(void) {
     wi_date_register();
     wi_dictionary_register();
     wi_digest_register();
+    
+#ifdef WI_ENCODING
+    wi_encoding_register();
+#endif
+    
     wi_enumerator_register();
     wi_error_register();
     wi_file_register();
@@ -79,7 +84,7 @@ void wi_initialize(void) {
     wi_random_register();
     wi_regexp_register();
     
-#ifdef HAVE_OPENSSL_SHA_H
+#ifdef WI_RSA
     wi_rsa_register();
 #endif
     
@@ -100,7 +105,7 @@ void wi_initialize(void) {
     wi_uuid_register();
     wi_version_register();
     
-#ifdef HAVE_OPENSSL_SHA_H
+#ifdef WI_X509
     wi_x509_register();
 #endif
 
@@ -122,6 +127,11 @@ void wi_initialize(void) {
     wi_data_initialize();
     wi_date_initialize();
     wi_digest_initialize();
+    
+#ifdef WI_ENCODING
+    wi_encoding_initialize();
+#endif
+    
     wi_enumerator_initialize();
     wi_error_initialize();
     wi_file_initialize();
@@ -136,7 +146,7 @@ void wi_initialize(void) {
     wi_random_initialize();
     wi_regexp_initialize();
     
-#ifdef HAVE_OPENSSL_SHA_H
+#ifdef WI_RSA
     wi_rsa_initialize();
 #endif
 
@@ -153,7 +163,7 @@ void wi_initialize(void) {
     wi_uuid_initialize();
     wi_version_initialize();
 
-#ifdef HAVE_OPENSSL_SHA_H
+#ifdef WI_X509
     wi_x509_initialize();
 #endif
 }
@@ -188,9 +198,13 @@ void wi_crash(void) {
 
 #pragma mark -
 
-wi_hash_code_t wi_hash_cstring(const char *s, wi_uinteger_t length) {
-    wi_hash_code_t    hash = length;
-    const char        *end, *end4;
+wi_hash_code_t wi_hash_utf8_string(const char *s) {
+    wi_uinteger_t   length;
+    wi_hash_code_t  hash = length;
+    const char      *end, *end4;
+    
+    length = strlen(s);
+    hash = length;
 
     if(length < 16) {
         end = s + length;

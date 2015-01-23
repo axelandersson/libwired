@@ -63,7 +63,7 @@ void wi_test_rsa_creation(void) {
     
     WI_TEST_ASSERT_NULL(rsa, "");
     
-    rsa = wi_autorelease(wi_rsa_init_with_private_key(wi_rsa_alloc(), wi_data_with_base64(WI_STR("MIIBOwIBAAJBANlpi/JRzsGFCHyHARWkjg6qLnNjvgo84Shha4aOKQlQVON6LjVUTKuTGodkp7yZK0W4gfoNF/5CNbXb1Qo4xcUCAwEAAQJAafHFAJBc8HCjcgtXu/Q0RXEosZIpSVPhZIwUmb0swhw9LULNarL244HT2WJ/pSSUu3uIx+sT6mpNL+OtunQJAQIhAPSgtPWiWbHE7Bf3F4GS87PuVD2uYj9nbHuGAqfkrTaLAiEA44Tzb52/2dKz56sOW/ga/4ydsQeIQAxVBmr3uHK9zu8CIQDzQviQp5CQUeYBcurCJHMKA79r0wTKTju3niz37lQ9PwIhANdjtv5UzhpNgalxY++nSw/gtCyy38capaekvo2seoqbAiBYCzlmjq02JpohH29ijG52ecfb88uS9eUufUVoOfTC/A=="))));
+    rsa = wi_autorelease(wi_rsa_init_with_private_key(wi_rsa_alloc(), wi_data_with_base64_string(WI_STR("MIIBOwIBAAJBANlpi/JRzsGFCHyHARWkjg6qLnNjvgo84Shha4aOKQlQVON6LjVUTKuTGodkp7yZK0W4gfoNF/5CNbXb1Qo4xcUCAwEAAQJAafHFAJBc8HCjcgtXu/Q0RXEosZIpSVPhZIwUmb0swhw9LULNarL244HT2WJ/pSSUu3uIx+sT6mpNL+OtunQJAQIhAPSgtPWiWbHE7Bf3F4GS87PuVD2uYj9nbHuGAqfkrTaLAiEA44Tzb52/2dKz56sOW/ga/4ydsQeIQAxVBmr3uHK9zu8CIQDzQviQp5CQUeYBcurCJHMKA79r0wTKTju3niz37lQ9PwIhANdjtv5UzhpNgalxY++nSw/gtCyy38capaekvo2seoqbAiBYCzlmjq02JpohH29ijG52ecfb88uS9eUufUVoOfTC/A=="))));
     
     WI_TEST_ASSERT_NOT_NULL(rsa, "");
     WI_TEST_ASSERT_EQUALS(wi_rsa_bits(rsa), 512U, "");
@@ -72,7 +72,7 @@ void wi_test_rsa_creation(void) {
     
     WI_TEST_ASSERT_NULL(rsa, "");
     
-    rsa = wi_autorelease(wi_rsa_init_with_public_key(wi_rsa_alloc(), wi_data_with_base64(WI_STR("MEgCQQDZaYvyUc7BhQh8hwEVpI4Oqi5zY74KPOEoYWuGjikJUFTjei41VEyrkxqHZKe8mStFuIH6DRf+QjW129UKOMXFAgMBAAE="))));
+    rsa = wi_autorelease(wi_rsa_init_with_public_key(wi_rsa_alloc(), wi_data_with_base64_string(WI_STR("MEgCQQDZaYvyUc7BhQh8hwEVpI4Oqi5zY74KPOEoYWuGjikJUFTjei41VEyrkxqHZKe8mStFuIH6DRf+QjW129UKOMXFAgMBAAE="))));
     
     WI_TEST_ASSERT_NOT_NULL(rsa, "");
     WI_TEST_ASSERT_EQUALS(wi_rsa_bits(rsa), 512U, "");
@@ -121,10 +121,10 @@ void wi_test_rsa_encrypting_and_decrypting(void) {
     rsa1 = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
     rsa2 = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_rsa_decrypt(rsa1, wi_rsa_encrypt(rsa1, wi_string_data(WI_STR("hello world")))),
-                                   wi_string_data(WI_STR("hello world")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_rsa_decrypt(rsa1, wi_rsa_encrypt(rsa1, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")))),
+                                   wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")), "");
     
-    WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(wi_rsa_decrypt(rsa1, wi_rsa_encrypt(rsa2, wi_string_data(WI_STR("hello world")))),
-                                       wi_string_data(WI_STR("hello world")), "");
+    WI_TEST_ASSERT_NOT_EQUAL_INSTANCES(wi_rsa_decrypt(rsa1, wi_rsa_encrypt(rsa2, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")))),
+                                       wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")), "");
 #endif
 }

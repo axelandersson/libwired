@@ -219,8 +219,8 @@ static wi_array_t * _wi_host_addresses_for_interface_string(wi_string_t *string)
         return NULL;
     }
 
-    array        = wi_array_init(wi_mutable_array_alloc());
-    name        = string ? wi_string_cstring(string) : NULL;
+    array   = wi_array_init(wi_mutable_array_alloc());
+    name    = string ? wi_string_utf8_string(string) : NULL;
 
     for(ifp = ifap; ifp; ifp = ifp->ifa_next) {
         if(!ifp->ifa_addr)
@@ -270,7 +270,7 @@ static wi_array_t * _wi_host_addresses_for_host_string(wi_string_t *string) {
     struct addrinfo     *aiap, *aip;
     int                 err;
 
-    err = getaddrinfo(wi_string_cstring(string), NULL, NULL, &aiap);
+    err = getaddrinfo(wi_string_utf8_string(string), NULL, NULL, &aiap);
 
     if(err != 0) {
         wi_error_set_error(WI_ERROR_DOMAIN_GAI, err);

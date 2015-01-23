@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <wired/wi-base.h>
+#include <wired/wi-data.h>
 #include <wired/wi-runtime.h>
 
 #define WI_PATH_SIZE                MAXPATHLEN
@@ -85,27 +86,6 @@ typedef enum _wi_file_mode          wi_file_mode_t;
 typedef struct _wi_file             wi_file_t;
 
 
-WI_EXPORT wi_boolean_t              wi_file_delete(wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_clear(wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_rename(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_symlink(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_copy(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_stat(wi_string_t *, wi_file_stat_t *);
-WI_EXPORT wi_boolean_t              wi_file_lstat(wi_string_t *, wi_file_stat_t *);
-WI_EXPORT wi_boolean_t              wi_file_statfs(wi_string_t *, wi_file_statfs_t *);
-WI_EXPORT wi_boolean_t              wi_file_exists(wi_string_t *, wi_boolean_t *);
-WI_EXPORT wi_boolean_t              wi_file_create_directory(wi_string_t *, uint32_t);
-WI_EXPORT wi_boolean_t              wi_file_set_mode(wi_string_t *, uint32_t);
-WI_EXPORT wi_boolean_t              wi_file_is_alias(wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_is_alias_cpath(const char *);
-WI_EXPORT wi_boolean_t              wi_file_is_invisible(wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_file_is_invisible_cpath(const char *);
-WI_EXPORT wi_boolean_t              wi_file_set_finder_comment(wi_string_t *, wi_string_t *);
-WI_EXPORT wi_string_t *             wi_file_finder_comment(wi_string_t *);
-
-WI_EXPORT wi_array_t *              wi_file_directory_contents_at_path(wi_string_t *);
-WI_EXPORT wi_string_t *             wi_file_sha1(wi_string_t *, wi_file_offset_t);
-
 WI_EXPORT wi_runtime_id_t           wi_file_runtime_id(void);
 
 WI_EXPORT wi_file_t *               wi_file_for_reading(wi_string_t *);
@@ -118,16 +98,15 @@ WI_EXPORT wi_file_t *               wi_file_init_with_path(wi_file_t *, wi_strin
 WI_EXPORT wi_file_t *               wi_file_init_with_file_descriptor(wi_file_t *, int);
 WI_EXPORT wi_file_t *               wi_file_init_temporary_file(wi_file_t *);
 
+WI_EXPORT wi_string_t *             wi_file_path(wi_file_t *);
 WI_EXPORT int                       wi_file_descriptor(wi_file_t *);
 
-WI_EXPORT wi_string_t *             wi_file_read(wi_file_t *, wi_uinteger_t);
-WI_EXPORT wi_string_t *             wi_file_read_to_end_of_file(wi_file_t *);
-WI_EXPORT wi_string_t *             wi_file_read_line(wi_file_t *);
-WI_EXPORT wi_string_t *             wi_file_read_config_line(wi_file_t *);
-WI_EXPORT wi_string_t *             wi_file_read_to_string(wi_file_t *, wi_string_t *);
-WI_EXPORT wi_integer_t              wi_file_read_buffer(wi_file_t *, void *, wi_uinteger_t);
-WI_EXPORT wi_integer_t              wi_file_write_format(wi_file_t *, wi_string_t *, ...);
-WI_EXPORT wi_integer_t              wi_file_write_buffer(wi_file_t *, const void *, wi_uinteger_t);
+WI_EXPORT wi_data_t *               wi_file_read(wi_file_t *, wi_uinteger_t);
+WI_EXPORT wi_data_t *               wi_file_read_to_end_of_file(wi_file_t *);
+WI_EXPORT wi_integer_t              wi_file_read_bytes(wi_file_t *, void *, wi_uinteger_t);
+
+WI_EXPORT wi_integer_t              wi_file_write(wi_file_t *, wi_data_t *);
+WI_EXPORT wi_integer_t              wi_file_write_bytes(wi_file_t *, const void *, wi_uinteger_t);
 
 WI_EXPORT void                      wi_file_seek(wi_file_t *, wi_file_offset_t);
 WI_EXPORT wi_file_offset_t          wi_file_seek_to_end_of_file(wi_file_t *);

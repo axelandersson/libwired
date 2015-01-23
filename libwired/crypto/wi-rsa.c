@@ -117,7 +117,7 @@ wi_rsa_t * wi_rsa_init_with_rsa(wi_rsa_t *rsa, void *_rsa) {
 wi_rsa_t * wi_rsa_init_with_pem_file(wi_rsa_t *rsa, wi_string_t *path) {
     FILE    *fp;
     
-    fp = fopen(wi_string_cstring(path), "r");
+    fp = fopen(wi_string_utf8_string(path), "r");
     
     if(!fp) {
         wi_error_set_errno(errno);

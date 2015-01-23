@@ -5652,6 +5652,17 @@ fi
     fi
 
 
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_ENCODING"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_ENCODING"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_ENCODING"
+        fi
+    fi
+
+
         wi_include_iconv_library_done="yes"
     fi
 

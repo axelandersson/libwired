@@ -33,7 +33,7 @@
 WI_EXPORT wi_runtime_instance_t *       wi_json_read_instance_from_file(wi_string_t *);
 WI_EXPORT wi_runtime_instance_t *       wi_json_instance_for_string(wi_string_t *);
 
-WI_EXPORT wi_boolean_t                  wi_json_write_instance_to_file(wi_runtime_instance_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                  wi_json_write_instance_to_path(wi_runtime_instance_t *, wi_string_t *);
 WI_EXPORT wi_string_t *                 wi_json_string_for_instance(wi_runtime_instance_t *);
 
 #endif /* WI_JSON_H */

@@ -146,7 +146,7 @@ static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc
     array = wi_mutable_array();
     
     for(i = 0; i < argc; i++)
-        wi_mutable_array_add_data(array, wi_string_with_cstring(argv[i]));
+        wi_mutable_array_add_data(array, wi_string_with_utf8_string(argv[i]));
     
     string = wi_array_first_data(array);
     
@@ -165,8 +165,8 @@ static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc
     
     uname(&name);
     
-    process->os_name = wi_string_init_with_cstring(wi_string_alloc(), name.sysname);
-    process->os_release = wi_string_init_with_cstring(wi_string_alloc(), name.release);
+    process->os_name = wi_string_init_with_utf8_string(wi_string_alloc(), name.sysname);
+    process->os_release = wi_string_init_with_utf8_string(wi_string_alloc(), name.release);
 
 #if defined(HAVE_NXGETLOCALARCHINFO)
     cputypesize = sizeof(cputype);
@@ -177,14 +177,14 @@ static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc
     archinfo = NXGetArchInfoFromCpuType(cputype, CPU_SUBTYPE_MULTIPLE);
     
     if(archinfo)
-        process->arch = wi_string_init_with_cstring(wi_string_alloc(), archinfo->name);
+        process->arch = wi_string_init_with_utf8_string(wi_string_alloc(), archinfo->name);
 #elif defined(HAVE_SYSINFO) && defined(SI_ARCHITECTURE)
     if(sysinfo(SI_ARCHITECTURE, buffer, sizeof(buffer)) >= 0)
-        process->arch = wi_string_init_with_cstring(wi_string_alloc(), buffer);
+        process->arch = wi_string_init_with_utf8_string(wi_string_alloc(), buffer);
 #endif
 
     if(!process->arch)
-        process->arch = wi_string_init_with_cstring(wi_string_alloc(), name.machine);
+        process->arch = wi_string_init_with_utf8_string(wi_string_alloc(), name.machine);
 
     return process;
 }
@@ -246,7 +246,7 @@ wi_array_t * wi_process_arguments(wi_process_t *process) {
 
 
 wi_boolean_t wi_process_set_hostname(wi_process_t *process, wi_string_t *hostname) {
-    if(sethostname((char *) wi_string_cstring(hostname), wi_string_length(hostname))) {
+    if(sethostname((char *) wi_string_utf8_string(hostname), wi_string_length(hostname))) {
         wi_error_set_errno(errno);
         
         return false;
@@ -263,7 +263,7 @@ wi_string_t * wi_process_hostname(wi_process_t *process) {
     if(gethostname(hostname, sizeof(hostname)) < 0)
         return NULL;
     
-    return wi_string_with_cstring(hostname);
+    return wi_string_with_utf8_string(hostname);
 }
 
 

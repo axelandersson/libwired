@@ -50,7 +50,7 @@ void wi_test_uuid_creation(void) {
     WI_TEST_ASSERT_NOT_NULL(uuid, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_uuid_string(uuid), WI_STR("3545D40D-6F34-4DCE-8732-61D183A41DF4"), "");
     
-    data = wi_data_with_base64(WI_STR("NUXUDW80Tc6HMmHRg6Qd9A=="));
+    data = wi_data_with_base64_string(WI_STR("NUXUDW80Tc6HMmHRg6Qd9A=="));
     uuid = wi_uuid_with_bytes(wi_data_bytes(data));
     
     wi_uuid_get_bytes(uuid, buffer);

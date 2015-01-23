@@ -39,6 +39,7 @@
 #include <wired/wi-dictionary.h>
 #include <wired/wi-digest.h>
 #include <wired/wi-enumerator.h>
+#include <wired/wi-encoding.h>
 #include <wired/wi-error.h>
 #include <wired/wi-file.h>
 #include <wired/wi-fs.h>

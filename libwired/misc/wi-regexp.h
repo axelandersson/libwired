@@ -43,7 +43,6 @@ WI_EXPORT wi_regexp_t *             wi_regexp_init_with_string(wi_regexp_t *, wi
 WI_EXPORT wi_string_t *             wi_regexp_string(wi_regexp_t *);
 
 WI_EXPORT wi_boolean_t              wi_regexp_matches_string(wi_regexp_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_regexp_matches_cstring(wi_regexp_t *, const char *);
 WI_EXPORT wi_string_t *             wi_regexp_string_by_matching_string(wi_regexp_t *, wi_string_t *, wi_uinteger_t);
 
 #endif /* WI_REGEXP_H */

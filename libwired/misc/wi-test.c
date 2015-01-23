@@ -87,7 +87,7 @@ void wi_test_initialize(void) {
     env = getenv("wi_test_name");
     
     if(env) {
-        _wi_tests_name = wi_string_init_with_cstring(wi_string_alloc(), env);
+        _wi_tests_name = wi_string_init_with_utf8_string(wi_string_alloc(), env);
         
         printf("*** wi_test_initialize(): wi_test_name = %s\n", env);
     }
@@ -134,14 +134,14 @@ void wi_tests_run_test(const char *name, wi_run_test_func_t *function) {
     wi_time_interval_t          interval;
     
     if(_wi_tests_name) {
-        if(wi_string_index_of_string(wi_string_with_cstring(name), _wi_tests_name, 0) == WI_NOT_FOUND)
+        if(wi_string_index_of_string(wi_string_with_utf8_string(name), _wi_tests_name, 0) == WI_NOT_FOUND)
             return;
     }
     
-    if(wi_string_has_suffix(wi_string_with_cstring(name), WI_STR("initialize"))) {
+    if(wi_string_has_suffix(wi_string_with_utf8_string(name), WI_STR("initialize"))) {
         (*function)();
     } else {
-        _wi_tests_current_test = _wi_test_init_with_function(_wi_test_alloc(), wi_string_with_cstring(name), function);
+        _wi_tests_current_test = _wi_test_init_with_function(_wi_test_alloc(), wi_string_with_utf8_string(name), function);
         
         handler = wi_assert_handler;
         wi_assert_handler = _wi_tests_assert_handler;
@@ -187,7 +187,7 @@ static void _wi_tests_assert_handler(const char *file, unsigned int line, wi_str
     string = wi_string_init_with_format_and_arguments(wi_string_alloc(), fmt, ap);
     va_end(ap);
     
-    wi_log_warn(WI_STR("%@:%u: %@"), wi_string_last_path_component(wi_string_with_cstring(file)), line, string);
+    wi_log_warn(WI_STR("%@:%u: %@"), wi_string_last_path_component(wi_string_with_utf8_string(file)), line, string);
     
     wi_release(string);
     

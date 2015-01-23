@@ -47,6 +47,7 @@ WI_EXPORT wi_boolean_t          wi_execv(wi_string_t *, wi_array_t *);
 
 WI_EXPORT void *                wi_malloc(size_t);
 WI_EXPORT void *                wi_realloc(void *, size_t);
+WI_EXPORT char *                wi_strdup(const char *);
 WI_EXPORT void                  wi_free(void *);
 
 WI_EXPORT wi_array_t *          wi_backtrace(void);

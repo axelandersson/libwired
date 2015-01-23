@@ -170,35 +170,6 @@ wi_array_t * wi_task_arguments(wi_task_t *task) {
 
 #pragma mark -
 
-static const char ** _wi_task_alloc_argv_with_array(wi_array_t *array) {
-    wi_string_t     *description;
-    const char      **argv;
-    wi_uinteger_t   i;
-    
-    argv = wi_malloc((wi_array_count(array) + 1) * sizeof(char *));
-    
-    for(i = 0; i < wi_array_count(array); i++)
-        argv[i] = strdup(wi_string_cstring(wi_description(WI_ARRAY(array, i))));
-    
-    return argv;
-}
-
-
-
-void wi_array_destroy_argv(wi_uinteger_t argc, const char **argv) {
-    wi_uinteger_t   i;
-    
-    for(i = 0; i < argc; i++)
-    free((char *) argv[i]);
-    
-    free(argv);
-}
-
-
-
-
-#pragma mark -
-
 wi_boolean_t wi_task_launch(wi_task_t *task) {
     char    **argv;
     pid_t   pid;
@@ -219,10 +190,10 @@ wi_boolean_t wi_task_launch(wi_task_t *task) {
             (void) close(i);
         
         argv = wi_malloc((wi_array_count(task->arguments) + 2) * sizeof(char *));
-        argv[0] = strdup(wi_string_cstring(task->launch_path));
+        argv[0] = wi_strdup(wi_string_utf8_string(task->launch_path));
         
         for(i = 0; i < wi_array_count(task->arguments); i++)
-            argv[i + 1] = strdup(wi_string_cstring(wi_description(WI_ARRAY(task->arguments, i))));
+            argv[i + 1] = wi_strdup(wi_string_utf8_string(WI_ARRAY(task->arguments, i)));
         
         if(execv(argv[0], (char * const *) argv) < 0) {
             printf("execve: %s: %s\n", argv[0], strerror(errno));

@@ -731,9 +731,9 @@ void * wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *instance,
 
 #pragma mark -
 
-wi_boolean_t wi_dictionary_write_to_file(wi_dictionary_t *dictionary, wi_string_t *path) {
+wi_boolean_t wi_dictionary_write_to_path(wi_dictionary_t *dictionary, wi_string_t *path) {
 #ifdef WI_PLIST
-    return wi_plist_write_instance_to_file(dictionary, path);
+    return wi_plist_write_instance_to_path(dictionary, path);
 #else
     return false;
 #endif
