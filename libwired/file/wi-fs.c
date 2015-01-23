@@ -294,8 +294,8 @@ wi_boolean_t wi_fs_copy_path_with_callback(wi_string_t *frompath, wi_string_t *t
 
 static wi_boolean_t _wi_fs_copy_file(wi_string_t *frompath, wi_string_t *topath, wi_fs_copy_path_callback_t callback) {
     char            buffer[8192];
-    int                fromfd = -1, tofd = -1;
-    int                rbytes, wbytes;
+    int             fromfd = -1, tofd = -1;
+    int             rbytes, wbytes;
     wi_boolean_t    result = false;
     
     fromfd = open(wi_string_utf8_string(frompath), O_RDONLY, 0);
@@ -333,12 +333,12 @@ end:
 
 
 static wi_boolean_t _wi_fs_copy_directory(wi_string_t *frompath, wi_string_t *topath, wi_fs_copy_path_callback_t callback) {
-    WI_FTS                    *fts;
-    WI_FTSENT                *p;
-    wi_mutable_string_t        *newpath;
-    wi_string_t                *path;
+    WI_FTS                  *fts;
+    WI_FTSENT               *p;
+    wi_mutable_string_t     *newpath;
+    wi_string_t             *path;
     char                    *paths[2];
-    wi_uinteger_t            pathlength;
+    wi_uinteger_t           pathlength;
     wi_boolean_t            result = true;
 
     paths[0] = (char *) wi_string_utf8_string(frompath);
@@ -421,26 +421,26 @@ static wi_boolean_t _wi_fs_stat_path(wi_string_t *path, wi_fs_stat_t *sp, wi_boo
     }
     
     if(sp) {
-        sp->dev            = sb.st_dev;
-        sp->ino            = sb.st_ino;
+        sp->dev         = sb.st_dev;
+        sp->ino         = sb.st_ino;
         sp->mode        = sb.st_mode;
-        sp->nlink        = sb.st_nlink;
-        sp->uid            = sb.st_uid;
-        sp->gid            = sb.st_gid;
+        sp->nlink       = sb.st_nlink;
+        sp->uid         = sb.st_uid;
+        sp->gid         = sb.st_gid;
         sp->rdev        = sb.st_rdev;
-        sp->atime        = sb.st_atime;
-        sp->mtime        = sb.st_mtime;
-        sp->ctime        = sb.st_ctime;
+        sp->atime       = sb.st_atime;
+        sp->mtime       = sb.st_mtime;
+        sp->ctime       = sb.st_ctime;
         
 #ifdef HAVE_STRUCT_STAT64_ST_BIRTHTIME
-        sp->birthtime    = sb.st_birthtime;
+        sp->birthtime   = sb.st_birthtime;
 #else
-        sp->birthtime    = sb.st_ctime;
+        sp->birthtime   = sb.st_ctime;
 #endif
         
         sp->size        = sb.st_size;
-        sp->blocks        = sb.st_blocks;
-        sp->blksize        = sb.st_blksize;
+        sp->blocks      = sb.st_blocks;
+        sp->blksize     = sb.st_blksize;
     }
         
     return true;
@@ -455,26 +455,26 @@ static wi_boolean_t _wi_fs_stat_path(wi_string_t *path, wi_fs_stat_t *sp, wi_boo
     }
     
     if(sp) {
-        sp->dev            = sb.st_dev;
-        sp->ino            = sb.st_ino;
+        sp->dev         = sb.st_dev;
+        sp->ino         = sb.st_ino;
         sp->mode        = sb.st_mode;
-        sp->nlink        = sb.st_nlink;
-        sp->uid            = sb.st_uid;
-        sp->gid            = sb.st_gid;
+        sp->nlink       = sb.st_nlink;
+        sp->uid         = sb.st_uid;
+        sp->gid         = sb.st_gid;
         sp->rdev        = sb.st_rdev;
-        sp->atime        = sb.st_atime;
-        sp->mtime        = sb.st_mtime;
-        sp->ctime        = sb.st_ctime;
+        sp->atime       = sb.st_atime;
+        sp->mtime       = sb.st_mtime;
+        sp->ctime       = sb.st_ctime;
         
 #ifdef HAVE_STRUCT_STAT_ST_BIRTHTIME
-        sp->birthtime    = sb.st_birthtime;
+        sp->birthtime   = sb.st_birthtime;
 #else
-        sp->birthtime    = sb.st_ctime;
+        sp->birthtime   = sb.st_ctime;
 #endif
         
         sp->size        = sb.st_size;
-        sp->blocks        = sb.st_blocks;
-        sp->blksize        = sb.st_blksize;
+        sp->blocks      = sb.st_blocks;
+        sp->blksize     = sb.st_blksize;
     }
         
     return true;
@@ -497,7 +497,7 @@ wi_boolean_t wi_fs_lstat_path(wi_string_t *path, wi_fs_stat_t *sp) {
 
 wi_boolean_t wi_fs_statfs_path(wi_string_t *path, wi_fs_statfs_t *sfp) {
 #ifdef HAVE_STATVFS
-    struct statvfs        sfvb;
+    struct statvfs  sfvb;
 
     if(statvfs(wi_string_utf8_string(path), &sfvb) < 0) {
         wi_error_set_errno(errno);
@@ -505,19 +505,19 @@ wi_boolean_t wi_fs_statfs_path(wi_string_t *path, wi_fs_statfs_t *sfp) {
         return false;
     }
 
-    sfp->bsize        = sfvb.f_bsize;
-    sfp->frsize        = sfvb.f_frsize;
-    sfp->blocks        = sfvb.f_blocks;
-    sfp->bfree        = sfvb.f_bfree;
-    sfp->bavail        = sfvb.f_bavail;
-    sfp->files        = sfvb.f_files;
-    sfp->ffree        = sfvb.f_ffree;
-    sfp->favail        = sfvb.f_favail;
-    sfp->fsid        = sfvb.f_fsid;
-    sfp->flag        = sfvb.f_flag;
+    sfp->bsize      = sfvb.f_bsize;
+    sfp->frsize     = sfvb.f_frsize;
+    sfp->blocks     = sfvb.f_blocks;
+    sfp->bfree      = sfvb.f_bfree;
+    sfp->bavail     = sfvb.f_bavail;
+    sfp->files      = sfvb.f_files;
+    sfp->ffree      = sfvb.f_ffree;
+    sfp->favail     = sfvb.f_favail;
+    sfp->fsid       = sfvb.f_fsid;
+    sfp->flag       = sfvb.f_flag;
     sfp->namemax    = sfvb.f_namemax;
 #else
-    struct statfs        sfb;
+    struct statfs   sfb;
 
     if(statfs(wi_string_utf8_string(path), &sfb) < 0) {
         wi_error_set_errno(errno);
@@ -525,16 +525,16 @@ wi_boolean_t wi_fs_statfs_path(wi_string_t *path, wi_fs_statfs_t *sfp) {
         return false;
     }
 
-    sfp->bsize        = sfb.f_iosize;
-    sfp->frsize        = sfb.f_bsize;
-    sfp->blocks        = sfb.f_blocks;
-    sfp->bfree        = sfb.f_bfree;
-    sfp->bavail        = sfb.f_bavail;
-    sfp->files        = sfb.f_files;
-    sfp->ffree        = sfb.f_ffree;
-    sfp->favail        = sfb.f_ffree;
-    sfp->fsid        = sfb.f_fsid.val[0];
-    sfp->flag        = 0;
+    sfp->bsize      = sfb.f_iosize;
+    sfp->frsize     = sfb.f_bsize;
+    sfp->blocks     = sfb.f_blocks;
+    sfp->bfree      = sfb.f_bfree;
+    sfp->bavail     = sfb.f_bavail;
+    sfp->files      = sfb.f_files;
+    sfp->ffree      = sfb.f_ffree;
+    sfp->favail     = sfb.f_ffree;
+    sfp->fsid       = sfb.f_fsid.val[0];
+    sfp->flag       = 0;
     sfp->namemax    = 0;
 #endif
     

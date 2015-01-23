@@ -44,12 +44,10 @@ void wi_test_null_runtime_functions(void) {
     wi_null_t   *null1, *null2;
     
     null1 = wi_null();
-    null2 = wi_autorelease(wi_copy(null1));
+    null2 = wi_null();
     
     WI_TEST_ASSERT_EQUALS(null1, null2, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(null1, null2, "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(null1), wi_null_runtime_id(), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(null2), wi_null_runtime_id(), "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(null1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(null2) & WI_RUNTIME_OPTION_IMMUTABLE, "");
 }

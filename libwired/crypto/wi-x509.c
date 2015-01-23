@@ -86,7 +86,7 @@ wi_runtime_id_t wi_x509_runtime_id(void) {
 #pragma mark -
 
 wi_x509_t * wi_x509_alloc(void) {
-    return wi_runtime_create_instance_with_options(_wi_x509_runtime_id, sizeof(wi_x509_t), WI_RUNTIME_OPTION_IMMUTABLE);
+    return wi_runtime_create_instance(_wi_x509_runtime_id, sizeof(wi_x509_t));
 }
 
 

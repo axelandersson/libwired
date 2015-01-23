@@ -92,8 +92,6 @@ void wi_test_uuid_runtime_functions(void) {
     WI_TEST_ASSERT_EQUALS(wi_hash(uuid1), wi_hash(uuid2), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(uuid1), wi_uuid_runtime_id(), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(uuid2), wi_uuid_runtime_id(), "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(uuid1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(uuid2) & WI_RUNTIME_OPTION_IMMUTABLE, "");
     
     WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(uuid1), wi_uuid_string(uuid1), 0), WI_NOT_FOUND, "");
 }

@@ -73,9 +73,9 @@ void wi_test_x509_runtime_functions(void) {
     rsa = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
     
     x5091 = wi_autorelease(wi_x509_init_with_common_name(wi_x509_alloc(), rsa, WI_STR("foobar")));
-    x5092 = wi_autorelease(wi_copy(x5091));
+    x5092 = wi_autorelease(wi_x509_init_with_common_name(wi_x509_alloc(), rsa, WI_STR("foobar")));
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(x5091, x5092, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_x509_common_name(x5091), wi_x509_common_name(x5092), "");
     WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(x5091), WI_STR("foobar"), 0), WI_NOT_FOUND, "");
 #endif
 }

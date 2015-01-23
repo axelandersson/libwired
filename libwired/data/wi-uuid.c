@@ -188,7 +188,7 @@ wi_uuid_t * wi_uuid_with_bytes(const void *bytes) {
 #pragma mark -
 
 wi_uuid_t * wi_uuid_alloc(void) {
-    return wi_runtime_create_instance_with_options(_wi_uuid_runtime_id, sizeof(wi_uuid_t), WI_RUNTIME_OPTION_IMMUTABLE);
+    return wi_runtime_create_instance(_wi_uuid_runtime_id, sizeof(wi_uuid_t));
 }
 
 

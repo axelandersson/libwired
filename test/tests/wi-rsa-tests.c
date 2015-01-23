@@ -91,8 +91,6 @@ void wi_test_rsa_runtime_functions(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_rsa_private_key(rsa1), wi_rsa_private_key(rsa2), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(rsa1), wi_rsa_runtime_id(), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(rsa2), wi_rsa_runtime_id(), "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(rsa1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(rsa2) & WI_RUNTIME_OPTION_IMMUTABLE, "");
     WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(rsa1), WI_STR("512"), 0), WI_NOT_FOUND, "");
 #endif
 }

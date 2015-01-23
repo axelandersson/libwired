@@ -53,7 +53,7 @@ void wi_null_register(void) {
 
 
 void wi_null_initialize(void) {
-    _wi_null = wi_runtime_create_instance_with_options(_wi_null_runtime_id, sizeof(wi_null_t), WI_RUNTIME_OPTION_IMMUTABLE);
+    _wi_null = wi_runtime_create_instance(_wi_null_runtime_id, sizeof(wi_null_t));
 }
 
 
