@@ -357,10 +357,10 @@ void wi_test_array_enumeration(void) {
     
     array = wi_mutable_array();
     
-    for(i = 5000; i <= 10000; i++)
+    for(i = 500; i <= 1000; i++)
         wi_mutable_array_add_data(array, WI_INT32(i));
     
-    for(i = 1; i < 5000; i++)
+    for(i = 1; i < 500; i++)
         wi_mutable_array_insert_data_at_index(array, WI_INT32(i), i - 1);
     
     enumerator = wi_array_data_enumerator(array);
@@ -372,10 +372,10 @@ void wi_test_array_enumeration(void) {
         i++;
     }
 
-    WI_TEST_ASSERT_EQUALS(i, 10001, "");
+    WI_TEST_ASSERT_EQUALS(i, 1001, "");
 
     enumerator = wi_array_reverse_data_enumerator(array);
-    i = 10000;
+    i = 1000;
     
     while((number = wi_enumerator_next_data(enumerator))) {
         WI_TEST_ASSERT_EQUAL_INSTANCES(number, WI_INT32(i), "");
@@ -385,7 +385,7 @@ void wi_test_array_enumeration(void) {
 
     WI_TEST_ASSERT_EQUALS(i, 0, "");
     
-    for(i = 0; i < 10000; i++)
+    for(i = 0; i < 1000; i++)
         wi_mutable_array_remove_data_at_index(array, 0);
 }
 

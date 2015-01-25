@@ -231,7 +231,7 @@ void wi_test_dictionary_enumeration(void) {
     
     dictionary = wi_mutable_dictionary();
     
-    for(i = 1; i <= 10000; i++)
+    for(i = 1; i <= 1000; i++)
         wi_mutable_dictionary_set_data_for_key(dictionary, wi_string_with_format(WI_STR("%u"), i), WI_INT32(i));
     
     enumerator = wi_dictionary_key_enumerator(dictionary);
@@ -239,24 +239,24 @@ void wi_test_dictionary_enumeration(void) {
     
     while((number = wi_enumerator_next_data(enumerator))) {
         WI_TEST_ASSERT_TRUE(wi_number_int32(number) >= 1, "");
-        WI_TEST_ASSERT_TRUE(wi_number_int32(number) <= 10000, "");
+        WI_TEST_ASSERT_TRUE(wi_number_int32(number) <= 1000, "");
         
         i++;
     }
 
-    WI_TEST_ASSERT_EQUALS(i, 10000, "");
+    WI_TEST_ASSERT_EQUALS(i, 1000, "");
 
     enumerator = wi_dictionary_data_enumerator(dictionary);
     i = 0;
     
     while((string = wi_enumerator_next_data(enumerator))) {
         WI_TEST_ASSERT_TRUE(wi_string_int32(string) >= 1, "");
-        WI_TEST_ASSERT_TRUE(wi_string_int32(string) <= 10000, "");
+        WI_TEST_ASSERT_TRUE(wi_string_int32(string) <= 1000, "");
         
         i++;
     }
 
-    for(i = 1; i <= 10000; i++)
+    for(i = 1; i <= 1000; i++)
         wi_mutable_dictionary_remove_data_for_key(dictionary, WI_INT32(i));
 }
 

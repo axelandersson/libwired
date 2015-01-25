@@ -52,6 +52,9 @@ WI_EXPORT wi_boolean_t                      wi_indexset_contains_index(wi_indexs
 WI_EXPORT wi_boolean_t                      wi_indexset_contains_indexes(wi_indexset_t *, wi_indexset_t *);
 WI_EXPORT wi_boolean_t                      wi_indexset_contains_indexes_in_range(wi_indexset_t *, wi_range_t);
 
+WI_EXPORT wi_uinteger_t                     wi_indexset_first_index(wi_indexset_t *);
+WI_EXPORT wi_uinteger_t                     wi_indexset_last_index(wi_indexset_t *);
+
 WI_EXPORT wi_enumerator_t *                 wi_indexset_index_enumerator(wi_indexset_t *);
 
 WI_EXPORT void                              wi_mutable_indexset_add_index(wi_mutable_indexset_t *, wi_uinteger_t);

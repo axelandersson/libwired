@@ -48,6 +48,8 @@ static wi_boolean_t                     _wi_indexset_is_equal(wi_runtime_instanc
 static wi_string_t *                    _wi_indexset_description(wi_runtime_instance_t *);
 static wi_hash_code_t                   _wi_indexset_hash(wi_runtime_instance_t *);
 
+static wi_integer_t                     _wi_index_compare(wi_runtime_instance_t *, wi_runtime_instance_t *);
+
 
 static wi_runtime_id_t                  _wi_indexset_runtime_id = WI_RUNTIME_ID_NULL;
 static wi_runtime_class_t               _wi_indexset_runtime_class = {
@@ -262,8 +264,33 @@ wi_boolean_t wi_indexset_contains_indexes_in_range(wi_indexset_t *indexset, wi_r
 
 #pragma mark -
 
+wi_uinteger_t wi_indexset_first_index(wi_indexset_t *indexset) {
+    return (wi_uinteger_t) wi_array_first_data(indexset->array);
+}
+
+
+
+wi_uinteger_t wi_indexset_last_index(wi_indexset_t *indexset) {
+    return (wi_uinteger_t) wi_array_last_data(indexset->array);
+}
+
+
+
+#pragma mark -
+
 wi_enumerator_t * wi_indexset_index_enumerator(wi_indexset_t *indexset) {
     return wi_array_data_enumerator(indexset->array);
+}
+
+
+
+#pragma mark -
+
+static wi_integer_t _wi_index_compare(wi_runtime_instance_t *instance1, wi_runtime_instance_t *instance2) {
+    wi_uinteger_t   index1 = instance1;
+    wi_uinteger_t   index2 = instance2;
+    
+    return (index1 > index2) ? 1 : ((index1 < index2) ? -1 : 0);
 }
 
 
@@ -273,7 +300,7 @@ wi_enumerator_t * wi_indexset_index_enumerator(wi_indexset_t *indexset) {
 void wi_mutable_indexset_add_index(wi_mutable_indexset_t *indexset, wi_uinteger_t index) {
     WI_RUNTIME_ASSERT_MUTABLE(indexset);
     
-    wi_mutable_array_add_data(indexset->array, (void *) index);
+    wi_mutable_array_add_data_sorted(indexset->array, (void *) index, _wi_index_compare);
 }
 
 
@@ -287,7 +314,7 @@ void wi_mutable_indexset_add_indexes(wi_mutable_indexset_t *indexset, wi_indexse
     enumerator = wi_array_data_enumerator(otherindexset->array);
     
     while(wi_enumerator_get_next_data(enumerator, (void **) &index))
-        wi_mutable_array_add_data(indexset->array, (void *) index);
+        wi_mutable_array_add_data_sorted(indexset->array, (void *) index, _wi_index_compare);
 }
 
 
@@ -298,7 +325,7 @@ void wi_mutable_indexset_add_indexes_in_range(wi_mutable_indexset_t *indexset, w
     WI_RUNTIME_ASSERT_MUTABLE(indexset);
     
     for(index = range.location; index < range.location + range.length; index++)
-        wi_mutable_array_add_data(indexset->array, (void *) index);
+        wi_mutable_array_add_data_sorted(indexset->array, (void *) index, _wi_index_compare);
 }
 
 

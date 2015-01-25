@@ -151,7 +151,7 @@ void wi_test_set_enumeration(void) {
     
     set = wi_mutable_set();
     
-    for(i = 1; i <= 10000; i++)
+    for(i = 1; i <= 1000; i++)
         wi_mutable_set_add_data(set, WI_INT32(i));
     
     enumerator = wi_set_data_enumerator(set);
@@ -159,14 +159,14 @@ void wi_test_set_enumeration(void) {
     
     while((number = wi_enumerator_next_data(enumerator))) {
         WI_TEST_ASSERT_TRUE(wi_number_int32(number) >= 1, "");
-        WI_TEST_ASSERT_TRUE(wi_number_int32(number) <= 10000, "");
+        WI_TEST_ASSERT_TRUE(wi_number_int32(number) <= 1000, "");
         
         i++;
     }
     
-    WI_TEST_ASSERT_EQUALS(i, 10000, "");
+    WI_TEST_ASSERT_EQUALS(i, 1000, "");
     
-    for(i = 1; i <= 10000; i++)
+    for(i = 1; i <= 1000; i++)
         wi_mutable_set_remove_data(set, WI_INT32(i));
 }
 

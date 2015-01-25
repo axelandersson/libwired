@@ -40,12 +40,16 @@ void wi_test_indexset_creation(void) {
 
     WI_TEST_ASSERT_NOT_NULL(indexset, "");
     WI_TEST_ASSERT_EQUALS(wi_indexset_count(indexset), 0U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset), 0U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset), 0U, "");
     
     indexset = wi_indexset_with_index(1);
 
     WI_TEST_ASSERT_NOT_NULL(indexset, "");
     WI_TEST_ASSERT_EQUALS(wi_indexset_count(indexset), 1U, "");
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset, 1), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset), 1U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset), 1U, "");
     
     indexset = wi_indexset_with_indexes_in_range(wi_make_range(1, 3));
     
@@ -54,6 +58,8 @@ void wi_test_indexset_creation(void) {
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset, 1), "");
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset, 2), "");
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset, 3), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset), 1U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset), 3U, "");
 }
 
 
@@ -97,6 +103,8 @@ void wi_test_indexset_indexes(void) {
     WI_TEST_ASSERT_FALSE(wi_indexset_contains_indexes(indexset, wi_indexset_with_index(4)), "");
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_indexes_in_range(indexset, wi_make_range(2, 1)), "");
     WI_TEST_ASSERT_FALSE(wi_indexset_contains_indexes_in_range(indexset, wi_make_range(4, 1)), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset), 1U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset), 3U, "");
 }
 
 
@@ -109,17 +117,19 @@ void wi_test_indexset_enumeration(void) {
     
     indexset = wi_mutable_indexset();
     
-    for(i = 0; i < 10000; i++)
+    for(i = 0; i < 1000; i++)
         wi_mutable_indexset_add_index(indexset, i);
     
     enumerator = wi_indexset_index_enumerator(indexset);
+    i = 0;
     
     while(wi_enumerator_get_next_data(enumerator, (void **) &index)) {
-        WI_TEST_ASSERT_TRUE(index >= 0, "");
-        WI_TEST_ASSERT_TRUE(index < 10000, "");
+        WI_TEST_ASSERT_EQUALS(index, i, "");
+        
+        i++;
     }
     
-    for(i = 0; i < 10000; i++)
+    for(i = 0; i < 1000; i++)
         wi_mutable_indexset_remove_index(indexset, i);
 }
 
@@ -134,6 +144,8 @@ void wi_test_indexset_mutation(void) {
     WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 1), "");
     WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 2), "");
     WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 3), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset1), 0U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset1), 0U, "");
     
     wi_mutable_indexset_add_index(indexset1, 1);
     wi_mutable_indexset_add_indexes(indexset1, wi_indexset_with_index(2));
@@ -143,19 +155,36 @@ void wi_test_indexset_mutation(void) {
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset1, 1), "");
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset1, 2), "");
     WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset1, 3), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset1), 1U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset1), 3U, "");
     
     wi_mutable_indexset_remove_index(indexset1, 1);
     wi_mutable_indexset_remove_indexes(indexset1, wi_indexset_with_index(2));
     wi_mutable_indexset_remove_indexes_in_range(indexset1, wi_make_range(3, 1));
     
     WI_TEST_ASSERT_EQUALS(wi_indexset_count(indexset1), 0U, "");
+    WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 1), "");
+    WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 2), "");
+    WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 3), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset1), 0U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset1), 0U, "");
 
     wi_mutable_indexset_add_indexes_in_range(indexset1, wi_make_range(1, 3));
     
-    indexset2 = wi_mutable_copy(indexset1);
+    indexset2 = wi_autorelease(wi_mutable_copy(indexset1));
 
+    wi_mutable_indexset_add_index(indexset2, 5);
     wi_mutable_indexset_add_index(indexset2, 4);
 
+    WI_TEST_ASSERT_EQUALS(wi_indexset_count(indexset2), 5U, "");
+    WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset2, 1), "");
+    WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset2, 2), "");
+    WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset2, 3), "");
+    WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset2, 4), "");
+    WI_TEST_ASSERT_TRUE(wi_indexset_contains_index(indexset2, 5), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset2), 1U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset2), 5U, "");
+    
     wi_mutable_indexset_set_indexes(indexset1, indexset2);
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(indexset1, indexset2, "");
@@ -163,4 +192,9 @@ void wi_test_indexset_mutation(void) {
     wi_mutable_indexset_remove_all_indexes(indexset1);
     
     WI_TEST_ASSERT_EQUALS(wi_indexset_count(indexset1), 0U, "");
+    WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 1), "");
+    WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 2), "");
+    WI_TEST_ASSERT_FALSE(wi_indexset_contains_index(indexset1, 3), "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_first_index(indexset1), 0U, "");
+    WI_TEST_ASSERT_EQUALS(wi_indexset_last_index(indexset1), 0U, "");
 }
