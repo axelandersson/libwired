@@ -47,6 +47,7 @@
 #include <wired/wi-fsevents.h>
 #include <wired/wi-fts.h>
 #include <wired/wi-host.h>
+#include <wired/wi-indexset.h>
 #include <wired/wi-ip.h>
 #include <wired/wi-json.h>
 #include <wired/wi-lock.h>

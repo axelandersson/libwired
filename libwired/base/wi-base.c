@@ -74,6 +74,7 @@ void wi_initialize(void) {
     wi_fsenumerator_register();
     wi_fsevents_register();
     wi_host_register();
+    wi_indexset_register();
     wi_lock_register();
     wi_log_register();
     wi_null_register();
@@ -138,6 +139,7 @@ void wi_initialize(void) {
     wi_fsenumerator_initialize();
     wi_fsevents_initialize();
     wi_host_initialize();
+    wi_indexset_initialize();
     wi_log_initialize();
     wi_null_initialize();
     wi_number_initialize();

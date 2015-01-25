@@ -703,28 +703,32 @@ static _wi_dictionary_bucket_t * _wi_enumerator_dictionary_enumerator(wi_runtime
 
 
 
-void * wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+wi_boolean_t wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     _wi_dictionary_bucket_t     *bucket;
     
     bucket = _wi_enumerator_dictionary_enumerator(instance, context);
     
-    if(bucket)
-        return bucket->key;
+    if(!bucket)
+        return false;
     
-    return NULL;
+    *data = bucket->key;
+    
+    return true;
 }
 
 
 
-void * wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+wi_boolean_t wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     _wi_dictionary_bucket_t     *bucket;
     
     bucket = _wi_enumerator_dictionary_enumerator(instance, context);
     
-    if(bucket)
-        return bucket->data;
+    if(!bucket)
+        return false;
     
-    return NULL;
+    *data = bucket->data;
+    
+    return true;
 }
 
 

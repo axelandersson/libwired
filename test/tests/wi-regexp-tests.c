@@ -82,17 +82,39 @@ void wi_test_regexp_runtime_functions(void) {
 void wi_test_regexp_matching(void) {
     wi_regexp_t     *regexp;
     wi_string_t     *string;
+    wi_range_t      range;
+    wi_boolean_t    result;
     
-    regexp = wi_regexp_with_string(WI_STR("/w.*/"));
+    regexp = wi_regexp_with_string(WI_STR("/(w).*/"));
     
-    WI_TEST_ASSERT_TRUE(wi_regexp_matches_string(regexp, WI_STR("hello world")), "");
     WI_TEST_ASSERT_FALSE(wi_regexp_matches_string(regexp, WI_STR("foobar")), "");
+    WI_TEST_ASSERT_TRUE(wi_regexp_matches_string(regexp, WI_STR("hello world")), "");
+    
+    result = wi_regexp_get_range_by_matching_string(regexp, WI_STR("foobar"), 0, &range);
+    
+    WI_TEST_ASSERT_TRUE(result, "");
+    WI_TEST_ASSERT_EQUALS(range.location, WI_NOT_FOUND, "");
+    WI_TEST_ASSERT_EQUALS(range.length, 0U, "");
+    
+    result = wi_regexp_get_range_by_matching_string(regexp, WI_STR("hello world"), 0, &range);
+    
+    WI_TEST_ASSERT_TRUE(result, "");
+    WI_TEST_ASSERT_EQUALS(range.location, 6U, "");
+    WI_TEST_ASSERT_EQUALS(range.length, 5U, "");
+    
+    string = wi_regexp_string_by_matching_string(regexp, WI_STR("foobar"), 0);
+    
+    WI_TEST_ASSERT_NULL(string, "");
     
     string = wi_regexp_string_by_matching_string(regexp, WI_STR("hello world"), 0);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("world"), "");
     
-    string = wi_regexp_string_by_matching_string(regexp, WI_STR("hello world"), 1000);
+    string = wi_regexp_string_by_matching_string(regexp, WI_STR("hello world"), 1);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("w"), "");
+    
+    string = wi_regexp_string_by_matching_string(regexp, WI_STR("hello world"), 2);
     
     WI_TEST_ASSERT_NULL(string, "");
 }

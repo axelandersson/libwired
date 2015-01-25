@@ -32,8 +32,8 @@ WI_TEST_EXPORT void                     wi_test_enumerator_instances_all_data(vo
 WI_TEST_EXPORT void                     wi_test_enumerator_scalars_enumeration(void);
 WI_TEST_EXPORT void                     wi_test_enumerator_scalars_all_data(void);
 
-static void *                           _wi_test_enumerator_instance_function(wi_runtime_instance_t *, wi_enumerator_context_t *);
-static void *                           _wi_test_enumerator_scalar_function(wi_runtime_instance_t *, wi_enumerator_context_t *);
+static wi_boolean_t                     _wi_test_enumerator_instance_function(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+static wi_boolean_t                     _wi_test_enumerator_scalar_function(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 
 
 void wi_test_enumerator_instances_enumeration(void) {
@@ -115,11 +115,13 @@ void wi_test_enumerator_instances_all_data(void) {
 
 
 
-static void * _wi_test_enumerator_instance_function(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+static wi_boolean_t _wi_test_enumerator_instance_function(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     if(context->index == 3)
-        return NULL;
+        return false;
     
-    return WI_INT32(++context->index);
+    *data = WI_INT32(++context->index);
+    
+    return true;
 }
 
 
@@ -198,9 +200,11 @@ void wi_test_enumerator_scalars_all_data(void) {
 
 
 
-static void * _wi_test_enumerator_scalar_function(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+static wi_boolean_t _wi_test_enumerator_scalar_function(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     if(context->index == 3)
-        return NULL;
+        return false;
     
-    return (void *) ++context->index;
+    *data = (void *) ++context->index;
+    
+    return true;
 }

@@ -545,34 +545,32 @@ wi_enumerator_t * wi_array_reverse_data_enumerator(wi_array_t *array) {
 
 
 
-void * wi_enumerator_array_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+wi_boolean_t wi_enumerator_array_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     wi_array_t  *array = instance;
-    void        *data;
     
     if(context->index == array->data_count)
-        return NULL;
+        return false;
     
-    data = wi_array_data_at_index(array, context->index);
+    *data = wi_array_data_at_index(array, context->index);
     
     context->index++;
     
-    return data;
+    return true;
 }
 
 
 
-void * wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+wi_boolean_t wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     wi_array_t  *array = instance;
-    void        *data;
     
     if(context->index == array->data_count)
-        return NULL;
+        return false;
     
-    data = wi_array_data_at_index(array, array->data_count - context->index - 1);
+    *data = wi_array_data_at_index(array, array->data_count - context->index - 1);
     
     context->index++;
     
-    return data;
+    return true;
 }
 
 

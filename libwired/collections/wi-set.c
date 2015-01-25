@@ -423,7 +423,7 @@ wi_enumerator_t * wi_set_data_enumerator(wi_set_t *set) {
 
 
 
-void * wi_enumerator_set_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context) {
+wi_boolean_t wi_enumerator_set_data_enumerator(wi_runtime_instance_t *instance, wi_enumerator_context_t *context, void **data) {
     wi_set_t            *set = instance;
     _wi_set_bucket_t    *bucket;
     
@@ -434,7 +434,9 @@ void * wi_enumerator_set_data_enumerator(wi_runtime_instance_t *instance, wi_enu
             bucket = bucket->next;
             context->bucket = bucket;
             
-            return bucket->data;
+            *data = bucket->data;
+            
+            return true;
         } else {
             context->index++;
             context->bucket = NULL;
@@ -447,13 +449,15 @@ void * wi_enumerator_set_data_enumerator(wi_runtime_instance_t *instance, wi_enu
         if(bucket) {
             context->bucket = bucket;
             
-            return bucket->data;
+            *data = bucket->data;
+            
+            return true;
         }
         
         context->index++;
     }
     
-    return NULL;
+    return false;
 }
 
 

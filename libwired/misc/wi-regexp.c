@@ -249,17 +249,55 @@ wi_boolean_t wi_regexp_matches_string(wi_regexp_t *regexp, wi_string_t *string) 
 
 
 
+wi_boolean_t wi_regexp_get_range_by_matching_string(wi_regexp_t *regexp, wi_string_t *string, wi_uinteger_t index, wi_range_t *range) {
+    wi_boolean_t    result;
+    regmatch_t      match, *matches;
+    int             err;
+    
+    result      = true;
+    matches     = wi_malloc((index + 1) * sizeof(regmatch_t));
+    err         = regexec(&regexp->regex, wi_string_utf8_string(string), index + 1, matches, 0);
+    
+    if(err != 0) {
+        if(err == REG_NOMATCH) {
+            *range = wi_make_range(WI_NOT_FOUND, 0);
+            
+            goto end;
+        } else {
+            wi_error_set_regex_error(&regexp->regex, err);
+            
+            result = false;
+            
+            goto end;
+        }
+    }
+    
+    match = matches[index];
+    
+    if(match.rm_so == -1 || match.rm_eo == -1) {
+        *range = wi_make_range(WI_NOT_FOUND, 0);
+        
+        goto end;
+    }
+    
+    *range = wi_make_range(match.rm_so, match.rm_eo - match.rm_so);
+
+end:
+    wi_free(matches);
+    
+    return result;
+}
+
+
+
 wi_string_t * wi_regexp_string_by_matching_string(wi_regexp_t *regexp, wi_string_t *string, wi_uinteger_t index) {
-    regmatch_t  matches[32];
-
-    if(index >= 32)
+    wi_range_t  range;
+    
+    if(!wi_regexp_get_range_by_matching_string(regexp, string, index, &range))
         return NULL;
-
-    memset(matches, 0, sizeof(matches));
-
-    if(regexec(&regexp->regex, wi_string_utf8_string(string), 32, matches, 0) != 0)
+    
+    if(range.location == WI_NOT_FOUND)
         return NULL;
-
-    return wi_string_substring_with_range(string,
-        wi_make_range(matches[index].rm_so, matches[index].rm_eo - matches[index].rm_so));
+    
+    return wi_string_substring_with_range(string, range);
 }

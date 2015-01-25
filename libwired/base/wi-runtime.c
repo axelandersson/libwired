@@ -457,6 +457,6 @@ void wi_show(wi_runtime_instance_t *instance) {
     wi_pool_t   *pool;
     
     pool = wi_pool_init(wi_pool_alloc());
-    printf("%s\n", wi_string_utf8_string(wi_description(instance)));
+    printf("%s\n", instance ? wi_string_utf8_string(wi_description(instance)) : "(null)");
     wi_release(pool);
 }

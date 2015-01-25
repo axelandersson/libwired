@@ -117,7 +117,7 @@ static wi_string_t * _wi_enumerator_description(wi_runtime_instance_t *instance)
 
 #pragma mark -
 
-void * wi_enumerator_all_data(wi_enumerator_t *enumerator) {
+wi_array_t * wi_enumerator_all_data(wi_enumerator_t *enumerator) {
     wi_mutable_array_t                  *array;
     wi_array_callbacks_t                callbacks, array_callbacks;
     wi_dictionary_value_callbacks_t     dictionary_callbacks;
@@ -170,5 +170,16 @@ void * wi_enumerator_all_data(wi_enumerator_t *enumerator) {
 
 
 void * wi_enumerator_next_data(wi_enumerator_t *enumerator) {
-    return (*enumerator->func)(enumerator->collection, &enumerator->context);
+    void    *data;
+    
+    if(!(*enumerator->func)(enumerator->collection, &enumerator->context, &data))
+        return NULL;
+    
+    return data;
+}
+
+
+
+wi_boolean_t wi_enumerator_get_next_data(wi_enumerator_t *enumerator, void **data) {
+    return (*enumerator->func)(enumerator->collection, &enumerator->context, data);
 }

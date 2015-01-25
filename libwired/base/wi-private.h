@@ -57,7 +57,8 @@ struct _wi_enumerator_context {
 typedef struct _wi_enumerator_context       wi_enumerator_context_t;
 
 
-typedef void *                              wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *);
+//typedef void *                              wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *);
+typedef wi_boolean_t                        wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 
 
 WI_EXPORT void                              wi_address_register(void);
@@ -74,6 +75,7 @@ WI_EXPORT void                              wi_file_register(void);
 WI_EXPORT void                              wi_fsenumerator_register(void);
 WI_EXPORT void                              wi_fsevents_register(void);
 WI_EXPORT void                              wi_host_register(void);
+WI_EXPORT void                              wi_indexset_register(void);
 WI_EXPORT void                              wi_lock_register(void);
 WI_EXPORT void                              wi_log_register(void);
 WI_EXPORT void                              wi_null_register(void);
@@ -110,6 +112,7 @@ WI_EXPORT void                              wi_file_initialize(void);
 WI_EXPORT void                              wi_fsenumerator_initialize(void);
 WI_EXPORT void                              wi_fsevents_initialize(void);
 WI_EXPORT void                              wi_host_initialize(void);
+WI_EXPORT void                              wi_indexset_initialize(void);
 WI_EXPORT void                              wi_lock_initialize(void);
 WI_EXPORT void                              wi_log_initialize(void);
 WI_EXPORT void                              wi_null_initialize(void);
@@ -147,13 +150,13 @@ WI_EXPORT wi_data_t *                       wi_encoding_data_from_utf8_bytes(wi_
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_alloc(void);
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
 
-WI_EXPORT void *                            wi_enumerator_array_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                            wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                            wi_enumerator_hash_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                            wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                            wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                            wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
-WI_EXPORT void *                            wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *);
+WI_EXPORT wi_boolean_t                      wi_enumerator_array_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_hash_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 
 WI_EXPORT wi_array_callbacks_t              wi_array_callbacks(wi_array_t *);
 WI_EXPORT wi_dictionary_key_callbacks_t     wi_dictionary_key_callbacks(wi_dictionary_t *);
