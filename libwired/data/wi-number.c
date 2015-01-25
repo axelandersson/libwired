@@ -63,6 +63,7 @@ struct _wi_number {
 };
 
 
+static wi_runtime_instance_t *          _wi_number_copy(wi_runtime_instance_t *);
 static wi_boolean_t                     _wi_number_is_equal(wi_runtime_instance_t *, wi_runtime_instance_t *);
 static wi_hash_code_t                   _wi_number_hash(wi_runtime_instance_t *);
 static wi_string_t *                    _wi_number_description(wi_runtime_instance_t *);
@@ -75,7 +76,7 @@ static wi_runtime_id_t                  _wi_number_runtime_id = WI_RUNTIME_ID_NU
 static wi_runtime_class_t               _wi_number_runtime_class = {
     "wi_number_t",
     NULL,
-    NULL,
+    _wi_number_copy,
     _wi_number_is_equal,
     _wi_number_description,
     _wi_number_hash
@@ -179,7 +180,7 @@ wi_number_t * wi_number_with_double(double value) {
 #pragma mark -
 
 wi_number_t * wi_number_alloc(void) {
-    return wi_runtime_create_instance_with_options(_wi_number_runtime_id, sizeof(wi_number_t), WI_RUNTIME_OPTION_IMMUTABLE);
+    return wi_runtime_create_instance(_wi_number_runtime_id, sizeof(wi_number_t));
 }
 
 
@@ -268,6 +269,17 @@ wi_number_t * wi_number_init_with_float(wi_number_t *number, float value) {
 
 wi_number_t * wi_number_init_with_double(wi_number_t *number, double value) {
     return wi_number_init_with_value(number, WI_NUMBER_DOUBLE, &value);
+}
+
+
+
+static wi_runtime_instance_t * _wi_number_copy(wi_runtime_instance_t *instance) {
+    wi_number_t     *number = instance;
+    
+    if(_wi_number_is_float(number))
+        return wi_number_init_with_double(wi_number_alloc(), wi_number_double(number));
+    else
+        return wi_number_init_with_int64(wi_number_alloc(), wi_number_int64(number));
 }
 
 

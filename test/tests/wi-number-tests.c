@@ -115,8 +115,6 @@ void wi_test_number_runtime_functions(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(number1, number2, "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(number1), wi_number_runtime_id(), "");
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(number2), wi_number_runtime_id(), "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(number1) & WI_RUNTIME_OPTION_IMMUTABLE, "");
-    WI_TEST_ASSERT_TRUE(wi_runtime_options(number2) & WI_RUNTIME_OPTION_IMMUTABLE, "");
 
     number1 = wi_number_with_int(1);
     number2 = wi_number_with_long(1);
