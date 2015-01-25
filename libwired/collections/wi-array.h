@@ -30,6 +30,7 @@
 #include <stdarg.h>
 #include <wired/wi-base.h>
 #include <wired/wi-enumerator.h>
+#include <wired/wi-indexset.h>
 #include <wired/wi-runtime.h>
 
 #define WI_ARRAY(array, i)              wi_array_data_at_index((array), (i))
@@ -62,6 +63,7 @@ WI_EXPORT wi_array_t *                  wi_array_init_with_plist_file(wi_array_t
 
 WI_EXPORT wi_uinteger_t                 wi_array_count(wi_array_t *);
 WI_EXPORT void *                        wi_array_data_at_index(wi_array_t *, wi_uinteger_t);
+WI_EXPORT wi_array_t *                  wi_array_data_at_indexes(wi_array_t *, wi_indexset_t *);
 
 WI_EXPORT void *                        wi_array_first_data(wi_array_t *);
 WI_EXPORT void *                        wi_array_last_data(wi_array_t *);

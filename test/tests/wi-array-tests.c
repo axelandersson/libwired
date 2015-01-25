@@ -147,7 +147,7 @@ void wi_test_array_runtime_functions(void) {
 
 
 void wi_test_array_instances(void) {
-    wi_array_t      *array;
+    wi_array_t      *array, *subarray;
     wi_string_t     *string, *strings[5];
     
     array = wi_array();
@@ -171,6 +171,26 @@ void wi_test_array_instances(void) {
     WI_TEST_ASSERT_EQUALS(wi_array_index_of_data(array, WI_STR("bar")), 1U, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_first_data(array), WI_STR("foo"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_last_data(array), WI_STR("bar"), "");
+    
+    subarray = wi_array_subarray_with_range(array, wi_make_range(0, 1));
+    
+    WI_TEST_ASSERT_NOT_NULL(subarray, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(subarray), 1U, "");
+    WI_TEST_ASSERT_TRUE(wi_array_contains_data(subarray, WI_STR("foo")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(subarray, 0), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_index_of_data(subarray, WI_STR("foo")), 0U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_first_data(subarray), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_last_data(subarray), WI_STR("foo"), "");
+    
+    subarray = wi_array_data_at_indexes(array, wi_indexset_with_index(0));
+    
+    WI_TEST_ASSERT_NOT_NULL(subarray, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(subarray), 1U, "");
+    WI_TEST_ASSERT_TRUE(wi_array_contains_data(subarray, WI_STR("foo")), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(subarray, 0), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_index_of_data(subarray, WI_STR("foo")), 0U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_first_data(subarray), WI_STR("foo"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_last_data(subarray), WI_STR("foo"), "");
     
     string = wi_array_components_joined_by_string(array, WI_STR(","));
     
@@ -238,6 +258,7 @@ void wi_test_array_instances(void) {
 
 void wi_test_array_scalars(void) {
     wi_mutable_array_t  *array;
+    wi_array_t          *subarray;
     wi_uinteger_t       integers[3];
     wi_string_t         *string;
     
@@ -265,6 +286,26 @@ void wi_test_array_scalars(void) {
     WI_TEST_ASSERT_EQUALS(wi_array_index_of_data(array, (void *) 2), 1U, "");
     WI_TEST_ASSERT_EQUALS(wi_array_first_data(array), (void *) 1, "");
     WI_TEST_ASSERT_EQUALS(wi_array_last_data(array), (void *) 2, "");
+    
+    subarray = wi_array_subarray_with_range(array, wi_make_range(0, 1));
+    
+    WI_TEST_ASSERT_NOT_NULL(subarray, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(subarray), 1U, "");
+    WI_TEST_ASSERT_TRUE(wi_array_contains_data(subarray, (void *) 1), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(subarray, 0), (void *) 1, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_index_of_data(subarray, (void *) 1), 0U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_first_data(subarray), (void *) 1, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_last_data(subarray), (void *) 1, "");
+    
+    subarray = wi_array_data_at_indexes(array, wi_indexset_with_index(0));
+    
+    WI_TEST_ASSERT_NOT_NULL(subarray, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(subarray), 1U, "");
+    WI_TEST_ASSERT_TRUE(wi_array_contains_data(subarray, (void *) 1), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(subarray, 0), (void *) 1, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_index_of_data(subarray, (void *) 1), 0U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_first_data(subarray), (void *) 1, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_last_data(subarray), (void *) 1, "");
     
     string = wi_array_components_joined_by_string(array, WI_STR(","));
     

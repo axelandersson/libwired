@@ -440,6 +440,25 @@ void * wi_array_data_at_index(wi_array_t *array, wi_uinteger_t index) {
 
 
 
+wi_array_t * wi_array_data_at_indexes(wi_array_t *array, wi_indexset_t *indexset) {
+    wi_enumerator_t     *enumerator;
+    wi_array_t          *newarray;
+    wi_uinteger_t       index;
+    
+    newarray = wi_array_init_with_capacity_and_callbacks(wi_array_alloc(), wi_indexset_count(indexset), array->callbacks);
+    enumerator = wi_indexset_index_enumerator(indexset);
+    
+    while(wi_enumerator_get_next_data(enumerator, (void **) &index)) {
+        _WI_ARRAY_ASSERT_INDEX(array, index);
+        
+        _wi_array_add_data(newarray, WI_ARRAY(array, index));
+    }
+    
+    return wi_autorelease(newarray);
+}
+
+
+
 #pragma mark -
 
 void * wi_array_first_data(wi_array_t *array) {
@@ -584,7 +603,7 @@ wi_array_t * wi_array_subarray_with_range(wi_array_t *array, wi_range_t range) {
     _WI_ARRAY_ASSERT_INDEX(array, range.location);
     _WI_ARRAY_ASSERT_INDEX(array, range.location + range.length - 1);
     
-    newarray = wi_array_init_with_capacity(wi_array_alloc(), range.length);
+    newarray = wi_array_init_with_capacity_and_callbacks(wi_array_alloc(), range.length, array->callbacks);
     
     for(i = range.location; i < range.location + range.length; i++)
         _wi_array_add_data(newarray, WI_ARRAY(array, i));
