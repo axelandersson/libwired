@@ -116,11 +116,6 @@ static const char                       *_wi_error_strings[] = {
     /* WI_ERROR_JSON_WRITEFAILED */
     "JSON write failed",
     
-    /* WI_ERROR_REGEXP_NOSLASH */
-    "Missing \"/\"",
-    /* WI_ERROR_REGEXP_INVALIDOPTION */
-    "Invalid option",
-    
     /* WI_ERROR_SOCKET_NOVALIDCIPHER */
     "No valid cipher",
     /* WI_ERROR_SOCKET_EOF */

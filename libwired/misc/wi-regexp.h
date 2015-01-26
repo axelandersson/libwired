@@ -30,20 +30,35 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_regexp           wi_regexp_t;
+typedef struct _wi_regexp               wi_regexp_t;
 
 
-WI_EXPORT wi_runtime_id_t           wi_regexp_runtime_id(void);
+struct _wi_regexp_match {
+    wi_range_t                          range;
+};
+typedef struct _wi_regexp_match         wi_regexp_match_t;
 
-WI_EXPORT wi_regexp_t *             wi_regexp_with_string(wi_string_t *);
+enum _wi_regexp_options {
+    WI_REGEXP_CASE_INSENSITIVE          = (1 << 0),
+    WI_REGEXP_NEWLINE_SENSITIVE         = (1 << 1),
+};
+typedef enum _wi_regexp_options         wi_regexp_options_t;
 
-WI_EXPORT wi_regexp_t *             wi_regexp_alloc(void);
-WI_EXPORT wi_regexp_t *             wi_regexp_init_with_string(wi_regexp_t *, wi_string_t *);
 
-WI_EXPORT wi_string_t *             wi_regexp_string(wi_regexp_t *);
+WI_EXPORT wi_runtime_id_t               wi_regexp_runtime_id(void);
 
-WI_EXPORT wi_boolean_t              wi_regexp_matches_string(wi_regexp_t *, wi_string_t *);
-WI_EXPORT wi_boolean_t              wi_regexp_get_range_by_matching_string(wi_regexp_t *, wi_string_t *, wi_uinteger_t, wi_range_t *);
-WI_EXPORT wi_string_t *             wi_regexp_string_by_matching_string(wi_regexp_t *, wi_string_t *, wi_uinteger_t);
+WI_EXPORT wi_regexp_t *                 wi_regexp_with_pattern(wi_string_t *, wi_regexp_options_t);
+
+WI_EXPORT wi_regexp_t *                 wi_regexp_alloc(void);
+WI_EXPORT wi_regexp_t *                 wi_regexp_init_with_pattern(wi_regexp_t *, wi_string_t *, wi_regexp_options_t);
+
+WI_EXPORT wi_string_t *                 wi_regexp_pattern(wi_regexp_t *);
+WI_EXPORT wi_regexp_options_t           wi_regexp_options(wi_regexp_t *);
+WI_EXPORT wi_uinteger_t                 wi_regexp_number_of_capture_groups(wi_regexp_t *);
+
+WI_EXPORT wi_uinteger_t                 wi_regexp_number_of_matches_in_string(wi_regexp_t *, wi_string_t *);
+WI_EXPORT wi_range_t                    wi_regexp_range_of_first_match_in_string(wi_regexp_t *, wi_string_t *);
+WI_EXPORT wi_string_t *                 wi_regexp_string_of_first_match_in_string(wi_regexp_t *, wi_string_t *);
+WI_EXPORT wi_uinteger_t                 wi_regexp_get_matches_in_string(wi_regexp_t *, wi_string_t *, wi_regexp_match_t *, wi_uinteger_t);
 
 #endif /* WI_REGEXP_H */

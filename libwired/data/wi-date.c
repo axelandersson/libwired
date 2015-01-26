@@ -241,11 +241,11 @@ wi_date_t * wi_date_init_with_ts(wi_date_t *date, struct timespec ts) {
 
 
 wi_date_t * wi_date_init_with_string(wi_date_t *date, wi_string_t *string, wi_string_t *format) {
-    wi_regexp_t     *regexp;
-    wi_string_t     *match;
-    struct tm       tm;
-    time_t          clock;
-    wi_uinteger_t   offset, hours, minutes;
+    wi_regexp_t         *regexp;
+    wi_string_t         *substring;
+    struct tm           tm;
+    time_t              clock;
+    wi_uinteger_t       count, offset, hours, minutes;
 
     memset(&tm, 0, sizeof(tm));
 
@@ -258,16 +258,15 @@ wi_date_t * wi_date_init_with_string(wi_date_t *date, wi_string_t *string, wi_st
     offset = 0;
 
     if(wi_string_contains_string(format, WI_STR("%z"), WI_STRING_CASE_INSENSITIVE)) {
-        regexp  = wi_regexp_with_string(WI_STR("/((\\+|\\-)[0-9]{4})/"));
-        match   = wi_regexp_string_by_matching_string(regexp, string, 1);
-
-        if(match) {
-            hours       = wi_string_uinteger(wi_string_substring_with_range(match, wi_make_range(1, 2)));
-            minutes     = wi_string_uinteger(wi_string_substring_with_range(match, wi_make_range(3, 2)));
-
-            offset = (hours * 3600) + (minutes * 60);
-
-            if(wi_string_has_prefix(match, WI_STR("-")))
+        regexp      = wi_regexp_with_pattern(WI_STR("((\\+|\\-)[0-9]{4})"), 0);
+        substring   = wi_regexp_string_of_first_match_in_string(regexp, string);
+        
+        if(substring) {
+            hours       = wi_string_uinteger(wi_string_substring_with_range(substring, wi_make_range(1, 2)));
+            minutes     = wi_string_uinteger(wi_string_substring_with_range(substring, wi_make_range(3, 2)));
+            offset      = (hours * 3600) + (minutes * 60);
+            
+            if(wi_string_has_prefix(substring, WI_STR("-")))
                 offset = -offset;
         }
     }

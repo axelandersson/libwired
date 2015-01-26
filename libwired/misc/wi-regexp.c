@@ -39,14 +39,17 @@
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 
+#define WI_REGEXP_MAX_MATCH_COUNT       64
+
+
 struct _wi_regexp {
     wi_runtime_base_t                   base;
     
-    wi_string_t                         *string;
+    wi_string_t                         *pattern;
+    wi_regexp_options_t                 options;
+    
     regex_t                             regex;
     wi_boolean_t                        compiled;
-    
-    wi_hash_code_t                      hash;
 };
 
 
@@ -92,8 +95,8 @@ wi_runtime_id_t wi_regexp_runtime_id(void) {
 
 #pragma mark -
 
-wi_regexp_t * wi_regexp_with_string(wi_string_t *string) {
-    return wi_autorelease(wi_regexp_init_with_string(wi_regexp_alloc(), string));
+wi_regexp_t * wi_regexp_with_pattern(wi_string_t *pattern, wi_regexp_options_t options) {
+    return wi_autorelease(wi_regexp_init_with_pattern(wi_regexp_alloc(), pattern, options));
 }
 
 
@@ -106,8 +109,9 @@ wi_regexp_t * wi_regexp_alloc(void) {
 
 
 
-wi_regexp_t * wi_regexp_init_with_string(wi_regexp_t *regexp, wi_string_t *string) {
-    regexp->string = wi_copy(string);
+wi_regexp_t * wi_regexp_init_with_pattern(wi_regexp_t *regexp, wi_string_t *pattern, wi_regexp_options_t options) {
+    regexp->pattern = wi_copy(pattern);
+    regexp->options = options;
     
     if(!_wi_regexp_compile(regexp)) {
         wi_release(regexp);
@@ -126,7 +130,7 @@ static void _wi_regexp_dealloc(wi_runtime_instance_t *instance) {
     if(regexp->compiled)
         regfree(&regexp->regex);
 
-    wi_release(regexp->string);
+    wi_release(regexp->pattern);
 }
 
 
@@ -134,7 +138,7 @@ static void _wi_regexp_dealloc(wi_runtime_instance_t *instance) {
 static wi_runtime_instance_t * _wi_regexp_copy(wi_runtime_instance_t *instance) {
     wi_regexp_t     *regexp = instance;
     
-    return wi_regexp_init_with_string(wi_regexp_alloc(), regexp->string);
+    return wi_regexp_init_with_pattern(wi_regexp_alloc(), regexp->pattern, regexp->options);
 }
 
 
@@ -143,7 +147,7 @@ static wi_boolean_t _wi_regexp_is_equal(wi_runtime_instance_t *instance1, wi_run
     wi_regexp_t     *regexp1 = instance1;
     wi_regexp_t     *regexp2 = instance2;
 
-    return wi_is_equal(regexp1->string, regexp2->string);
+    return wi_is_equal(regexp1->pattern, regexp2->pattern) && (regexp1->options == regexp2->options);
 }
 
 
@@ -151,7 +155,10 @@ static wi_boolean_t _wi_regexp_is_equal(wi_runtime_instance_t *instance1, wi_run
 static wi_string_t * _wi_regexp_description(wi_runtime_instance_t *instance) {
     wi_regexp_t     *regexp = instance;
     
-    return regexp->string;
+    return wi_string_with_format(WI_STR("<%@ %p>{pattern = %@}"),
+                                 wi_runtime_class_name(regexp),
+                                 regexp,
+                                 regexp->pattern);
 }
 
 
@@ -159,10 +166,7 @@ static wi_string_t * _wi_regexp_description(wi_runtime_instance_t *instance) {
 static wi_hash_code_t _wi_regexp_hash(wi_runtime_instance_t *instance) {
     wi_regexp_t     *regexp = instance;
     
-    if(regexp->hash == 0)
-        regexp->hash = wi_hash(regexp->string);
-    
-    return regexp->hash;
+    return wi_hash(regexp->pattern) + regexp->options;
 }
 
 
@@ -170,134 +174,121 @@ static wi_hash_code_t _wi_regexp_hash(wi_runtime_instance_t *instance) {
 #pragma mark -
 
 static wi_boolean_t _wi_regexp_compile(wi_regexp_t *regexp) {
-    const char      *cstring;
-    char            *p, *s = NULL, *ss;
-    int             options, err;
-    wi_boolean_t    result = false;
+    int     options, error;
     
-    cstring = wi_string_utf8_string(regexp->string);
-
-    if(cstring[0] != '/') {
-        wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
-
-        goto end;
-    }
-    
-    s = ss = wi_strdup(cstring);
-    ss++;
-
-    if(!(p = strrchr(ss, '/'))) {
-        wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_NOSLASH);
-
-        goto end;
-    }
-
-    *p = '\0';
     options = REG_EXTENDED;
-
-    while(*++p) {
-        switch(*p) {
-            case 'i':
-                options |= REG_ICASE;
-                break;
-
-            case 'm':
-                options |= REG_NEWLINE;
-                break;
-
-            default:
-                wi_error_set_error(WI_ERROR_DOMAIN_LIBWIRED, WI_ERROR_REGEXP_INVALIDOPTION);
-
-                goto end;
-                break;
-        }
-    }
-
-    err = regcomp(&regexp->regex, ss, options);
-
-    if(err != 0) {
-        wi_error_set_regex_error(&regexp->regex, err);
+    
+    if(regexp->options & WI_REGEXP_CASE_INSENSITIVE)
+        options |= REG_ICASE;
+    
+    if(regexp->options & WI_REGEXP_NEWLINE_SENSITIVE)
+        options |= REG_NEWLINE;
+    
+    error = regcomp(&regexp->regex, wi_string_utf8_string(regexp->pattern), options);
+    
+    if(error != 0) {
+        wi_error_set_regex_error(&regexp->regex, error);
         
-        goto end;
+        return false;
     }
-
-    result = true;
+    
     regexp->compiled = true;
-
-end:
-    if(s)
-        wi_free(s);
-
-    return result;
+    
+    return true;
 }
 
 
 
 #pragma mark -
 
-wi_string_t * wi_regexp_string(wi_regexp_t *regexp) {
-    return regexp->string;
+wi_string_t * wi_regexp_pattern(wi_regexp_t *regexp) {
+    return regexp->pattern;
+}
+
+
+
+wi_regexp_options_t wi_regexp_options(wi_regexp_t *regexp) {
+    return regexp->options;
+}
+
+
+
+wi_uinteger_t wi_regexp_number_of_capture_groups(wi_regexp_t *regexp) {
+    return regexp->regex.re_nsub;
 }
 
 
 
 #pragma mark -
 
-wi_boolean_t wi_regexp_matches_string(wi_regexp_t *regexp, wi_string_t *string) {
-    return (regexec(&regexp->regex, wi_string_utf8_string(string), 0, NULL, 0) == 0);
+wi_uinteger_t wi_regexp_number_of_matches_in_string(wi_regexp_t *regexp, wi_string_t *string) {
+    return wi_regexp_get_matches_in_string(regexp, string, NULL, 0);
 }
 
 
 
-wi_boolean_t wi_regexp_get_range_by_matching_string(wi_regexp_t *regexp, wi_string_t *string, wi_uinteger_t index, wi_range_t *range) {
-    wi_boolean_t    result;
-    regmatch_t      match, *matches;
-    int             err;
+wi_range_t wi_regexp_range_of_first_match_in_string(wi_regexp_t *regexp, wi_string_t *string) {
+    wi_regexp_match_t   matches[1];
     
-    result      = true;
-    matches     = wi_malloc((index + 1) * sizeof(regmatch_t));
-    err         = regexec(&regexp->regex, wi_string_utf8_string(string), index + 1, matches, 0);
+    wi_regexp_get_matches_in_string(regexp, string, matches, 1);
     
-    if(err != 0) {
-        if(err == REG_NOMATCH) {
-            *range = wi_make_range(WI_NOT_FOUND, 0);
-            
-            goto end;
-        } else {
-            wi_error_set_regex_error(&regexp->regex, err);
-            
-            result = false;
-            
-            goto end;
-        }
-    }
+    return matches[0].range;
+}
+
+
+
+wi_string_t * wi_regexp_string_of_first_match_in_string(wi_regexp_t *regexp, wi_string_t *string) {
+    wi_regexp_match_t   matches[1];
     
-    match = matches[index];
+    wi_regexp_get_matches_in_string(regexp, string, matches, 1);
     
-    if(match.rm_so == -1 || match.rm_eo == -1) {
-        *range = wi_make_range(WI_NOT_FOUND, 0);
+    if(matches[0].range.location == WI_NOT_FOUND)
+        return NULL;
+    
+    return wi_string_substring_with_range(string, matches[0].range);
+}
+
+
+
+wi_uinteger_t wi_regexp_get_matches_in_string(wi_regexp_t *regexp, wi_string_t *string, wi_regexp_match_t *matches, wi_uinteger_t size) {
+    const char          *utf8_string;
+    wi_regexp_match_t   match;
+    regmatch_t          regmatch, regmatches[WI_REGEXP_MAX_MATCH_COUNT];
+    wi_uinteger_t       i, count, offset;
+    int                 error;
+    
+    utf8_string = wi_string_utf8_string(string);
+    count = 0;
+    offset = 0;
+    
+    while(strlen(utf8_string + offset) > 0) {
+        error = regexec(&regexp->regex, utf8_string + offset, WI_REGEXP_MAX_MATCH_COUNT, regmatches, 0);
         
-        goto end;
+        if(error != 0) {
+            wi_error_set_regex_error(&regexp->regex, error);
+            
+            break;
+        }
+        
+        for(i = 0; i < WI_REGEXP_MAX_MATCH_COUNT; i++) {
+            regmatch = regmatches[i];
+            
+            if(regmatch.rm_so == -1 || regmatch.rm_eo == -1)
+                break;
+            
+            if(matches && count < size)
+                matches[count].range = wi_make_range(regmatch.rm_so + offset, regmatch.rm_eo - regmatch.rm_so);
+            
+            count++;
+        }
+        
+        offset += regmatches[0].rm_eo;
     }
     
-    *range = wi_make_range(match.rm_so, match.rm_eo - match.rm_so);
-
-end:
-    wi_free(matches);
+    if(matches) {
+        for(i = count; i < size; i++)
+            matches[i].range = wi_make_range(WI_NOT_FOUND, 0);
+    }
     
-    return result;
-}
-
-
-
-wi_string_t * wi_regexp_string_by_matching_string(wi_regexp_t *regexp, wi_string_t *string, wi_uinteger_t index) {
-    wi_range_t  range;
-    
-    if(!wi_regexp_get_range_by_matching_string(regexp, string, index, &range))
-        return NULL;
-    
-    if(range.location == WI_NOT_FOUND)
-        return NULL;
-    
-    return wi_string_substring_with_range(string, range);
+    return count;
 }
