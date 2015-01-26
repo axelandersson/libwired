@@ -393,10 +393,11 @@ void wi_test_array_enumeration(void) {
 
 void wi_test_array_mutation(void) {
     wi_mutable_array_t  *array1, *array2;
+    wi_indexset_t       *indexset;
     
     array1 = wi_mutable_array();
     
-    wi_mutable_array_add_data(array1, WI_STR("foo"));
+    wi_mutable_array_insert_data_at_index(array1, WI_STR("foo"), 0);
     wi_mutable_array_add_data(array1, WI_STR("bar"));
     
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 2U, "");
@@ -410,6 +411,10 @@ void wi_test_array_mutation(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo2"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("bar2"), "");
     
+    wi_mutable_array_replace_data_from_array_at_indexes(array1,
+                                                        wi_array_with_data(WI_STR("foo3"), WI_STR("bar3"), NULL),
+                                                        wi_indexset_with_indexes_in_range(wi_make_range(0, 2)));
+    
     array2 = wi_mutable_copy(array1);
     
     wi_mutable_array_add_data(array2, WI_STR("baz"));
@@ -422,8 +427,8 @@ void wi_test_array_mutation(void) {
     
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 4U, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("abc"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("foo2"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("bar2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("foo3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("bar3"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("baz"), "");
     
     wi_mutable_array_insert_data_at_index(array1, WI_STR("zzz"), 0);
@@ -431,49 +436,80 @@ void wi_test_array_mutation(void) {
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 5U, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("zzz"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("abc"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("foo2"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("bar2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("foo3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("bar3"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 4), WI_STR("baz"), "");
+    
+    wi_mutable_array_insert_data_from_array_at_indexes(array1,
+                                                       wi_array_with_data(WI_STR("1"), WI_STR("2"), NULL),
+                                                       wi_indexset_with_indexes_in_range(wi_make_range(2, 2)));
+    
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 7U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("zzz"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("abc"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("1"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 4), WI_STR("foo3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 5), WI_STR("bar3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 6), WI_STR("baz"), "");
     
     wi_mutable_array_sort(array1, wi_string_compare);
     
-    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 5U, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("abc"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("bar2"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("baz"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("foo2"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 4), WI_STR("zzz"), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 7U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("1"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("abc"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("bar3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 4), WI_STR("baz"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 5), WI_STR("foo3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 6), WI_STR("zzz"), "");
     
     wi_mutable_array_reverse(array1);
     
-    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 5U, "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 7U, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("zzz"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("foo2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("foo3"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("baz"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("bar2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("bar3"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 4), WI_STR("abc"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 5), WI_STR("2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 6), WI_STR("1"), "");
     
     wi_mutable_array_remove_data_at_index(array1, 0);
 
-    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 4U, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo2"), "");
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 6U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo3"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("baz"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("bar2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("bar3"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("abc"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 4), WI_STR("2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 5), WI_STR("1"), "");
+    
+    wi_mutable_array_remove_data_at_indexes(array1, wi_indexset_with_indexes_in_range(wi_make_range(1, 2)));
+    
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 4U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("abc"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 2), WI_STR("2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 3), WI_STR("1"), "");
     
     wi_mutable_array_remove_data_in_range(array1, wi_make_range(1, 2));
     
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 2U, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo2"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("abc"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo3"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("1"), "");
     
-    wi_mutable_array_remove_data_in_array(array1, wi_array_with_data(WI_STR("abc"), NULL));
+    wi_mutable_array_remove_data_in_array(array1, wi_array_with_data(WI_STR("foo3"), NULL));
     
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 1U, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("foo2"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("1"), "");
 
-    wi_mutable_array_remove_all_data(array1);
+    wi_mutable_array_remove_last_data(array1);
 
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 0U, "");
+    
+    wi_mutable_array_remove_last_data(array1);
+    
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 0U, "");
     
     wi_mutable_array_sort(array1, wi_string_compare);
@@ -490,4 +526,8 @@ void wi_test_array_mutation(void) {
     WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 2U, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 0), WI_STR("abc"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_array_data_at_index(array1, 1), WI_STR("zzz"), "");
+    
+    wi_mutable_array_remove_all_data(array1);
+
+    WI_TEST_ASSERT_EQUALS(wi_array_count(array1), 0U, "");
 }

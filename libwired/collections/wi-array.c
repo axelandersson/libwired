@@ -883,23 +883,56 @@ void wi_mutable_array_insert_data_at_index(wi_mutable_array_t *array, void *data
 
 
 
+void wi_mutable_array_insert_data_from_array_at_indexes(wi_mutable_array_t *array, wi_array_t *otherarray, wi_indexset_t *indexset) {
+    wi_enumerator_t     *enumerator;
+    wi_uinteger_t       index, offset;
+    
+    WI_RUNTIME_ASSERT_MUTABLE(array);
+    WI_ASSERT(wi_array_count(otherarray) == wi_indexset_count(indexset), "counts of data array and index set does not match");
+    
+    enumerator = wi_indexset_index_enumerator(indexset);
+    offset = 0;
+    
+    while(wi_enumerator_get_next_data(enumerator, (void *) &index)) {
+        wi_mutable_array_insert_data_at_index(array, WI_ARRAY(otherarray, offset), index);
+        
+        offset++;
+    }
+}
+
+
+
+#pragma mark -
+
 void wi_mutable_array_replace_data_at_index(wi_mutable_array_t *array, void *data, wi_uinteger_t index) {
     _wi_array_item_t    *item;
     
     WI_RUNTIME_ASSERT_MUTABLE(array);
     _WI_ARRAY_ASSERT_INDEX(array, index);
 
-    if(array->callbacks.retain == wi_retain) {
-        WI_ASSERT(data != NULL,
-            "attempt to insert NULL in %@",
-            array);
-    }
+    if(array->callbacks.retain == wi_retain)
+        WI_ASSERT(data != NULL, "attempt to insert NULL in %@", array);
 
     item = _wi_array_create_item(array);
     item->data = _WI_ARRAY_RETAIN(array, data);
     
     _wi_array_remove_item(array, array->items[index]);
     array->items[index] = item;
+}
+
+
+
+void wi_mutable_array_replace_data_from_array_at_indexes(wi_mutable_array_t *array, wi_array_t *otherarray, wi_indexset_t *indexset) {
+    wi_enumerator_t     *enumerator;
+    wi_uinteger_t       index;
+    
+    WI_RUNTIME_ASSERT_MUTABLE(array);
+    WI_ASSERT(wi_array_count(otherarray) == wi_indexset_count(indexset), "counts of data array and index set does not match");
+    
+    enumerator = wi_indexset_index_enumerator(indexset);
+    
+    while(wi_enumerator_get_next_data(enumerator, (void *) &index))
+        wi_mutable_array_replace_data_at_index(array, WI_ARRAY(otherarray, index), index);
 }
 
 
@@ -957,6 +990,26 @@ void wi_mutable_array_remove_data_at_index(wi_mutable_array_t *array, wi_uintege
 
 
 
+void wi_mutable_array_remove_data_at_indexes(wi_mutable_array_t *array, wi_indexset_t *indexset) {
+    wi_enumerator_t     *enumerator;
+    wi_uinteger_t       i, index, offset;
+    
+    WI_RUNTIME_ASSERT_MUTABLE(array);
+    
+    enumerator = wi_indexset_index_enumerator(indexset);
+    offset = 0;
+    
+    while(wi_enumerator_get_next_data(enumerator, (void *) &i)) {
+        index = i - offset;
+        
+        wi_mutable_array_remove_data_at_index(array, index);
+        
+        offset++;
+    }
+}
+
+
+
 void wi_mutable_array_remove_data_in_range(wi_mutable_array_t *array, wi_range_t range) {
     wi_uinteger_t   count;
     
@@ -986,6 +1039,17 @@ void wi_mutable_array_remove_data_in_array(wi_mutable_array_t *array, wi_array_t
         if(index != WI_NOT_FOUND)
             wi_mutable_array_remove_data_at_index(array, index);
     }
+}
+
+
+
+void wi_mutable_array_remove_last_data(wi_mutable_array_t *array) {
+    WI_RUNTIME_ASSERT_MUTABLE(array);
+    
+    if(wi_array_count(array) == 0)
+        return;
+    
+    wi_mutable_array_remove_data_at_index(array, wi_array_count(array) - 1);
 }
 
 

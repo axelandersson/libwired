@@ -88,13 +88,18 @@ WI_EXPORT void                          wi_mutable_array_add_data(wi_mutable_arr
 WI_EXPORT void                          wi_mutable_array_add_data_sorted(wi_mutable_array_t *, void *, wi_compare_func_t *);
 WI_EXPORT void                          wi_mutable_array_add_data_from_array(wi_mutable_array_t *, wi_array_t *);
 WI_EXPORT void                          wi_mutable_array_insert_data_at_index(wi_mutable_array_t *, void *, wi_uinteger_t);
+WI_EXPORT void                          wi_mutable_array_insert_data_from_array_at_indexes(wi_mutable_array_t *, wi_array_t *, wi_indexset_t *);
+
 WI_EXPORT void                          wi_mutable_array_replace_data_at_index(wi_mutable_array_t *, void *, wi_uinteger_t);
+WI_EXPORT void                          wi_mutable_array_replace_data_from_array_at_indexes(wi_mutable_array_t *, wi_array_t *, wi_indexset_t *);
 WI_EXPORT void                          wi_mutable_array_set_array(wi_mutable_array_t *, wi_array_t *);
 
 WI_EXPORT void                          wi_mutable_array_remove_data(wi_mutable_array_t *, void *);
 WI_EXPORT void                          wi_mutable_array_remove_data_at_index(wi_mutable_array_t *, wi_uinteger_t);
+WI_EXPORT void                          wi_mutable_array_remove_data_at_indexes(wi_mutable_array_t *, wi_indexset_t *);
 WI_EXPORT void                          wi_mutable_array_remove_data_in_range(wi_mutable_array_t *, wi_range_t);
 WI_EXPORT void                          wi_mutable_array_remove_data_in_array(wi_mutable_array_t *, wi_array_t *);
+WI_EXPORT void                          wi_mutable_array_remove_last_data(wi_mutable_array_t *);
 WI_EXPORT void                          wi_mutable_array_remove_all_data(wi_mutable_array_t *);
 
 WI_EXPORT void                          wi_mutable_array_sort(wi_mutable_array_t *, wi_compare_func_t *);
