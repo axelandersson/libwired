@@ -287,8 +287,8 @@ wi_enumerator_t * wi_indexset_index_enumerator(wi_indexset_t *indexset) {
 #pragma mark -
 
 static wi_integer_t _wi_index_compare(wi_runtime_instance_t *instance1, wi_runtime_instance_t *instance2) {
-    wi_uinteger_t   index1 = instance1;
-    wi_uinteger_t   index2 = instance2;
+    wi_uinteger_t   index1 = (wi_uinteger_t) instance1;
+    wi_uinteger_t   index2 = (wi_uinteger_t) instance2;
     
     return (index1 > index2) ? 1 : ((index1 < index2) ? -1 : 0);
 }
