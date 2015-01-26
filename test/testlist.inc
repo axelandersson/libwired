@@ -70,6 +70,8 @@ wi_tests_run_test("wi_test_process", wi_test_process);
 wi_tests_run_test("wi_test_regexp_creation", wi_test_regexp_creation);
 wi_tests_run_test("wi_test_regexp_runtime_functions", wi_test_regexp_runtime_functions);
 wi_tests_run_test("wi_test_regexp_matching", wi_test_regexp_matching);
+wi_tests_run_test("wi_test_regexp_replacing_by_mutating", wi_test_regexp_replacing_by_mutating);
+wi_tests_run_test("wi_test_regexp_replacing_by_creating", wi_test_regexp_replacing_by_creating);
 wi_tests_run_test("wi_test_rsa_creation", wi_test_rsa_creation);
 wi_tests_run_test("wi_test_rsa_runtime_functions", wi_test_rsa_runtime_functions);
 wi_tests_run_test("wi_test_rsa_accessors", wi_test_rsa_accessors);

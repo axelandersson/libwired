@@ -61,4 +61,7 @@ WI_EXPORT wi_range_t                    wi_regexp_range_of_first_match_in_string
 WI_EXPORT wi_string_t *                 wi_regexp_string_of_first_match_in_string(wi_regexp_t *, wi_string_t *);
 WI_EXPORT wi_uinteger_t                 wi_regexp_get_matches_in_string(wi_regexp_t *, wi_string_t *, wi_regexp_match_t *, wi_uinteger_t);
 
+WI_EXPORT wi_uinteger_t                 wi_regexp_replace_matches_in_string(wi_regexp_t *, wi_mutable_string_t *, wi_string_t *);
+WI_EXPORT wi_string_t *                 wi_regexp_string_by_replacing_matches_in_string(wi_regexp_t *, wi_string_t *, wi_string_t *);
+
 #endif /* WI_REGEXP_H */

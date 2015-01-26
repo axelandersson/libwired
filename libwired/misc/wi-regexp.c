@@ -292,3 +292,60 @@ wi_uinteger_t wi_regexp_get_matches_in_string(wi_regexp_t *regexp, wi_string_t *
     
     return count;
 }
+
+
+
+#pragma mark -
+
+wi_uinteger_t wi_regexp_replace_matches_in_string(wi_regexp_t *regexp, wi_mutable_string_t *string, wi_string_t *template) {
+    wi_string_t         *originalstring, *substring;
+    wi_regexp_match_t   matches[WI_REGEXP_MAX_MATCH_COUNT];
+    wi_range_t          range;
+    wi_uinteger_t       count, replacements;
+    wi_integer_t        i;
+    
+    replacements = 0;
+    
+    if(wi_regexp_number_of_capture_groups(regexp) > 0) {
+        originalstring = wi_autorelease(wi_copy(string));
+        
+        wi_mutable_string_set_string(string, template);
+        
+        count = wi_regexp_get_matches_in_string(regexp, originalstring, matches, WI_REGEXP_MAX_MATCH_COUNT);
+        
+        for(i = count - 1; i >= 0; i--) {
+            substring = wi_string_substring_with_range(originalstring, matches[i].range);
+            range = wi_string_range_of_string(string, wi_string_with_format(WI_STR("$%u"), i), 0);
+            
+            if(range.location != WI_NOT_FOUND) {
+                wi_mutable_string_replace_characters_in_range_with_string(string, range, substring);
+                
+                replacements++;
+            }
+        }
+    } else {
+        count = wi_regexp_get_matches_in_string(regexp, string, matches, WI_REGEXP_MAX_MATCH_COUNT);
+        
+        for(i = count - 1; i >= 0; i--) {
+            wi_mutable_string_replace_characters_in_range_with_string(string, matches[i].range, template);
+            
+            replacements++;
+        }
+    }
+    
+    return replacements;
+}
+
+
+
+wi_string_t * wi_regexp_string_by_replacing_matches_in_string(wi_regexp_t *regexp, wi_string_t *string, wi_string_t *template) {
+    wi_mutable_string_t     *newstring;
+    
+    newstring = wi_mutable_copy(string);
+    
+    wi_regexp_replace_matches_in_string(regexp, newstring, template);
+    
+    wi_runtime_make_immutable(newstring);
+    
+    return wi_autorelease(newstring);
+}

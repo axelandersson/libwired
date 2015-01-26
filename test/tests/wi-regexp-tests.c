@@ -29,6 +29,8 @@
 WI_TEST_EXPORT void                     wi_test_regexp_creation(void);
 WI_TEST_EXPORT void                     wi_test_regexp_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_regexp_matching(void);
+WI_TEST_EXPORT void                     wi_test_regexp_replacing_by_mutating(void);
+WI_TEST_EXPORT void                     wi_test_regexp_replacing_by_creating(void);
 
 
 void wi_test_regexp_creation(void) {
@@ -117,4 +119,79 @@ void wi_test_regexp_matching(void) {
     string = wi_regexp_string_of_first_match_in_string(regexp, WI_STR("hello world"));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("l"), "");
+}
+
+
+
+void wi_test_regexp_replacing_by_mutating(void) {
+    wi_regexp_t             *regexp;
+    wi_mutable_string_t     *string;
+    wi_uinteger_t           count;
+    
+    regexp = wi_regexp_with_pattern(WI_STR("l"), 0);
+    string = wi_mutable_string_with_format(WI_STR("hello world"));
+    count = wi_regexp_replace_matches_in_string(regexp, string, WI_STR(""));
+    
+    WI_TEST_ASSERT_EQUALS(count, 3U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("heo word"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("l"), 0);
+    string = wi_mutable_string_with_format(WI_STR("hello world"));
+    count = wi_regexp_replace_matches_in_string(regexp, string, WI_STR("x"));
+
+    WI_TEST_ASSERT_EQUALS(count, 3U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hexxo worxd"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("l"), 0);
+    string = wi_mutable_string_with_format(WI_STR("hello world"));
+    count = wi_regexp_replace_matches_in_string(regexp, string, WI_STR("xxx"));
+    
+    WI_TEST_ASSERT_EQUALS(count, 3U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hexxxxxxo worxxxd"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("hello (world)"), 0);
+    string = wi_mutable_string_with_format(WI_STR("hello world"));
+    count = wi_regexp_replace_matches_in_string(regexp, string, WI_STR("hi $1"));
+    
+    WI_TEST_ASSERT_EQUALS(count, 1U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hi world"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("hello (world)"), 0);
+    string = wi_mutable_string_with_format(WI_STR("hello world"));
+    count = wi_regexp_replace_matches_in_string(regexp, string, WI_STR("hi $0"));
+    
+    WI_TEST_ASSERT_EQUALS(count, 1U, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hi hello world"), "");
+}
+
+
+
+void wi_test_regexp_replacing_by_creating(void) {
+    wi_regexp_t     *regexp;
+    wi_string_t     *string;
+    
+    regexp = wi_regexp_with_pattern(WI_STR("l"), 0);
+    string = wi_regexp_string_by_replacing_matches_in_string(regexp, WI_STR("hello world"), WI_STR(""));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("heo word"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("l"), 0);
+    string = wi_regexp_string_by_replacing_matches_in_string(regexp, WI_STR("hello world"), WI_STR("x"));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hexxo worxd"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("l"), 0);
+    string = wi_regexp_string_by_replacing_matches_in_string(regexp, WI_STR("hello world"), WI_STR("xxx"));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hexxxxxxo worxxxd"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("hello (world)"), 0);
+    string = wi_regexp_string_by_replacing_matches_in_string(regexp, WI_STR("hello world"), WI_STR("hi $1"));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hi world"), "");
+    
+    regexp = wi_regexp_with_pattern(WI_STR("hello (world)"), 0);
+    string = wi_regexp_string_by_replacing_matches_in_string(regexp, WI_STR("hello world"), WI_STR("hi $0"));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hi hello world"), "");
 }

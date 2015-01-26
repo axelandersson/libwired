@@ -70,6 +70,8 @@ WI_TEST_EXPORT void                     wi_test_process(void);
 WI_TEST_EXPORT void                     wi_test_regexp_creation(void);
 WI_TEST_EXPORT void                     wi_test_regexp_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_regexp_matching(void);
+WI_TEST_EXPORT void                     wi_test_regexp_replacing_by_mutating(void);
+WI_TEST_EXPORT void                     wi_test_regexp_replacing_by_creating(void);
 WI_TEST_EXPORT void                     wi_test_rsa_creation(void);
 WI_TEST_EXPORT void                     wi_test_rsa_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_rsa_accessors(void);
