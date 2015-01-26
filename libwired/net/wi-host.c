@@ -164,6 +164,9 @@ static wi_boolean_t _wi_host_is_equal(wi_runtime_instance_t *instance1, wi_runti
     addresses1 = wi_host_addresses(host1);
     addresses2 = wi_host_addresses(host2);
     
+    if(addresses1 == addresses2)
+        return true;
+    
     if(!addresses1 || !addresses2)
         return false;
     
