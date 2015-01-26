@@ -29,7 +29,8 @@
 WI_TEST_EXPORT void                     wi_test_indexset_creation(void);
 WI_TEST_EXPORT void                     wi_test_indexset_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_indexset_indexes(void);
-WI_TEST_EXPORT void                     wi_test_indexset_enumeration(void);
+WI_TEST_EXPORT void                     wi_test_indexset_enumeration_with_index(void);
+WI_TEST_EXPORT void                     wi_test_indexset_enumeration_with_range(void);
 WI_TEST_EXPORT void                     wi_test_indexset_mutation(void);
 
 
@@ -109,10 +110,9 @@ void wi_test_indexset_indexes(void) {
 
 
 
-void wi_test_indexset_enumeration(void) {
+void wi_test_indexset_enumeration_with_index(void) {
     wi_mutable_indexset_t   *indexset;
     wi_enumerator_t         *enumerator;
-    wi_number_t             *number;
     wi_uinteger_t           i, index;
     
     indexset = wi_mutable_indexset();
@@ -131,6 +131,24 @@ void wi_test_indexset_enumeration(void) {
     
     for(i = 0; i < 1000; i++)
         wi_mutable_indexset_remove_index(indexset, i);
+}
+
+
+
+void wi_test_indexset_enumeration_with_range(void) {
+    wi_indexset_t       *indexset;
+    wi_enumerator_t     *enumerator;
+    wi_uinteger_t       i, index;
+    
+    indexset = wi_indexset_with_indexes_in_range(wi_make_range(0, 1000));
+    enumerator = wi_indexset_index_enumerator(indexset);
+    i = 0;
+    
+    while(wi_enumerator_get_next_data(enumerator, (void **) &index)) {
+        WI_TEST_ASSERT_EQUALS(index, i, "");
+        
+        i++;
+    }
 }
 
 

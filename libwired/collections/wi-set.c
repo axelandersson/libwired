@@ -45,13 +45,13 @@
 #define _WI_SET_MIN_COUNT                   11
 #define _WI_SET_MAX_COUNT                   16777213
 
-#define _WI_SET_CHECK_RESIZE(set)                                       \
+#define _WI_SET_CHECK_OPTIMIZE(set)                                     \
     WI_STMT_START                                                       \
-        if((set->buckets_count >= 3 * set->data_count &&                \
-            set->buckets_count >  set->min_count) ||                    \
-           (set->data_count    >= 3 * set->buckets_count &&             \
-            set->buckets_count <  _WI_SET_MAX_COUNT))                   \
-            _wi_set_resize(set);                                        \
+        if(((set)->buckets_count >= 3 * (set)->data_count &&            \
+            (set)->buckets_count >  (set)->min_count) ||                \
+           ((set)->data_count    >= 3 * (set)->buckets_count &&         \
+            (set)->buckets_count <  _WI_SET_MAX_COUNT))                 \
+            _wi_set_optimize((set));                                    \
     WI_STMT_END
 
 #define _WI_SET_RETAIN(set, data)                                       \
@@ -464,7 +464,7 @@ wi_boolean_t wi_enumerator_set_data_enumerator(wi_runtime_instance_t *instance, 
 
 #pragma mark -
 
-static void _wi_set_resize(wi_set_t *set) {
+static void _wi_set_optimize(wi_set_t *set) {
     _wi_set_bucket_t    **buckets, *bucket, *next_bucket;
     wi_uinteger_t       i, index, capacity, buckets_count;
 
@@ -571,7 +571,7 @@ static void _wi_set_add_data(wi_set_t *set, void *data) {
         set->buckets[index] = bucket;
     }
 
-    _WI_SET_CHECK_RESIZE(set);
+    _WI_SET_CHECK_OPTIMIZE(set);
 }
 
 
@@ -598,7 +598,7 @@ static void _wi_set_remove_all_data(wi_set_t *set) {
         set->buckets[i] = NULL;
     }
 
-    _WI_SET_CHECK_RESIZE(set);
+    _WI_SET_CHECK_OPTIMIZE(set);
 }
 
 
@@ -655,6 +655,8 @@ void wi_mutable_set_add_data_from_array(wi_mutable_set_t *set, wi_array_t *array
 }
 
 
+
+#pragma mark -
 
 void wi_mutable_set_set_set(wi_mutable_set_t *set, wi_set_t *otherset) {
     _wi_set_bucket_t    *bucket;
@@ -718,7 +720,7 @@ void wi_mutable_set_remove_data(wi_mutable_set_t *set, void *data) {
         }
     }
     
-    _WI_SET_CHECK_RESIZE(set);
+    _WI_SET_CHECK_OPTIMIZE(set);
 }
 
 

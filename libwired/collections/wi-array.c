@@ -52,11 +52,11 @@
 
 #define _WI_ARRAY_CHECK_OPTIMIZE(array)                                 \
     WI_STMT_START                                                       \
-        if((array->items_count >= 3 * array->data_count &&              \
-            array->items_count >  array->min_count) ||                  \
-           (array->data_count  >= 3 * array->items_count &&             \
-            array->items_count <  _WI_ARRAY_MAX_COUNT))                 \
-            _wi_array_optimize(array);                                  \
+        if(((array)->items_count >= 3 * (array)->data_count &&          \
+            (array)->items_count >  (array)->min_count) ||              \
+           ((array)->data_count  >= 3 * (array)->items_count &&         \
+            (array)->items_count <  _WI_ARRAY_MAX_COUNT))               \
+            _wi_array_optimize((array));                                \
     WI_STMT_END
 
 #define _WI_ARRAY_RETAIN(array, data)                                   \
@@ -786,23 +786,19 @@ static void _wi_array_add_data(wi_array_t *array, void *data) {
 
 
 static void _wi_array_remove_all_data(wi_array_t *array) {
-    wi_uinteger_t       i, count;
+    wi_uinteger_t       i;
     _wi_array_item_t    *item;
     
-    count = array->data_count;
-    
-    if(count > 0) {
-        for(i = 0; i < count; i++) {
-            item = array->items[i];
-            
-            WI_ASSERT(item != NULL, "NULL item at index %lu (count %lu) in array %p",
-                i, count, array);
-
-            _wi_array_remove_item(array, item);
-        }
+    for(i = 0; i < array->data_count; i++) {
+        item = array->items[i];
         
-        array->data_count = 0;
+        WI_ASSERT(item != NULL, "NULL item at index %lu (count %lu) in array %p",
+            i, array->data_count, array);
+
+        _wi_array_remove_item(array, item);
     }
+    
+    array->data_count = 0;
 
     _WI_ARRAY_CHECK_OPTIMIZE(array);
 }

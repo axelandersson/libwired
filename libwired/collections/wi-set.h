@@ -68,6 +68,7 @@ WI_EXPORT wi_uinteger_t                     wi_set_count_for_data(wi_set_t *, vo
 
 WI_EXPORT void                              wi_mutable_set_add_data(wi_mutable_set_t *, void *);
 WI_EXPORT void                              wi_mutable_set_add_data_from_array(wi_mutable_set_t *, wi_array_t *);
+
 WI_EXPORT void                              wi_mutable_set_set_set(wi_mutable_set_t *, wi_set_t *);
 
 WI_EXPORT void                              wi_mutable_set_remove_data(wi_mutable_set_t *, void *);

@@ -57,7 +57,6 @@ struct _wi_enumerator_context {
 typedef struct _wi_enumerator_context       wi_enumerator_context_t;
 
 
-//typedef void *                              wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *);
 typedef wi_boolean_t                        wi_enumerator_func_t(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 
 
@@ -152,10 +151,9 @@ WI_EXPORT wi_enumerator_t *                 wi_enumerator_init_with_collection(w
 
 WI_EXPORT wi_boolean_t                      wi_enumerator_array_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 WI_EXPORT wi_boolean_t                      wi_enumerator_array_reverse_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
-WI_EXPORT wi_boolean_t                      wi_enumerator_hash_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
-WI_EXPORT wi_boolean_t                      wi_enumerator_hash_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 WI_EXPORT wi_boolean_t                      wi_enumerator_dictionary_key_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 WI_EXPORT wi_boolean_t                      wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
+WI_EXPORT wi_boolean_t                      wi_enumerator_indexset_index_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 WI_EXPORT wi_boolean_t                      wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 
 WI_EXPORT wi_array_callbacks_t              wi_array_callbacks(wi_array_t *);

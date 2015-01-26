@@ -49,52 +49,52 @@
 #define _WI_DICTIONARY_MIN_COUNT                11
 #define _WI_DICTIONARY_MAX_COUNT                16777213
 
-#define _WI_DICTIONARY_CHECK_RESIZE(dictionary)                             \
-    WI_STMT_START                                                           \
-        if((dictionary->buckets_count >= 3 * dictionary->key_count &&       \
-            dictionary->buckets_count >  dictionary->min_count) ||          \
-           (dictionary->key_count     >= 3 * dictionary->buckets_count &&   \
-            dictionary->buckets_count <  _WI_DICTIONARY_MAX_COUNT))         \
-            _wi_dictionary_resize(dictionary);                              \
+#define _WI_DICTIONARY_CHECK_OPTIMIZE(dictionary)                               \
+    WI_STMT_START                                                               \
+        if(((dictionary)->buckets_count >= 3 * (dictionary)->key_count &&       \
+            (dictionary)->buckets_count >  (dictionary)->min_count) ||          \
+           ((dictionary)->key_count     >= 3 * (dictionary)->buckets_count &&   \
+            (dictionary)->buckets_count <  _WI_DICTIONARY_MAX_COUNT))           \
+            _wi_dictionary_optimize((dictionary));                              \
     WI_STMT_END
 
-#define _WI_DICTIONARY_KEY_RETAIN(dictionary, key)                          \
-    ((dictionary)->key_callbacks.retain                                     \
-        ? (*(dictionary)->key_callbacks.retain)((key))                      \
+#define _WI_DICTIONARY_KEY_RETAIN(dictionary, key)                              \
+    ((dictionary)->key_callbacks.retain                                         \
+        ? (*(dictionary)->key_callbacks.retain)((key))                          \
         : (key))
 
-#define _WI_DICTIONARY_KEY_RELEASE(dictionary, key)                         \
-    WI_STMT_START                                                           \
-        if((dictionary)->key_callbacks.release)                             \
-            (*(dictionary)->key_callbacks.release)((key));                  \
+#define _WI_DICTIONARY_KEY_RELEASE(dictionary, key)                             \
+    WI_STMT_START                                                               \
+        if((dictionary)->key_callbacks.release)                                 \
+            (*(dictionary)->key_callbacks.release)((key));                      \
     WI_STMT_END
 
-#define _WI_DICTIONARY_KEY_HASH(dictionary, key)                            \
-    ((dictionary)->key_callbacks.hash                                       \
-        ? (*(dictionary)->key_callbacks.hash)((key))                        \
+#define _WI_DICTIONARY_KEY_HASH(dictionary, key)                                \
+    ((dictionary)->key_callbacks.hash                                           \
+        ? (*(dictionary)->key_callbacks.hash)((key))                            \
         : wi_hash_pointer((key)))
 
-#define _WI_DICTIONARY_KEY_IS_EQUAL(dictionary, key1, key2)                 \
-    (((dictionary)->key_callbacks.is_equal &&                               \
-      (*(dictionary)->key_callbacks.is_equal)((key1), (key2))) ||           \
-     (!(dictionary)->key_callbacks.is_equal &&                              \
+#define _WI_DICTIONARY_KEY_IS_EQUAL(dictionary, key1, key2)                     \
+    (((dictionary)->key_callbacks.is_equal &&                                   \
+      (*(dictionary)->key_callbacks.is_equal)((key1), (key2))) ||               \
+     (!(dictionary)->key_callbacks.is_equal &&                                  \
       (key1) == (key2)))
 
-#define _WI_DICTIONARY_VALUE_RETAIN(dictionary, value)                      \
-    ((dictionary)->value_callbacks.retain                                   \
-        ? (*(dictionary)->value_callbacks.retain)((value))                  \
+#define _WI_DICTIONARY_VALUE_RETAIN(dictionary, value)                          \
+    ((dictionary)->value_callbacks.retain                                       \
+        ? (*(dictionary)->value_callbacks.retain)((value))                      \
         : (value))
 
-#define _WI_DICTIONARY_VALUE_RELEASE(dictionary, value)                     \
-    WI_STMT_START                                                           \
-        if((dictionary)->value_callbacks.release)                           \
-            (*(dictionary)->value_callbacks.release)((value));              \
+#define _WI_DICTIONARY_VALUE_RELEASE(dictionary, value)                         \
+    WI_STMT_START                                                               \
+        if((dictionary)->value_callbacks.release)                               \
+            (*(dictionary)->value_callbacks.release)((value));                  \
     WI_STMT_END
 
-#define _WI_DICTIONARY_VALUE_IS_EQUAL(dictionary, value1, value2)           \
-    (((dictionary)->value_callbacks.is_equal &&                             \
-      (*(dictionary)->value_callbacks.is_equal)((value1), (value2))) ||     \
-     (!(dictionary)->value_callbacks.is_equal &&                            \
+#define _WI_DICTIONARY_VALUE_IS_EQUAL(dictionary, value1, value2)               \
+    (((dictionary)->value_callbacks.is_equal &&                                 \
+      (*(dictionary)->value_callbacks.is_equal)((value1), (value2))) ||         \
+     (!(dictionary)->value_callbacks.is_equal &&                                \
       (value1) == (value2)))
 
 
@@ -748,7 +748,7 @@ wi_boolean_t wi_dictionary_write_to_path(wi_dictionary_t *dictionary, wi_string_
 
 #pragma mark -
 
-static void _wi_dictionary_resize(wi_dictionary_t *dictionary) {
+static void _wi_dictionary_optimize(wi_dictionary_t *dictionary) {
     _wi_dictionary_bucket_t     **buckets, *bucket, *next_bucket;
     wi_uinteger_t               i, index, capacity, buckets_count;
 
@@ -767,8 +767,8 @@ static void _wi_dictionary_resize(wi_dictionary_t *dictionary) {
 
     wi_free(dictionary->buckets);
 
-    dictionary->buckets            = buckets;
-    dictionary->buckets_count    = buckets_count;
+    dictionary->buckets         = buckets;
+    dictionary->buckets_count   = buckets_count;
 }
 
 
@@ -859,7 +859,7 @@ static void _wi_dictionary_set_data_for_key(wi_mutable_dictionary_t *dictionary,
     bucket->key     = new_key;
     bucket->data    = new_data;
 
-    _WI_DICTIONARY_CHECK_RESIZE(dictionary);
+    _WI_DICTIONARY_CHECK_OPTIMIZE(dictionary);
 }
 
 
@@ -890,7 +890,7 @@ static void _wi_dictionary_remove_data_for_key(wi_mutable_dictionary_t *dictiona
         }
     }
     
-    _WI_DICTIONARY_CHECK_RESIZE(dictionary);
+    _WI_DICTIONARY_CHECK_OPTIMIZE(dictionary);
 }
 
 
@@ -906,7 +906,7 @@ static void _wi_dictionary_remove_all_data(wi_mutable_dictionary_t *dictionary) 
         dictionary->buckets[i] = NULL;
     }
 
-    _WI_DICTIONARY_CHECK_RESIZE(dictionary);
+    _WI_DICTIONARY_CHECK_OPTIMIZE(dictionary);
 }
 
 
