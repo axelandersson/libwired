@@ -189,6 +189,7 @@ typedef wi_uinteger_t                   wi_hash_code_t;
 typedef double                          wi_time_interval_t;
 
 typedef struct _wi_address              wi_address_t;
+typedef struct _wi_address              wi_mutable_address_t;
 typedef struct _wi_array                wi_array_t;
 typedef struct _wi_array                wi_mutable_array_t;
 typedef struct _wi_string               wi_string_t;

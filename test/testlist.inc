@@ -1,3 +1,8 @@
+wi_tests_run_test("wi_test_address_creation", wi_test_address_creation);
+wi_tests_run_test("wi_test_address_runtime_functions", wi_test_address_runtime_functions);
+wi_tests_run_test("wi_test_address_comparison", wi_test_address_comparison);
+wi_tests_run_test("wi_test_address_accessors", wi_test_address_accessors);
+wi_tests_run_test("wi_test_address_mutation", wi_test_address_mutation);
 wi_tests_run_test("wi_test_array_creation", wi_test_array_creation);
 wi_tests_run_test("wi_test_array_serialization", wi_test_array_serialization);
 wi_tests_run_test("wi_test_array_runtime_functions", wi_test_array_runtime_functions);

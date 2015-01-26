@@ -36,32 +36,33 @@
 #include <wired/wi-runtime.h>
 
 enum _wi_address_family {
-    WI_ADDRESS_NULL                 = AF_UNSPEC,
-    WI_ADDRESS_IPV4                 = AF_INET,
-    WI_ADDRESS_IPV6                 = AF_INET6
+    WI_ADDRESS_IPV4,
+    WI_ADDRESS_IPV6
 };
 typedef enum _wi_address_family     wi_address_family_t;
 
 
 WI_EXPORT wi_runtime_id_t           wi_address_runtime_id(void);
 
-WI_EXPORT wi_address_t *            wi_address_wildcard_for_family(wi_address_family_t);
+WI_EXPORT wi_address_t *            wi_address_with_sa(struct sockaddr *);
+WI_EXPORT wi_address_t *            wi_address_with_wildcard_for_family(wi_address_family_t);
 
 WI_EXPORT wi_address_t *            wi_address_alloc(void);
+WI_EXPORT wi_mutable_address_t *    wi_mutable_address_alloc(void);
 WI_EXPORT wi_address_t *            wi_address_init_with_sa(wi_address_t *, struct sockaddr *);
-WI_EXPORT wi_address_t *            wi_address_init_wildcard_for_family(wi_address_t *, wi_address_family_t);
-WI_EXPORT wi_address_t *            wi_address_init_with_ipv4_address(wi_address_t *, uint32_t);
+WI_EXPORT wi_address_t *            wi_address_init_with_wildcard_for_family(wi_address_t *, wi_address_family_t);
 
 WI_EXPORT wi_integer_t              wi_address_compare_family(wi_runtime_instance_t *, wi_runtime_instance_t *);
 
 WI_EXPORT struct sockaddr *         wi_address_sa(wi_address_t *);
 WI_EXPORT wi_uinteger_t             wi_address_sa_length(wi_address_t *);
 WI_EXPORT wi_address_family_t       wi_address_family(wi_address_t *);
-
-WI_EXPORT void                      wi_address_set_port(wi_address_t *, wi_uinteger_t);
 WI_EXPORT wi_uinteger_t             wi_address_port(wi_address_t *);
 
 WI_EXPORT wi_string_t *             wi_address_string(wi_address_t *);
 WI_EXPORT wi_string_t *             wi_address_hostname(wi_address_t *);
+
+WI_EXPORT wi_boolean_t              wi_mutable_address_set_sa(wi_address_t *, struct sockaddr *);
+WI_EXPORT void                      wi_mutable_address_set_port(wi_address_t *, wi_uinteger_t);
 
 #endif /* WI_ADDRESS_H */

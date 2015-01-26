@@ -69,7 +69,7 @@ static size_t sa_len(const struct sockaddr *sa) {
     }  
 }
 #define SA_LEN(sa)                      (sa_len(sa))
-#endif 
+#endif
 #endif
 
 
@@ -119,8 +119,14 @@ wi_runtime_id_t wi_address_runtime_id(void) {
 
 #pragma mark -
 
-wi_address_t * wi_address_wildcard_for_family(wi_address_family_t family) {
-    return wi_autorelease(wi_address_init_wildcard_for_family(wi_address_alloc(), family));
+wi_address_t * wi_address_with_sa(struct sockaddr *sa) {
+    return wi_autorelease(wi_address_init_with_sa(wi_address_alloc(), sa));
+}
+
+
+
+wi_address_t * wi_address_with_wildcard_for_family(wi_address_family_t family) {
+    return wi_autorelease(wi_address_init_with_wildcard_for_family(wi_address_alloc(), family));
 }
 
 
@@ -128,7 +134,13 @@ wi_address_t * wi_address_wildcard_for_family(wi_address_family_t family) {
 #pragma mark -
 
 wi_address_t * wi_address_alloc(void) {
-    return wi_runtime_create_instance(_wi_address_runtime_id, sizeof(wi_address_t));
+    return wi_runtime_create_instance_with_options(_wi_address_runtime_id, sizeof(wi_address_t), WI_RUNTIME_OPTION_IMMUTABLE);
+}
+
+
+
+wi_address_t * wi_mutable_address_alloc(void) {
+    return wi_runtime_create_instance_with_options(_wi_address_runtime_id, sizeof(wi_address_t), WI_RUNTIME_OPTION_MUTABLE);
 }
 
 
@@ -149,7 +161,7 @@ wi_address_t * wi_address_init_with_sa(wi_address_t *address, struct sockaddr *s
 
 
 
-wi_address_t * wi_address_init_wildcard_for_family(wi_address_t *address, wi_address_family_t family) {
+wi_address_t * wi_address_init_with_wildcard_for_family(wi_address_t *address, wi_address_family_t family) {
     struct sockaddr_in      sa;
     struct sockaddr_in6     sa6;
 
@@ -175,27 +187,9 @@ wi_address_t * wi_address_init_wildcard_for_family(wi_address_t *address, wi_add
 
             return wi_address_init_with_sa(address, (struct sockaddr *) &sa6);
             break;
-
-        default:
-            break;
     }
 
     return NULL;
-}
-
-
-
-wi_address_t * wi_address_init_with_ipv4_address(wi_address_t *address, uint32_t ipv4_address) {
-    struct sockaddr_in  sa;
-
-    memset(&sa, 0, sizeof(sa));
-    sa.sin_family       = AF_INET;
-    sa.sin_addr.s_addr  = ipv4_address;
-#ifdef HAVE_STRUCT_SOCKADDR_IN_SIN_LEN
-    sa.sin_len          = sizeof(sa);
-#endif
-    
-    return wi_address_init_with_sa(address, (struct sockaddr *) &sa);
 }
 
 
@@ -212,7 +206,7 @@ static wi_boolean_t _wi_address_is_equal(wi_runtime_instance_t *instance1, wi_ru
     wi_address_t    *address1 = instance1;
     wi_address_t    *address2 = instance2;
     
-    return wi_is_equal(wi_address_string(address1), wi_address_string(address2));
+    return wi_is_equal(wi_address_string(address1), wi_address_string(address2)) && wi_address_port(address1) == wi_address_port(address2);
 }
 
 
@@ -228,11 +222,6 @@ static wi_string_t * _wi_address_description(wi_runtime_instance_t *instance) {
 
         case WI_ADDRESS_IPV6:
             family = WI_STR("ipv6");
-            break;
-
-        case WI_ADDRESS_NULL:
-        default:
-            family = WI_STR("none");
             break;
     }
     
@@ -288,18 +277,10 @@ wi_uinteger_t wi_address_sa_length(wi_address_t *address) {
 
 
 wi_address_family_t wi_address_family(wi_address_t *address) {
-    return (wi_address_family_t) address->ss.ss_family;
-}
-
-
-
-#pragma mark -
-
-void wi_address_set_port(wi_address_t *address, wi_uinteger_t port) {
     if(address->ss.ss_family == AF_INET)
-        ((struct sockaddr_in *) &address->ss)->sin_port = htons(port);
-    else if(address->ss.ss_family == AF_INET6)
-        ((struct sockaddr_in6 *) &address->ss)->sin6_port = htons(port);
+        return WI_ADDRESS_IPV4;
+    else
+        return WI_ADDRESS_IPV6;
 }
 
 
@@ -307,10 +288,8 @@ void wi_address_set_port(wi_address_t *address, wi_uinteger_t port) {
 wi_uinteger_t wi_address_port(wi_address_t *address) {
     if(address->ss.ss_family == AF_INET)
         return ntohs(((struct sockaddr_in *) &address->ss)->sin_port);
-    else if(address->ss.ss_family == AF_INET6)
+    else
         return ntohs(((struct sockaddr_in6 *) &address->ss)->sin6_port);
-    
-    return 0;
 }
 
 
@@ -347,4 +326,29 @@ wi_string_t * wi_address_hostname(wi_address_t *address) {
     }
 
     return wi_string_with_utf8_string(string);
+}
+
+
+
+#pragma mark -
+
+wi_boolean_t wi_mutable_address_set_sa(wi_mutable_address_t *address, struct sockaddr *sa) {
+    if(sa->sa_family != AF_INET && sa->sa_family != AF_INET6) {
+        wi_error_set_error(WI_ERROR_DOMAIN_GAI, EAI_FAMILY);
+        
+        return false;
+    }
+    
+    memcpy(&address->ss, sa, SA_LEN(sa));
+    
+    return true;
+}
+
+
+
+void wi_mutable_address_set_port(wi_mutable_address_t *address, wi_uinteger_t port) {
+    if(address->ss.ss_family == AF_INET)
+        ((struct sockaddr_in *) &address->ss)->sin_port = htons(port);
+    else
+        ((struct sockaddr_in6 *) &address->ss)->sin6_port = htons(port);
 }

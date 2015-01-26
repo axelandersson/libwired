@@ -60,6 +60,7 @@ WI_EXPORT wi_enumerator_t *                 wi_indexset_index_enumerator(wi_inde
 WI_EXPORT void                              wi_mutable_indexset_add_index(wi_mutable_indexset_t *, wi_uinteger_t);
 WI_EXPORT void                              wi_mutable_indexset_add_indexes(wi_mutable_indexset_t *, wi_indexset_t *);
 WI_EXPORT void                              wi_mutable_indexset_add_indexes_in_range(wi_mutable_indexset_t *, wi_range_t);
+
 WI_EXPORT void                              wi_mutable_indexset_set_indexes(wi_mutable_indexset_t *, wi_indexset_t *);
 
 WI_EXPORT void                              wi_mutable_indexset_remove_index(wi_mutable_indexset_t *, wi_uinteger_t);

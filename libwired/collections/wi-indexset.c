@@ -330,6 +330,8 @@ void wi_mutable_indexset_add_indexes_in_range(wi_mutable_indexset_t *indexset, w
 
 
 
+#pragma mark -
+
 void wi_mutable_indexset_set_indexes(wi_mutable_indexset_t *indexset, wi_indexset_t *otherindexset) {
     WI_RUNTIME_ASSERT_MUTABLE(indexset);
     

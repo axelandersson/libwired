@@ -89,7 +89,7 @@ struct _wi_socket_tls {
 struct _wi_socket {
     wi_runtime_base_t                   base;
     
-    wi_address_t                        *address;
+    wi_mutable_address_t                *address;
     wi_socket_type_t                    type;
     wi_uinteger_t                       direction;
     int                                 sd;
@@ -384,11 +384,10 @@ wi_socket_t * wi_socket_alloc(void) {
 
 
 wi_socket_t * wi_socket_init_with_address(wi_socket_t *_socket, wi_address_t *address, wi_socket_type_t type) {
-    _socket->address    = wi_copy(address);
+    _socket->address    = wi_mutable_copy(address);
     _socket->close      = true;
     _socket->buffer     = wi_string_init_with_capacity(wi_mutable_string_alloc(), WI_SOCKET_BUFFER_SIZE);
     _socket->type       = type;
-
     _socket->sd         = socket(wi_address_family(_socket->address), _socket->type, 0);
     
     if(_socket->sd < 0) {
@@ -419,8 +418,8 @@ wi_socket_t * wi_socket_init_with_address(wi_socket_t *_socket, wi_address_t *ad
 
 
 wi_socket_t * wi_socket_init_with_descriptor(wi_socket_t *socket, int sd) {
-    socket->sd          = sd;
-    socket->buffer      = wi_string_init_with_capacity(wi_mutable_string_alloc(), WI_SOCKET_BUFFER_SIZE);
+    socket->sd      = sd;
+    socket->buffer  = wi_string_init_with_capacity(wi_mutable_string_alloc(), WI_SOCKET_BUFFER_SIZE);
     
     return socket;
 }
@@ -690,7 +689,7 @@ wi_string_t * wi_socket_certificate_hostname(wi_socket_t *socket) {
 #pragma mark -
 
 void wi_socket_set_port(wi_socket_t *socket, wi_uinteger_t port) {
-    wi_address_set_port(socket->address, port);
+    wi_mutable_address_set_port(socket->address, port);
 }
 
 
@@ -1176,7 +1175,7 @@ wi_socket_t * wi_socket_accept(wi_socket_t *accept_socket, wi_time_interval_t ti
     if(sd < 0)
         err = errno;
 
-    *address = (length > 0) ? wi_autorelease(wi_address_init_with_sa(wi_address_alloc(), (struct sockaddr *) &ss)) : NULL;
+    *address = (length > 0) ? wi_autorelease(wi_address_init_with_sa(wi_mutable_address_alloc(), (struct sockaddr *) &ss)) : NULL;
 
     if(sd < 0) {
         wi_error_set_errno(err);
@@ -1184,8 +1183,7 @@ wi_socket_t * wi_socket_accept(wi_socket_t *accept_socket, wi_time_interval_t ti
         return NULL;
     }
 
-    socket = wi_socket_init_with_descriptor(wi_socket_alloc(), sd);
-
+    socket                  = wi_socket_init_with_descriptor(wi_socket_alloc(), sd);
     socket->close           = true;
     socket->address         = wi_retain(*address);
     socket->type            = accept_socket->type;

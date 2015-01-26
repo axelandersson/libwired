@@ -1,3 +1,8 @@
+WI_TEST_EXPORT void                     wi_test_address_creation(void);
+WI_TEST_EXPORT void                     wi_test_address_runtime_functions(void);
+WI_TEST_EXPORT void                     wi_test_address_comparison(void);
+WI_TEST_EXPORT void                     wi_test_address_accessors(void);
+WI_TEST_EXPORT void                     wi_test_address_mutation(void);
 WI_TEST_EXPORT void                     wi_test_array_creation(void);
 WI_TEST_EXPORT void                     wi_test_array_serialization(void);
 WI_TEST_EXPORT void                     wi_test_array_runtime_functions(void);
