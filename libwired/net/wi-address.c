@@ -85,6 +85,13 @@ static wi_boolean_t                     _wi_address_is_equal(wi_runtime_instance
 static wi_string_t *                    _wi_address_description(wi_runtime_instance_t *);
 static wi_hash_code_t                   _wi_address_hash(wi_runtime_instance_t *);
 
+static wi_boolean_t                     _wi_address_ipv4_matches_wildcard(wi_address_t *, wi_string_t *);
+static wi_boolean_t                     _wi_address_ipv4_matches_netmask(wi_address_t *, wi_string_t *);
+static wi_boolean_t                     _wi_address_ipv4_matches_literal(wi_address_t *, wi_string_t *);
+static wi_boolean_t                     _wi_address_ipv6_matches_literal(wi_address_t *, wi_string_t *);
+static uint32_t                         _wi_address_ipv4_uint32(wi_string_t *);
+static wi_string_t *                    _wi_address_ipv6_expanded_value(wi_string_t *);
+
 
 static wi_runtime_id_t                  _wi_address_runtime_id = WI_RUNTIME_ID_NULL;
 static wi_runtime_class_t               _wi_address_runtime_class = {
@@ -127,6 +134,12 @@ wi_address_t * wi_address_with_sa(struct sockaddr *sa) {
 
 wi_address_t * wi_address_with_wildcard_for_family(wi_address_family_t family) {
     return wi_autorelease(wi_address_init_with_wildcard_for_family(wi_address_alloc(), family));
+}
+
+
+
+wi_address_t * wi_address_with_string(wi_string_t *string) {
+    return wi_autorelease(wi_address_init_with_string(wi_address_alloc(), string));
 }
 
 
@@ -189,6 +202,40 @@ wi_address_t * wi_address_init_with_wildcard_for_family(wi_address_t *address, w
             break;
     }
 
+    return NULL;
+}
+
+
+
+wi_address_t * wi_address_init_with_string(wi_address_t *address, wi_string_t *string) {
+    struct sockaddr_in      sa_in;
+    struct sockaddr_in6     sa_in6;
+    
+    if(wi_string_contains_string(string, WI_STR("."), 0)) {
+        memset(&sa_in, 0, sizeof(sa_in));
+        sa_in.sin_family    = AF_INET;
+#ifdef HAVE_STRUCT_SOCKADDR_IN_SIN_LEN
+        sa_in.sin_len       = sizeof(sa_in);
+#endif
+        
+        if(inet_pton(AF_INET, wi_string_utf8_string(string), &sa_in.sin_addr) > 0)
+            return wi_address_init_with_sa(address, (struct sockaddr *) &sa_in);
+    }
+    else if(wi_string_contains_string(string, WI_STR(":"), 0)) {
+        memset(&sa_in6, 0, sizeof(sa_in6));
+        sa_in6.sin6_family  = AF_INET6;
+#ifdef HAVE_STRUCT_SOCKADDR_IN6_SIN6_LEN
+        sa_in6.sin6_len     = sizeof(sa_in6);
+#endif
+        
+        if(inet_pton(AF_INET6, wi_string_utf8_string(string), &sa_in6.sin6_addr) > 0)
+            return wi_address_init_with_sa(address, (struct sockaddr *) &sa_in6);
+    }
+
+    wi_release(address);
+    
+    wi_error_set_libwired_error(WI_ERROR_ADDRESS_INVALIDADDRESS);
+    
     return NULL;
 }
 
@@ -326,6 +373,147 @@ wi_string_t * wi_address_hostname(wi_address_t *address) {
     }
 
     return wi_string_with_utf8_string(string);
+}
+
+
+
+#pragma mark -
+
+wi_boolean_t wi_address_matches_pattern(wi_address_t *address, wi_string_t *pattern) {
+    if(address->ss.ss_family == AF_INET) {
+        if(wi_string_contains_string(pattern, WI_STR("*"), 0))
+            return _wi_address_ipv4_matches_wildcard(address, pattern);
+        else if(wi_string_contains_string(pattern, WI_STR("/"), 0))
+            return _wi_address_ipv4_matches_netmask(address, pattern);
+        else
+            return _wi_address_ipv4_matches_literal(address, pattern);
+    } else {
+        return _wi_address_ipv6_matches_literal(address, pattern);
+    }
+}
+
+
+
+static wi_boolean_t _wi_address_ipv4_matches_wildcard(wi_address_t *address, wi_string_t *pattern) {
+    wi_array_t      *ip_octets, *pattern_octets;
+    wi_string_t     *ip, *ip_octet, *pattern_octet;
+    wi_uinteger_t   i, count;
+    
+    count           = 0;
+    ip              = wi_address_string(address);
+    ip_octets       = wi_string_components_separated_by_string(ip, WI_STR("."));
+    pattern_octets  = wi_string_components_separated_by_string(pattern, WI_STR("."));
+    
+    if(wi_array_count(ip_octets) != 4)
+        return false;
+    
+    if(wi_array_count(ip_octets) != wi_array_count(pattern_octets))
+        return false;
+    
+    for(i = 0; i < 4; i++) {
+        ip_octet        = WI_ARRAY(ip_octets, i);
+        pattern_octet   = WI_ARRAY(pattern_octets, i);
+        
+        if(wi_is_equal(ip_octet, pattern_octet) || wi_is_equal(pattern_octet, WI_STR("*")))
+            count++;
+    }
+    
+    return (count == 4);
+}
+
+
+
+static wi_boolean_t _wi_address_ipv4_matches_netmask(wi_address_t *address, wi_string_t *pattern) {
+    wi_string_t     *ip, *pattern_ip, *pattern_netmask;
+    wi_array_t      *array;
+    uint32_t        cidr, netmask;
+    
+    array = wi_string_components_separated_by_string(pattern, WI_STR("/"));
+    
+    if(wi_array_count(array) != 2)
+        return false;
+    
+    ip                  = wi_address_string(address);
+    pattern_ip          = WI_ARRAY(array, 0);
+    pattern_netmask     = WI_ARRAY(array, 1);
+    
+    if(wi_string_contains_string(pattern_netmask, WI_STR("."), 0)) {
+        netmask = _wi_address_ipv4_uint32(pattern_netmask);
+    } else {
+        cidr = wi_string_uint32(pattern_netmask);
+        netmask = pow(2.0, 32.0) - pow(2.0, 32.0 - cidr);
+    }
+    
+    return ((_wi_address_ipv4_uint32(ip) & netmask) == (_wi_address_ipv4_uint32(pattern_ip) & netmask));
+}
+
+
+
+static wi_boolean_t _wi_address_ipv4_matches_literal(wi_address_t *address, wi_string_t *pattern) {
+    return wi_is_equal(wi_address_string(address), pattern);
+}
+
+
+
+static wi_boolean_t _wi_address_ipv6_matches_literal(wi_address_t *address, wi_string_t *pattern) {
+    wi_string_t     *ip, *ip_expanded, *pattern_expanded;
+    
+    ip                  = wi_address_string(address);
+    ip_expanded         = _wi_address_ipv6_expanded_value(ip);
+    pattern_expanded    = _wi_address_ipv6_expanded_value(pattern);
+    
+    return (ip_expanded && pattern_expanded && wi_is_equal(ip_expanded, pattern_expanded));
+}
+
+
+
+static uint32_t _wi_address_ipv4_uint32(wi_string_t *ip) {
+    uint32_t    a, b, c, d;
+    
+    if(sscanf(wi_string_utf8_string(ip), "%u.%u.%u.%u", &a, &b, &c, &d) == 4)
+        return (a << 24) + (b << 16) + (c << 8) + d;
+    
+    return 0;
+}
+
+
+
+static wi_string_t * _wi_address_ipv6_expanded_value(wi_string_t *ip) {
+    wi_mutable_array_t      *octets;
+    wi_mutable_string_t     *octet;
+    wi_uinteger_t           i, count;
+    
+    octets  = wi_autorelease(wi_mutable_copy(wi_string_components_separated_by_string(ip, WI_STR(":"))));
+    count   = wi_array_count(octets);
+    
+    if(count < 3)
+        return NULL;
+    
+    while(count > 0 && wi_string_length(WI_ARRAY(octets, 0)) == 0) {
+        wi_mutable_array_remove_data_at_index(octets, 0);
+        count--;
+    }
+    
+    for(i = 0; i < count; i++) {
+        octet = wi_mutable_copy(WI_ARRAY(octets, i));
+        
+        while(wi_string_length(octet) < 4)
+            wi_mutable_string_insert_string_at_index(octet, WI_STR("0"), 0);
+        
+        wi_mutable_array_replace_data_at_index(octets, octet, i);
+        wi_release(octet);
+    }
+    
+    while(count < 8) {
+        if(count == 0)
+            wi_mutable_array_add_data(octets, WI_STR("0000"));
+        else
+            wi_mutable_array_insert_data_at_index(octets, WI_STR("0000"), 0);
+        
+        count++;
+    }
+    
+    return wi_array_components_joined_by_string(octets, WI_STR(":"));
 }
 
 

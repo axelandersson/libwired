@@ -51,7 +51,7 @@ typedef enum _wi_error_domain               wi_error_domain_t;
 enum _wi_error_code {
     WI_ERROR_NONE                           = 0,
 
-    WI_ERROR_ADDRESS_NOAVAILABLEADDRESSES,
+    WI_ERROR_ADDRESS_INVALIDADDRESS,
     
     WI_ERROR_CIPHER_CIPHERNOTSUPP,
     

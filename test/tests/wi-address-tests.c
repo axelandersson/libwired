@@ -32,6 +32,7 @@ WI_TEST_EXPORT void                     wi_test_address_creation(void);
 WI_TEST_EXPORT void                     wi_test_address_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_address_comparison(void);
 WI_TEST_EXPORT void                     wi_test_address_accessors(void);
+WI_TEST_EXPORT void                     wi_test_address_matching(void);
 WI_TEST_EXPORT void                     wi_test_address_mutation(void);
 
 
@@ -65,6 +66,22 @@ void wi_test_address_creation(void) {
     
     WI_TEST_ASSERT_NOT_NULL(address, "");
     WI_TEST_ASSERT_EQUALS(wi_address_family(address), WI_ADDRESS_IPV6, "");
+    
+    address = wi_address_with_string(WI_STR("127.0.0.1"));
+    
+    WI_TEST_ASSERT_NOT_NULL(address, "");
+    WI_TEST_ASSERT_EQUALS(wi_address_family(address), WI_ADDRESS_IPV4, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_address_string(address), WI_STR("127.0.0.1"), "");
+    
+    address = wi_address_with_string(WI_STR("::1"));
+    
+    WI_TEST_ASSERT_NOT_NULL(address, "");
+    WI_TEST_ASSERT_EQUALS(wi_address_family(address), WI_ADDRESS_IPV6, "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_address_string(address), WI_STR("::1"), "");
+    
+    address = wi_address_with_string(WI_STR("foobar"));
+    
+    WI_TEST_ASSERT_NULL(address, "");
 }
 
 
@@ -118,6 +135,17 @@ void wi_test_address_accessors(void) {
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_address_string(address), WI_STR("0.0.0.0"), "");
     WI_TEST_ASSERT_NULL(wi_address_hostname(address), "");
+}
+
+
+
+void wi_test_address_matching(void) {
+    WI_TEST_ASSERT_TRUE(wi_address_matches_pattern(wi_address_with_string(WI_STR("127.0.0.1")), WI_STR("127.0.0.1")), "");
+    WI_TEST_ASSERT_TRUE(wi_address_matches_pattern(wi_address_with_string(WI_STR("127.0.0.1")), WI_STR("127.0.0.*")), "");
+    WI_TEST_ASSERT_FALSE(wi_address_matches_pattern(wi_address_with_string(WI_STR("255.0.0.1")), WI_STR("127.0.0.*")), "");
+    WI_TEST_ASSERT_TRUE(wi_address_matches_pattern(wi_address_with_string(WI_STR("127.0.0.1")), WI_STR("127.0.0.0/24")), "");
+    WI_TEST_ASSERT_FALSE(wi_address_matches_pattern(wi_address_with_string(WI_STR("255.0.0.1")), WI_STR("127.0.0.0/24")), "");
+    WI_TEST_ASSERT_TRUE(wi_address_matches_pattern(wi_address_with_string(WI_STR("::1")), WI_STR("0000:0000:0000:0000:0000:0000:0000:0001")), "");
 }
 
 

@@ -46,11 +46,13 @@ WI_EXPORT wi_runtime_id_t           wi_address_runtime_id(void);
 
 WI_EXPORT wi_address_t *            wi_address_with_sa(struct sockaddr *);
 WI_EXPORT wi_address_t *            wi_address_with_wildcard_for_family(wi_address_family_t);
+WI_EXPORT wi_address_t *            wi_address_with_string(wi_string_t *);
 
 WI_EXPORT wi_address_t *            wi_address_alloc(void);
 WI_EXPORT wi_mutable_address_t *    wi_mutable_address_alloc(void);
 WI_EXPORT wi_address_t *            wi_address_init_with_sa(wi_address_t *, struct sockaddr *);
 WI_EXPORT wi_address_t *            wi_address_init_with_wildcard_for_family(wi_address_t *, wi_address_family_t);
+WI_EXPORT wi_address_t *            wi_address_init_with_string(wi_address_t *, wi_string_t *);
 
 WI_EXPORT wi_integer_t              wi_address_compare_family(wi_runtime_instance_t *, wi_runtime_instance_t *);
 
@@ -61,6 +63,8 @@ WI_EXPORT wi_uinteger_t             wi_address_port(wi_address_t *);
 
 WI_EXPORT wi_string_t *             wi_address_string(wi_address_t *);
 WI_EXPORT wi_string_t *             wi_address_hostname(wi_address_t *);
+
+WI_EXPORT wi_boolean_t              wi_address_matches_pattern(wi_address_t *, wi_string_t *);
 
 WI_EXPORT wi_boolean_t              wi_mutable_address_set_sa(wi_address_t *, struct sockaddr *);
 WI_EXPORT void                      wi_mutable_address_set_port(wi_address_t *, wi_uinteger_t);
