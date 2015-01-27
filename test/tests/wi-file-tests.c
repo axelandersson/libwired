@@ -51,7 +51,7 @@ void wi_test_file_creation(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_file_path(file), path, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_file_read_to_end_of_file(file), wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK")), "");
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
     file = wi_file_for_writing(path);
     
     WI_TEST_ASSERT_NOT_NULL(file, "");
@@ -59,9 +59,9 @@ void wi_test_file_creation(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_file_path(file), path, "");
     WI_TEST_ASSERT_EQUALS(wi_file_write(file, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK"))), 12, "");
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
     file = wi_file_for_updating(path);
     
     WI_TEST_ASSERT_NOT_NULL(file, "");
@@ -69,7 +69,7 @@ void wi_test_file_creation(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_file_path(file), path, "");
     WI_TEST_ASSERT_EQUALS(wi_file_write(file, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK"))), 12, "");
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
     
     file = wi_file_temporary_file();
     
@@ -142,7 +142,7 @@ void wi_test_file_writing(void) {
     wi_data_t       *data;
     wi_integer_t    length;
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
     file = wi_file_for_writing(path);
     length = wi_file_write(file, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK")));
     
@@ -154,7 +154,7 @@ void wi_test_file_writing(void) {
     
     WI_TEST_ASSERT_NULL(data, "");
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
 }
 
 
@@ -165,7 +165,7 @@ void wi_test_file_updating(void) {
     wi_data_t       *data;
     wi_integer_t    length;
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
     file = wi_file_for_updating(path);
     length = wi_file_write(file, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK")));
     
@@ -177,7 +177,7 @@ void wi_test_file_updating(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(data, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK")), "");
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
 }
 
 
@@ -189,7 +189,7 @@ void wi_test_file_truncating(void) {
     wi_integer_t    length;
     wi_boolean_t    result;
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-file.XXXXXXX"));
     file = wi_file_for_updating(path);
     length = wi_file_write(file, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQK")));
     
@@ -210,5 +210,5 @@ void wi_test_file_truncating(void) {
     
     WI_TEST_ASSERT_FALSE(result, "");
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
 }

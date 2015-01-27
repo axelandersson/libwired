@@ -34,7 +34,7 @@
 #include <wired/wi-data.h>
 #include <wired/wi-digest.h>
 #include <wired/wi-file.h>
-#include <wired/wi-fs.h>
+#include <wired/wi-filesystem.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-private.h>
 #include <wired/wi-random.h>
@@ -397,8 +397,8 @@ wi_boolean_t wi_data_write_to_path(wi_data_t *data, wi_string_t *path) {
     
     wi_file_write(file, data);
     
-    if(!wi_fs_rename_path(fullpath, path)) {
-        wi_fs_delete_path(fullpath);
+    if(!wi_filesystem_rename_path(fullpath, path)) {
+        wi_filesystem_delete_path(fullpath);
         
         return false;
     }

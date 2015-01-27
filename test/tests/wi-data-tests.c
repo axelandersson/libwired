@@ -178,7 +178,7 @@ void wi_test_data_serialization(void) {
     
     WI_TEST_ASSERT_FALSE(wi_data_write_to_path(data1, WI_STR("/non/existing/file")), "");
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-data.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-data.XXXXXXX"));
     
     WI_TEST_ASSERT_TRUE(wi_data_write_to_path(data1, path), "");
     

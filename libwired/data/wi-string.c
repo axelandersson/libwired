@@ -54,7 +54,7 @@
 #include <wired/wi-digest.h>
 #include <wired/wi-encoding.h>
 #include <wired/wi-file.h>
-#include <wired/wi-fs.h>
+#include <wired/wi-filesystem.h>
 #include <wired/wi-lock.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-private.h>

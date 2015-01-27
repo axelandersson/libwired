@@ -433,7 +433,7 @@ void wi_test_string_serialization(void) {
     
     WI_TEST_ASSERT_FALSE(wi_string_write_utf8_string_to_path(string1, WI_STR("/non/existing/file.string")), "");
     
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-string.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-string.XXXXXXX"));
     
     WI_TEST_ASSERT_TRUE(wi_string_write_utf8_string_to_path(string1, path), "");
     

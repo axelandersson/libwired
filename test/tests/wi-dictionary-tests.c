@@ -93,13 +93,13 @@ void wi_test_dictionary_serialization(void) {
     WI_TEST_ASSERT_NULL(dictionary1, "");
 
     dictionary1 = wi_dictionary_with_data_and_keys(WI_STR("1"), WI_STR("foo"), WI_STR("2"), WI_STR("bar"), NULL);
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-plist.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-plist.XXXXXXX"));
     
     wi_dictionary_write_to_path(dictionary1, path);
 
     dictionary2 = wi_dictionary_with_plist_file(path);
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(dictionary1, dictionary2, "");
 #endif

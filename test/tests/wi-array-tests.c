@@ -96,13 +96,13 @@ void wi_test_array_serialization(void) {
     WI_TEST_ASSERT_NULL(array1, "");
 
     array1 = wi_array_with_data(WI_STR("foo"), WI_STR("bar"), NULL);
-    path = wi_fs_temporary_path_with_template(WI_STR("/tmp/libwired-test-plist.XXXXXXX"));
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-plist.XXXXXXX"));
     
     wi_array_write_to_path(array1, path);
 
     array2 = wi_array_with_plist_file(path);
     
-    wi_fs_delete_path(path);
+    wi_filesystem_delete_path(path);
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(array1, array2, "");
 #endif
