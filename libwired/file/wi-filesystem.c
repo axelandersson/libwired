@@ -85,7 +85,7 @@ wi_string_t * wi_filesystem_temporary_path_with_template(wi_string_t *template) 
 
 #pragma mark -
 
-wi_boolean_t wi_filesystem_create_directory(wi_string_t *path) {
+wi_boolean_t wi_filesystem_create_directory_at_path(wi_string_t *path) {
     if(mkdir(wi_string_utf8_string(path), 0777) < 0) {
         wi_error_set_errno(errno);
         
@@ -97,7 +97,7 @@ wi_boolean_t wi_filesystem_create_directory(wi_string_t *path) {
 
 
 
-wi_boolean_t wi_filesystem_change_current_directory_path(wi_string_t *path) {
+wi_boolean_t wi_filesystem_change_current_directory_to_path(wi_string_t *path) {
     if(chdir(wi_string_utf8_string(path)) < 0) {
         wi_error_set_errno(errno);
         
@@ -110,7 +110,15 @@ wi_boolean_t wi_filesystem_change_current_directory_path(wi_string_t *path) {
 
 
 wi_string_t * wi_filesystem_current_directory_path(void) {
-    return NULL;
+    char    path[WI_PATH_SIZE];
+    
+    if(!getcwd(path, sizeof(path))) {
+        wi_error_set_errno(errno);
+        
+        return false;
+    }
+    
+    return wi_string_with_utf8_string(path);
 }
 
 
@@ -249,7 +257,7 @@ static wi_boolean_t _wi_filesystem_copy_directory(wi_string_t *frompath, wi_stri
                 break;
                 
             case WI_FTS_D:
-                if(!wi_filesystem_create_directory(newpath)) {
+                if(!wi_filesystem_create_directory_at_path(newpath)) {
                     result = false;
                 } else {
                     if(callback)
@@ -520,9 +528,9 @@ wi_boolean_t wi_filesystem_get_filesystem_stats_for_path(wi_string_t *path, wi_f
         return false;
     }
 
-    fsstats->filesystem_id  = sfvb.f_bsize;
-    fsstats->size           = sfvb.f_blocks * sfvb.f_bsize;
-    fsstats->free_size      = sfvb.f_bfree * sfvb.f_bsize;
+    fsstats->filesystem_id  = sfvb.f_fsid;
+    fsstats->size           = sfvb.f_blocks * sfvb.f_frsize;
+    fsstats->free_size      = sfvb.f_bfree * sfvb.f_frsize;
     fsstats->nodes          = sfvb.f_files;
     fsstats->free_nodes     = sfvb.f_ffree;
 #else
@@ -534,7 +542,7 @@ wi_boolean_t wi_filesystem_get_filesystem_stats_for_path(wi_string_t *path, wi_f
         return false;
     }
 
-    fsstats->filesystem_id  = sfb.f_bsize;
+    fsstats->filesystem_id  = sfb.f_fsid;
     fsstats->size           = sfb.f_blocks * sfb.f_bsize;
     fsstats->free_size      = sfb.f_bfree * sfb.f_bsize;
     fsstats->nodes          = sfb.f_files;

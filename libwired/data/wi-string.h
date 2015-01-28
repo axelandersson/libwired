@@ -120,6 +120,7 @@ WI_EXPORT wi_string_t *                     wi_string_uppercase_string(wi_string
 
 WI_EXPORT wi_array_t *                      wi_string_path_components(wi_string_t *);
 WI_EXPORT wi_string_t *                     wi_string_by_normalizing_path(wi_string_t *);
+WI_EXPORT wi_string_t *                     wi_string_by_resolving_symbolic_links_in_path(wi_string_t *);
 WI_EXPORT wi_string_t *                     wi_string_by_expanding_tilde_in_path(wi_string_t *);
 WI_EXPORT wi_string_t *                     wi_string_by_appending_path_component(wi_string_t *, wi_string_t *);
 WI_EXPORT wi_string_t *                     wi_string_by_appending_path_components(wi_string_t *, wi_array_t *);
@@ -161,6 +162,7 @@ WI_EXPORT void                              wi_mutable_string_delete_characters_
 WI_EXPORT void                              wi_mutable_string_delete_surrounding_whitespace(wi_mutable_string_t *);
 
 WI_EXPORT void                              wi_mutable_string_normalize_path(wi_mutable_string_t *);
+WI_EXPORT void                              wi_mutable_string_resolve_symbolic_links_in_path(wi_mutable_string_t *);
 WI_EXPORT void                              wi_mutable_string_expand_tilde_in_path(wi_mutable_string_t *);
 WI_EXPORT void                              wi_mutable_string_append_path_component(wi_mutable_string_t *, wi_string_t *);
 WI_EXPORT void                              wi_mutable_string_append_path_components(wi_mutable_string_t *, wi_array_t *);

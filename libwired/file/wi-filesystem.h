@@ -79,7 +79,8 @@ typedef void                                wi_filesystem_copy_path_callback_t(w
 WI_EXPORT wi_string_t *                     wi_filesystem_temporary_path_with_template(wi_string_t *);
 
 WI_EXPORT wi_boolean_t                      wi_filesystem_create_directory_at_path(wi_string_t *);
-WI_EXPORT wi_boolean_t                      wi_filesystem_change_directory_to_path(wi_string_t *);
+WI_EXPORT wi_boolean_t                      wi_filesystem_change_current_directory_to_path(wi_string_t *);
+WI_EXPORT wi_string_t *                     wi_filesystem_current_directory_path(void);
 
 WI_EXPORT wi_boolean_t                      wi_filesystem_file_exists_at_path(wi_string_t *, wi_boolean_t *);
 

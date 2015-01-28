@@ -359,6 +359,8 @@ void wi_test_string_paths(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_normalizing_path(WI_STR("////usr/././local/../local/../local/wired///")),
                                    WI_STR("/usr/local/wired"), "");
     
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_resolving_symbolic_links_in_path(WI_STR("/")), WI_STR("/"), "");
+    
     path = wi_string_by_expanding_tilde_in_path(WI_STR("~/wired"));
     
     WI_TEST_ASSERT_TRUE(wi_string_length(path) > wi_string_length(WI_STR("~/wired")), "");
@@ -440,6 +442,8 @@ void wi_test_string_serialization(void) {
     string2 = wi_string_with_utf8_contents_of_file(path);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string1, string2, "");
+    
+    wi_filesystem_delete_path(path);
 }
 
 
@@ -575,6 +579,10 @@ void wi_test_string_mutation_paths(void) {
     path = wi_mutable_string_with_format(WI_STR("/"));
     
     wi_mutable_string_normalize_path(path);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(path, WI_STR("/"), "");
+    
+    wi_mutable_string_resolve_symbolic_links_in_path(path);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(path, WI_STR("/"), "");
     

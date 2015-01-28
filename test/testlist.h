@@ -56,6 +56,8 @@ WI_TEST_EXPORT void                     wi_test_file_reading(void);
 WI_TEST_EXPORT void                     wi_test_file_writing(void);
 WI_TEST_EXPORT void                     wi_test_file_updating(void);
 WI_TEST_EXPORT void                     wi_test_file_truncating(void);
+WI_TEST_EXPORT void                     wi_test_filesystem_successes(void);
+WI_TEST_EXPORT void                     wi_test_filesystem_failures(void);
 WI_TEST_EXPORT void                     wi_test_fsevents(void);
 WI_TEST_EXPORT void                     wi_test_host_creation(void);
 WI_TEST_EXPORT void                     wi_test_host_runtime_functions(void);

@@ -185,6 +185,8 @@ void wi_test_data_serialization(void) {
     data2 = wi_data_with_contents_of_file(path);
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(data1, data2, "");
+    
+    wi_filesystem_delete_path(path);
 }
 
 

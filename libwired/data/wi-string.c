@@ -1202,6 +1202,20 @@ wi_string_t * wi_string_by_normalizing_path(wi_string_t *path) {
 
 
 
+wi_string_t * wi_string_by_resolving_symbolic_links_in_path(wi_string_t *path) {
+    wi_mutable_string_t     *string;
+    
+    string = wi_mutable_copy(path);
+    
+    wi_mutable_string_resolve_symbolic_links_in_path(string);
+    
+    wi_runtime_make_immutable(string);
+    
+    return wi_autorelease(string);
+}
+
+
+
 wi_string_t * wi_string_by_expanding_tilde_in_path(wi_string_t *path) {
     wi_mutable_string_t     *string;
     
@@ -1697,6 +1711,17 @@ void wi_mutable_string_normalize_path(wi_mutable_string_t *path) {
         wi_mutable_string_set_format(path, WI_STR("/%@"), string);
     else
         wi_mutable_string_set_string(path, string);
+}
+
+
+
+void wi_mutable_string_resolve_symbolic_links_in_path(wi_mutable_string_t *path) {
+    char    buffer[WI_PATH_SIZE];
+    
+    if(!realpath(wi_string_utf8_string(path), buffer))
+        return;
+    
+    wi_mutable_string_set_string(path, wi_string_with_utf8_string(buffer));
 }
 
 

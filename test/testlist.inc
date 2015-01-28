@@ -56,6 +56,8 @@ wi_tests_run_test("wi_test_file_reading", wi_test_file_reading);
 wi_tests_run_test("wi_test_file_writing", wi_test_file_writing);
 wi_tests_run_test("wi_test_file_updating", wi_test_file_updating);
 wi_tests_run_test("wi_test_file_truncating", wi_test_file_truncating);
+wi_tests_run_test("wi_test_filesystem_successes", wi_test_filesystem_successes);
+wi_tests_run_test("wi_test_filesystem_failures", wi_test_filesystem_failures);
 wi_tests_run_test("wi_test_fsevents", wi_test_fsevents);
 wi_tests_run_test("wi_test_host_creation", wi_test_host_creation);
 wi_tests_run_test("wi_test_host_runtime_functions", wi_test_host_runtime_functions);
