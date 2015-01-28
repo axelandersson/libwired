@@ -593,6 +593,6 @@ wi_array_t * wi_filesystem_directory_contents_at_path(wi_string_t *path) {
 
 
 
-wi_fsenumerator_t * wi_filesystem_directory_enumerator_at_path(wi_string_t *path) {
-    return wi_autorelease(wi_fsenumerator_init_with_path(wi_fsenumerator_alloc(), path));
+wi_directory_enumerator_t * wi_filesystem_directory_enumerator_at_path(wi_string_t *path) {
+    return wi_autorelease(wi_directory_enumerator_init_with_path(wi_directory_enumerator_alloc(), path));
 }

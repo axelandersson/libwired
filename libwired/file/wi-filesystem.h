@@ -30,8 +30,8 @@
 #include <sys/param.h>
 #include <wired/wi-base.h>
 #include <wired/wi-date.h>
+#include <wired/wi-directory-enumerator.h>
 #include <wired/wi-file.h>
-#include <wired/wi-fsenumerator.h>
 #include <wired/wi-runtime.h>
 
 #define WI_PATH_SIZE                        MAXPATHLEN
@@ -95,6 +95,6 @@ WI_EXPORT wi_boolean_t                      wi_filesystem_get_file_stats_for_pat
 WI_EXPORT wi_boolean_t                      wi_filesystem_get_filesystem_stats_for_path(wi_string_t *, wi_filesystem_stats_t *);
 
 WI_EXPORT wi_array_t *                      wi_filesystem_directory_contents_at_path(wi_string_t *);
-WI_EXPORT wi_fsenumerator_t *               wi_filesystem_directory_enumerator_at_path(wi_string_t *);
+WI_EXPORT wi_directory_enumerator_t *       wi_filesystem_directory_enumerator_at_path(wi_string_t *);
 
 #endif /* WI_FILESYSTEM_H */

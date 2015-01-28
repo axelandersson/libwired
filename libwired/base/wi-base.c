@@ -63,6 +63,7 @@ void wi_initialize(void) {
     wi_date_register();
     wi_dictionary_register();
     wi_digest_register();
+    wi_directory_enumerator_register();
     
 #ifdef WI_ENCODING
     wi_encoding_register();
@@ -71,7 +72,6 @@ void wi_initialize(void) {
     wi_enumerator_register();
     wi_error_register();
     wi_file_register();
-    wi_fsenumerator_register();
     wi_fsevents_register();
     wi_host_register();
     wi_indexset_register();
@@ -128,6 +128,7 @@ void wi_initialize(void) {
     wi_data_initialize();
     wi_date_initialize();
     wi_digest_initialize();
+    wi_directory_enumerator_initialize();
     
 #ifdef WI_ENCODING
     wi_encoding_initialize();
@@ -136,7 +137,6 @@ void wi_initialize(void) {
     wi_enumerator_initialize();
     wi_error_initialize();
     wi_file_initialize();
-    wi_fsenumerator_initialize();
     wi_fsevents_initialize();
     wi_host_initialize();
     wi_indexset_initialize();

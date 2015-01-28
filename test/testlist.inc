@@ -46,6 +46,7 @@ wi_tests_run_test("wi_test_digest_creation", wi_test_digest_creation);
 wi_tests_run_test("wi_test_digest_md5", wi_test_digest_md5);
 wi_tests_run_test("wi_test_digest_sha1", wi_test_digest_sha1);
 wi_tests_run_test("wi_test_digest_base64", wi_test_digest_base64);
+wi_tests_run_test("wi_test_directory_enumerator", wi_test_directory_enumerator);
 wi_tests_run_test("wi_test_enumerator_instances_enumeration", wi_test_enumerator_instances_enumeration);
 wi_tests_run_test("wi_test_enumerator_instances_all_data", wi_test_enumerator_instances_all_data);
 wi_tests_run_test("wi_test_enumerator_scalars_enumeration", wi_test_enumerator_scalars_enumeration);

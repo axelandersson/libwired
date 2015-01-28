@@ -34,9 +34,9 @@
 #include <wired/wi-assert.h>
 #include <wired/wi-base.h>
 #include <wired/wi-data.h>
+#include <wired/wi-directory-enumerator.h>
 #include <wired/wi-enumerator.h>
 #include <wired/wi-error.h>
-#include <wired/wi-fsenumerator.h>
 #include <wired/wi-set.h>
 #include <wired/wi-thread.h>
 
@@ -67,11 +67,11 @@ WI_EXPORT void                              wi_data_register(void);
 WI_EXPORT void                              wi_date_register(void);
 WI_EXPORT void                              wi_dictionary_register(void);
 WI_EXPORT void                              wi_digest_register(void);
+WI_EXPORT void                              wi_directory_enumerator_register(void);
 WI_EXPORT void                              wi_encoding_register(void);
 WI_EXPORT void                              wi_enumerator_register(void);
 WI_EXPORT void                              wi_error_register(void);
 WI_EXPORT void                              wi_file_register(void);
-WI_EXPORT void                              wi_fsenumerator_register(void);
 WI_EXPORT void                              wi_fsevents_register(void);
 WI_EXPORT void                              wi_host_register(void);
 WI_EXPORT void                              wi_indexset_register(void);
@@ -104,11 +104,11 @@ WI_EXPORT void                              wi_data_initialize(void);
 WI_EXPORT void                              wi_date_initialize(void);
 WI_EXPORT void                              wi_dictionary_initialize(void);
 WI_EXPORT void                              wi_digest_initialize(void);
+WI_EXPORT void                              wi_directory_enumerator_initialize(void);
 WI_EXPORT void                              wi_encoding_initialize(void);
 WI_EXPORT void                              wi_enumerator_initialize(void);
 WI_EXPORT void                              wi_error_initialize(void);
 WI_EXPORT void                              wi_file_initialize(void);
-WI_EXPORT void                              wi_fsenumerator_initialize(void);
 WI_EXPORT void                              wi_fsevents_initialize(void);
 WI_EXPORT void                              wi_host_initialize(void);
 WI_EXPORT void                              wi_indexset_initialize(void);
@@ -188,8 +188,8 @@ WI_EXPORT void                              wi_error_set_libwired_error(int);
 WI_EXPORT void                              wi_error_set_libwired_error_with_string(int, wi_string_t *);
 WI_EXPORT void                              wi_error_set_libwired_error_with_format(int, wi_string_t *, ...);
 
-WI_EXPORT wi_fsenumerator_t *               wi_fsenumerator_alloc(void);
-WI_EXPORT wi_fsenumerator_t *               wi_fsenumerator_init_with_path(wi_fsenumerator_t *, wi_string_t *);
+WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_alloc(void);
+WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_init_with_path(wi_directory_enumerator_t *, wi_string_t *);
 
 WI_EXPORT void                              wi_runtime_make_immutable(wi_runtime_instance_t *);
 

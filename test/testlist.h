@@ -46,6 +46,7 @@ WI_TEST_EXPORT void                     wi_test_digest_creation(void);
 WI_TEST_EXPORT void                     wi_test_digest_md5(void);
 WI_TEST_EXPORT void                     wi_test_digest_sha1(void);
 WI_TEST_EXPORT void                     wi_test_digest_base64(void);
+WI_TEST_EXPORT void                     wi_test_directory_enumerator(void);
 WI_TEST_EXPORT void                     wi_test_enumerator_instances_enumeration(void);
 WI_TEST_EXPORT void                     wi_test_enumerator_instances_all_data(void);
 WI_TEST_EXPORT void                     wi_test_enumerator_scalars_enumeration(void);

@@ -24,24 +24,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WI_FSENUMERATOR_H
-#define WI_FSENUMERATOR_H 1
+#ifndef WI_DIRECTORY_ENUMERATOR_H
+#define WI_DIRECTORY_ENUMERATOR_H 1
 
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-enum _wi_fsenumerator_status {
-    WI_FSENUMERATOR_EOF,
-    WI_FSENUMERATOR_ERROR,
-    WI_FSENUMERATOR_PATH
+enum _wi_directory_enumerator_status {
+    WI_DIRECTORY_ENUMERATOR_EOF,
+    WI_DIRECTORY_ENUMERATOR_ERROR,
+    WI_DIRECTORY_ENUMERATOR_PATH
 };
-typedef enum _wi_fsenumerator_status        wi_fsenumerator_status_t;
+typedef enum _wi_directory_enumerator_status    wi_directory_enumerator_status_t;
 
-typedef struct _wi_fsenumerator             wi_fsenumerator_t;
+typedef struct _wi_directory_enumerator         wi_directory_enumerator_t;
 
 
-WI_EXPORT wi_fsenumerator_status_t          wi_fsenumerator_get_next_path(wi_fsenumerator_t *, wi_string_t **);
-WI_EXPORT void                              wi_fsenumerator_skip_descendents(wi_fsenumerator_t *);
-WI_EXPORT wi_uinteger_t                     wi_fsenumerator_level(wi_fsenumerator_t *);
+WI_EXPORT wi_directory_enumerator_status_t      wi_directory_enumerator_get_next_path(wi_directory_enumerator_t *, wi_string_t **);
+WI_EXPORT void                                  wi_directory_enumerator_skip_descendents(wi_directory_enumerator_t *);
+WI_EXPORT wi_uinteger_t                         wi_directory_enumerator_level(wi_directory_enumerator_t *);
 
-#endif /* WI_FSENUMERATOR_H */
+#endif /* WI_DIRECTORY_ENUMERATOR_H */
