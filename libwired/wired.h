@@ -44,7 +44,7 @@
 #include <wired/wi-error.h>
 #include <wired/wi-file.h>
 #include <wired/wi-filesystem.h>
-#include <wired/wi-fsevents.h>
+#include <wired/wi-filesystem-events.h>
 #include <wired/wi-fts.h>
 #include <wired/wi-host.h>
 #include <wired/wi-indexset.h>

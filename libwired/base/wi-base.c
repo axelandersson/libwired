@@ -74,7 +74,7 @@ void wi_initialize(void) {
     wi_file_register();
     
 #ifdef WI_FILESYSTEM_EVENTS
-    wi_fsevents_register();
+    wi_filesystem_events_register();
 #endif
     
     wi_host_register();
@@ -143,7 +143,7 @@ void wi_initialize(void) {
     wi_file_initialize();
     
 #ifdef WI_FILESYSTEM_EVENTS
-    wi_fsevents_initialize();
+    wi_filesystem_events_initialize();
 #endif
     
     wi_host_initialize();
