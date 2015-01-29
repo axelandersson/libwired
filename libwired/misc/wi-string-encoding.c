@@ -26,16 +26,16 @@
 
 #include "config.h"
 
-#ifndef WI_ENCODING
+#ifndef WI_STRING_ENCODING
 
 int wi_iconv_dummy = 0;
 
 #else
 
-#include <wired/wi-encoding.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
+#include <wired/wi-string-encoding.h>
 #include <wired/wi-system.h>
 
 #include <iconv.h>
@@ -105,10 +105,10 @@ wi_encoding_t * wi_encoding_init_with_charset(wi_encoding_t *encoding, wi_string
     encoding->encoding  = wi_mutable_copy(charset);
     encoding->options   = options;
     
-    if(options & WI_ENCODING_IGNORE)
+    if(options & WI_STRING_ENCODING_IGNORE)
         wi_mutable_string_append_string(encoding->encoding, WI_STR("//IGNORE"));
         
-    if(options & WI_ENCODING_TRANSLITERATE)
+    if(options & WI_STRING_ENCODING_TRANSLITERATE)
         wi_mutable_string_append_string(encoding->encoding, WI_STR("//TRANSLIT"));
     
     return encoding;

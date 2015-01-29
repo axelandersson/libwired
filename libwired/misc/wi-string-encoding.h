@@ -24,16 +24,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WI_ENCODING_H
-#define WI_ENCODING_H 1
+#ifndef WI_STRING_ENCODING_H
+#define WI_STRING_ENCODING_H 1
 
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
 enum _wi_encoding_options {
-    WI_ENCODING_IGNORE                      = (1 << 0),
-    WI_ENCODING_TRANSLITERATE               = (1 << 1),
-    WI_ENCODING_ALL                         = (WI_ENCODING_IGNORE | WI_ENCODING_TRANSLITERATE)
+    WI_STRING_ENCODING_IGNORE               = (1 << 0),
+    WI_STRING_ENCODING_TRANSLITERATE        = (1 << 1),
+    WI_STRING_ENCODING_ALL                  = (WI_STRING_ENCODING_IGNORE | WI_STRING_ENCODING_TRANSLITERATE)
 };
 typedef enum _wi_encoding_options           wi_encoding_options_t;
 
@@ -48,4 +48,4 @@ WI_EXPORT wi_encoding_t *                   wi_encoding_init_with_charset(wi_enc
 WI_EXPORT wi_string_t *                     wi_encoding_charset(wi_encoding_t *);
 WI_EXPORT wi_encoding_options_t             wi_encoding_options(wi_encoding_t *);
 
-#endif /* WI_ENCODING_H */
+#endif /* WI_STRING_ENCODING_H */

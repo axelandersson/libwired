@@ -52,7 +52,6 @@
 #include <wired/wi-data.h>
 #include <wired/wi-dictionary.h>
 #include <wired/wi-digest.h>
-#include <wired/wi-encoding.h>
 #include <wired/wi-file.h>
 #include <wired/wi-filesystem.h>
 #include <wired/wi-lock.h>
@@ -61,6 +60,7 @@
 #include <wired/wi-random.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
+#include <wired/wi-string-encoding.h>
 #include <wired/wi-system.h>
 
 #define _WI_STRING_MIN_SIZE             256
@@ -160,7 +160,7 @@ wi_string_t * wi_string_with_utf8_string(const char *c_string) {
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_with_c_string(const char *c_string, wi_encoding_t *encoding) {
     return wi_autorelease(wi_string_init_with_c_string(wi_string_alloc(), c_string, encoding));
@@ -189,7 +189,7 @@ wi_string_t * wi_string_with_format_and_arguments(wi_string_t *fmt, va_list ap) 
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_with_data(wi_data_t *data, wi_encoding_t *encoding) {
     return wi_encoding_utf8_string_from_data(encoding, data);
@@ -205,7 +205,7 @@ wi_string_t * wi_string_with_utf8_data(wi_data_t *data) {
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_with_bytes(const void *buffer, wi_uinteger_t size, wi_encoding_t *encoding) {
     return wi_encoding_utf8_string_from_bytes(encoding, buffer, size);
@@ -221,7 +221,7 @@ wi_string_t * wi_string_with_utf8_bytes(const void *buffer, wi_uinteger_t size) 
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_with_contents_of_file(wi_string_t *path, wi_encoding_t *encoding) {
     return wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), path, encoding));
@@ -295,7 +295,7 @@ wi_string_t * wi_string_init_with_utf8_string(wi_string_t *string, const char *u
 }
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_init_with_c_string(wi_string_t *string, const char *c_string, wi_encoding_t *encoding) {
     wi_release(string);
@@ -307,7 +307,7 @@ wi_string_t * wi_string_init_with_c_string(wi_string_t *string, const char *c_st
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_init_with_data(wi_string_t *string, wi_data_t *data, wi_encoding_t *encoding) {
     wi_release(string);
@@ -325,7 +325,7 @@ wi_string_t * wi_string_init_with_utf8_data(wi_string_t *string, wi_data_t *data
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_init_with_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t size, wi_encoding_t *encoding) {
     wi_release(string);
@@ -369,7 +369,7 @@ wi_string_t * wi_string_init_with_format_and_arguments(wi_string_t *string, wi_s
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_string_t *path, wi_encoding_t *encoding) {
     wi_data_t   *data;
@@ -473,7 +473,7 @@ const char * wi_string_utf8_string(wi_string_t *string) {
 
 
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_data_t * wi_string_data(wi_string_t *string, wi_encoding_t *encoding) {
     return wi_encoding_data_from_utf8_bytes(encoding, string->string, string->length);
@@ -1476,7 +1476,7 @@ double wi_string_double(wi_string_t *string) {
 
 #pragma mark -
 
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
 
 wi_boolean_t wi_string_write_string_to_path(wi_string_t *string, wi_string_t *path, wi_encoding_t *encoding) {
     return wi_data_write_to_path(wi_encoding_data_from_utf8_bytes(encoding, string->string, string->length), path);

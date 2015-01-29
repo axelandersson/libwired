@@ -65,7 +65,7 @@ void wi_initialize(void) {
     wi_digest_register();
     wi_directory_enumerator_register();
     
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
     wi_encoding_register();
 #endif
     
@@ -134,7 +134,7 @@ void wi_initialize(void) {
     wi_digest_initialize();
     wi_directory_enumerator_initialize();
     
-#ifdef WI_ENCODING
+#ifdef WI_STRING_ENCODING
     wi_encoding_initialize();
 #endif
     

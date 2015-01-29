@@ -33,13 +33,13 @@
 #include <wired/wi-date.h>
 #include <wired/wi-dictionary.h>
 #include <wired/wi-json.h>
-#include <wired/wi-encoding.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-number.h>
 #include <wired/wi-null.h>
 #include <wired/wi-private.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
+#include <wired/wi-string-encoding.h>
 
 static wi_string_t *                _wi_json_quoted_string_for_string(wi_string_t *, wi_uinteger_t *);
 static wi_string_t *                _wi_json_number_string_for_string(wi_string_t *, wi_boolean_t *);
