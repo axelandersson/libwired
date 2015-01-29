@@ -131,6 +131,8 @@ if test -n "$enable_libxml2" -o -n "$enable_all"; then
     WI_INCLUDE_LIBXML2_LIBRARY
 fi
 
+WI_INCLUDE_FILESYSTEM_EVENTS
+
 
 # Check for glibc (Linux)
 AC_MSG_CHECKING([for glibc])
@@ -189,8 +191,6 @@ AC_CHECK_HEADERS([ \
     mach-o/arch.h \
     machine/param.h \
     sys/attr.h \
-    sys/event.h \
-    sys/inotify.h \
     sys/sockio.h \
     sys/statfs.h \
     sys/statvfs.h \

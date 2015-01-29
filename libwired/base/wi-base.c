@@ -72,7 +72,11 @@ void wi_initialize(void) {
     wi_enumerator_register();
     wi_error_register();
     wi_file_register();
+    
+#ifdef WI_FILESYSTEM_EVENTS
     wi_fsevents_register();
+#endif
+    
     wi_host_register();
     wi_indexset_register();
     wi_lock_register();
@@ -137,7 +141,11 @@ void wi_initialize(void) {
     wi_enumerator_initialize();
     wi_error_initialize();
     wi_file_initialize();
+    
+#ifdef WI_FILESYSTEM_EVENTS
     wi_fsevents_initialize();
+#endif
+    
     wi_host_initialize();
     wi_indexset_initialize();
     wi_log_initialize();

@@ -2362,6 +2362,9 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 
+
+
+
 # Get host
 ac_aux_dir=
 for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
@@ -5828,6 +5831,72 @@ fi
 fi
 
 
+    if test "$wi_include_filesystem_events_done" != "yes"; then
+        for ac_header in sys/event.h
+do :
+  ac_fn_c_check_header_compile "$LINENO" "sys/event.h" "ac_cv_header_sys_event_h" "
+            #include <sys/types.h>
+
+"
+if test "x$ac_cv_header_sys_event_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SYS_EVENT_H 1
+_ACEOF
+
+
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_FILESYSTEM_EVENTS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_FILESYSTEM_EVENTS"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_FILESYSTEM_EVENTS"
+        fi
+    fi
+
+
+fi
+
+done
+
+
+        for ac_header in  \
+            sys/inotify.h \
+            inotifytools/inotify.h \
+
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "
+            #include <sys/types.h>
+
+"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_FILESYSTEM_EVENTS"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_FILESYSTEM_EVENTS"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_FILESYSTEM_EVENTS"
+        fi
+    fi
+
+
+fi
+
+done
+
+
+        wi_include_filesystem_events_done="yes"
+    fi
+
+
+
 # Check for glibc (Linux)
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for glibc" >&5
 $as_echo_n "checking for glibc... " >&6; }
@@ -5995,8 +6064,6 @@ for ac_header in  \
     mach-o/arch.h \
     machine/param.h \
     sys/attr.h \
-    sys/event.h \
-    sys/inotify.h \
     sys/sockio.h \
     sys/statfs.h \
     sys/statvfs.h \

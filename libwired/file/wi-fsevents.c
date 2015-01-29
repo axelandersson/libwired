@@ -26,6 +26,12 @@
 
 #include "config.h"
 
+#ifndef WI_FILESYSTEM_EVENTS
+
+int wi_filesystem_events_dummy = 1;
+
+#else
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -48,11 +54,9 @@
 #include <wired/wi-string.h>
 
 #if defined(HAVE_SYS_EVENT_H)
-#define _WI_FSEVENTS_KQUEUE                1
-#define _WI_FSEVENTS_ANY                1
+#define _WI_FSEVENTS_KQUEUE             1
 #elif defined(HAVE_SYS_INOTIFY_H) || defined(HAVE_INOTIFYTOOLS_INOTIFY_H)
 #define _WI_FSEVENTS_INOTIFY            1
-#define _WI_FSEVENTS_ANY                1
 #endif
 
 #ifdef _WI_FSEVENTS_INOTIFY
@@ -142,12 +146,6 @@ wi_fsevents_t * wi_fsevents_init(wi_fsevents_t *fsevents) {
         
         return NULL;
     }
-#else
-    wi_error_set_libwired_error(WI_ERROR_FSEVENTS_NOTSUPP);
-    
-    wi_release(fsevents);
-    
-    return NULL;
 #endif
     
     fsevents->paths             = wi_set_init_with_capacity(wi_mutable_set_alloc(), 0, true);
@@ -333,7 +331,6 @@ wi_boolean_t wi_fsevents_add_path(wi_fsevents_t *fsevents, wi_string_t *path) {
 
 
 void wi_fsevents_remove_path(wi_fsevents_t *fsevents, wi_string_t *path) {
-#ifdef _WI_FSEVENTS_ANY
     int     fd;
     
     if(wi_set_count_for_data(fsevents->paths, path) == 1) {
@@ -354,13 +351,11 @@ void wi_fsevents_remove_path(wi_fsevents_t *fsevents, wi_string_t *path) {
     }
     
     wi_mutable_set_remove_data(fsevents->paths, path);
-#endif
 }
 
 
 
 void wi_fsevents_remove_all_paths(wi_fsevents_t *fsevents) {
-#ifdef _WI_FSEVENTS_ANY
     wi_enumerator_t     *enumerator;
     int                 fd;
     
@@ -380,5 +375,6 @@ void wi_fsevents_remove_all_paths(wi_fsevents_t *fsevents) {
 #ifdef _WI_FSEVENTS_INOTIFY
     wi_mutable_dictionary_remove_all_data(fsevents->paths_for_fds);
 #endif
-#endif
 }
+
+#endif

@@ -379,3 +379,25 @@ AC_DEFUN([WI_INCLUDE_LIBXML2_LIBRARY], [
         wi_include_libxml2_library_done="yes"
     fi
 ])
+
+
+AC_DEFUN([WI_INCLUDE_FILESYSTEM_EVENTS], [
+    if test "$wi_include_filesystem_events_done" != "yes"; then
+        AC_CHECK_HEADERS([sys/event.h], [
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_FILESYSTEM_EVENTS])
+        ], [], [
+            #include <sys/types.h>
+        ])
+
+        AC_CHECK_HEADERS([ \
+            sys/inotify.h \
+            inotifytools/inotify.h \
+        ], [
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_FILESYSTEM_EVENTS])
+        ], [], [
+            #include <sys/types.h>
+        ])
+
+        wi_include_filesystem_events_done="yes"
+    fi
+])

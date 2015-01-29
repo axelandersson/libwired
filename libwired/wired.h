@@ -38,12 +38,12 @@
 #include <wired/wi-date.h>
 #include <wired/wi-dictionary.h>
 #include <wired/wi-digest.h>
+#include <wired/wi-directory-enumerator.h>
 #include <wired/wi-enumerator.h>
 #include <wired/wi-encoding.h>
 #include <wired/wi-error.h>
 #include <wired/wi-file.h>
 #include <wired/wi-filesystem.h>
-#include <wired/wi-fsenumerator.h>
 #include <wired/wi-fsevents.h>
 #include <wired/wi-fts.h>
 #include <wired/wi-host.h>
