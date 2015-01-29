@@ -88,17 +88,8 @@ static const char                       *_wi_error_strings[] = {
     /* WI_ERROR_NONE */
     "No error",
 
-    /* WI_ERROR_ADDRESS_INVALIDADDRESS */
-    "Invalid address",
-
-    /* WI_ERROR_CIPHER_CIPHERNOTSUPP */
+    /* WI_ERROR_CIPHER_CIPHERNOTSUPPORTED */
     "Cipher not supported",
-    
-    /* WI_ERROR_FILE_NOTTEXT */
-    "File is not text",
-    
-    /* WI_ERROR_FSEVENTS_NOTSUPP */
-    "No compatible API available",
     
     /* WI_ERROR_HOST_NOAVAILABLEADDRESSES */
     "No available addresses",

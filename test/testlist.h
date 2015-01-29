@@ -51,6 +51,7 @@ WI_TEST_EXPORT void                     wi_test_enumerator_instances_enumeration
 WI_TEST_EXPORT void                     wi_test_enumerator_instances_all_data(void);
 WI_TEST_EXPORT void                     wi_test_enumerator_scalars_enumeration(void);
 WI_TEST_EXPORT void                     wi_test_enumerator_scalars_all_data(void);
+WI_TEST_EXPORT void                     wi_test_error(void);
 WI_TEST_EXPORT void                     wi_test_file_creation(void);
 WI_TEST_EXPORT void                     wi_test_file_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_file_reading(void);

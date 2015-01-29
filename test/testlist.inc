@@ -51,6 +51,7 @@ wi_tests_run_test("wi_test_enumerator_instances_enumeration", wi_test_enumerator
 wi_tests_run_test("wi_test_enumerator_instances_all_data", wi_test_enumerator_instances_all_data);
 wi_tests_run_test("wi_test_enumerator_scalars_enumeration", wi_test_enumerator_scalars_enumeration);
 wi_tests_run_test("wi_test_enumerator_scalars_all_data", wi_test_enumerator_scalars_all_data);
+wi_tests_run_test("wi_test_error", wi_test_error);
 wi_tests_run_test("wi_test_file_creation", wi_test_file_creation);
 wi_tests_run_test("wi_test_file_runtime_functions", wi_test_file_runtime_functions);
 wi_tests_run_test("wi_test_file_reading", wi_test_file_reading);

@@ -128,7 +128,7 @@ wi_cipher_t * wi_cipher_alloc(void) {
 
 wi_cipher_t * wi_cipher_init_with_key(wi_cipher_t *cipher, wi_cipher_type_t type, wi_data_t *key, wi_data_t *iv) {
     if(!_wi_cipher_set_type(cipher, type)) {
-        wi_error_set_libwired_error(WI_ERROR_CIPHER_CIPHERNOTSUPP);
+        wi_error_set_libwired_error(WI_ERROR_CIPHER_CIPHERNOTSUPPORTED);
         
         wi_release(cipher);
         
@@ -144,7 +144,7 @@ wi_cipher_t * wi_cipher_init_with_random_key(wi_cipher_t *cipher, wi_cipher_type
     wi_data_t   *key, *iv;
 
     if(!_wi_cipher_set_type(cipher, type)) {
-        wi_error_set_libwired_error(WI_ERROR_CIPHER_CIPHERNOTSUPP);
+        wi_error_set_libwired_error(WI_ERROR_CIPHER_CIPHERNOTSUPPORTED);
         
         wi_release(cipher);
         
