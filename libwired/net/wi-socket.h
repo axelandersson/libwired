@@ -33,12 +33,12 @@
 #include <wired/wi-base.h>
 #include <wired/wi-rsa.h>
 #include <wired/wi-runtime.h>
+#include <wired/wi-socket-tls.h>
 #include <wired/wi-x509.h>
 
 #define WI_SOCKET_BUFFER_SIZE           BUFSIZ
 
 
-typedef struct _wi_socket_tls           wi_socket_tls_t;
 typedef struct _wi_socket               wi_socket_t;
 
 
@@ -48,20 +48,11 @@ enum _wi_socket_type {
 };
 typedef enum _wi_socket_type            wi_socket_type_t;
 
-
 enum _wi_socket_direction {
     WI_SOCKET_READ                      = (1 << 0),
     WI_SOCKET_WRITE                     = (1 << 1)
 };
 typedef enum _wi_socket_direction       wi_socket_direction_t;
-
-
-enum _wi_socket_tls_type {
-    WI_SOCKET_TLS_CLIENT,
-    WI_SOCKET_TLS_SERVER,
-};
-typedef enum _wi_socket_tls_type        wi_socket_tls_type_t;
-
 
 enum _wi_socket_state {
     WI_SOCKET_READY,
@@ -69,17 +60,6 @@ enum _wi_socket_state {
     WI_SOCKET_TIMEOUT
 };
 typedef enum _wi_socket_state           wi_socket_state_t;
-
-
-WI_EXPORT wi_runtime_id_t               wi_socket_tls_runtime_id(void);
-
-WI_EXPORT wi_socket_tls_t *             wi_socket_tls_alloc(void);
-WI_EXPORT wi_socket_tls_t *             wi_socket_tls_init_with_type(wi_socket_tls_t *, wi_socket_tls_type_t);
-
-WI_EXPORT wi_boolean_t                  wi_socket_tls_set_certificate(wi_socket_tls_t *, wi_x509_t *);
-WI_EXPORT wi_boolean_t                  wi_socket_tls_set_private_key(wi_socket_tls_t *, wi_rsa_t *);
-WI_EXPORT wi_boolean_t                  wi_socket_tls_set_dh(wi_socket_tls_t *, const unsigned char *, wi_uinteger_t, const unsigned char *, wi_uinteger_t);
-WI_EXPORT wi_boolean_t                  wi_socket_tls_set_ciphers(wi_socket_tls_t *, wi_string_t *);
 
 
 WI_EXPORT wi_runtime_id_t               wi_socket_runtime_id(void);
@@ -134,7 +114,9 @@ WI_EXPORT wi_integer_t                  wi_socket_recvfrom_multiple_bytes(wi_arr
 WI_EXPORT wi_data_t *                   wi_socket_recvfrom_data(wi_socket_t *, wi_uinteger_t, wi_address_t **);
 WI_EXPORT wi_integer_t                  wi_socket_recvfrom_bytes(wi_socket_t *, char *, wi_uinteger_t, wi_address_t **);
 
+WI_EXPORT wi_integer_t                  wi_socket_write_data(wi_socket_t *, wi_time_interval_t, wi_data_t *);
 WI_EXPORT wi_integer_t                  wi_socket_write_bytes(wi_socket_t *, wi_time_interval_t, const void *, wi_uinteger_t);
+WI_EXPORT wi_data_t *                   wi_socket_read_data(wi_socket_t *, wi_time_interval_t, wi_uinteger_t);
 WI_EXPORT wi_integer_t                  wi_socket_read_bytes(wi_socket_t *, wi_time_interval_t, void *, wi_uinteger_t);
 
 #endif /* WI_SOCKET_H */

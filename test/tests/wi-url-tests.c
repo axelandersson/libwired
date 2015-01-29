@@ -86,35 +86,6 @@ void wi_test_url_creation(void) {
     
     WI_TEST_ASSERT_NOT_NULL(url, "");
     WI_TEST_ASSERT_FALSE(wi_url_is_valid(url), "");
-    
-//    wi_url_t            *url1;
-//    wi_mutable_url_t    *url2;
-//    
-//    url1 = wi_url_init_with_string(wi_url_alloc(), WI_STR("wired://user:pass@localhost:2000/file.txt"));
-//    
-//    WI_TEST_ASSERT_TRUE(wi_url_is_valid(url1), "");
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_string(url1), WI_STR("wired://user:pass@localhost:2000/file.txt"), "");
-//    
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_scheme(url1), WI_STR("wired"), "");
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_host(url1), WI_STR("localhost"), "");
-//    WI_TEST_ASSERT_EQUALS(wi_url_port(url1), 2000U, "");
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_path(url1), WI_STR("/file.txt"), "");
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_user(url1), WI_STR("user"), "");
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_password(url1), WI_STR("pass"), "");
-//    
-//    url2 = wi_mutable_copy(url1);
-//    
-//    wi_mutable_url_set_scheme(url2, WI_STR("wired2"));
-//    wi_mutable_url_set_host(url2, WI_STR("localhost2"));
-//    wi_mutable_url_set_port(url2, 2001);
-//    wi_mutable_url_set_path(url2, WI_STR("/anotherfile.txt"));
-//    wi_mutable_url_set_user(url2, WI_STR("user2"));
-//    wi_mutable_url_set_password(url2, WI_STR("pass2"));
-//
-//    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_url_string(url2), WI_STR("wired2://user2:pass2@localhost2:2001/anotherfile.txt"), "");
-//    
-//    wi_release(url1);
-//    wi_release(url2);
 }
 
 

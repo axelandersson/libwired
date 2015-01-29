@@ -67,23 +67,13 @@
 #include <wired/wi-private.h>
 #include <wired/wi-rsa.h>
 #include <wired/wi-socket.h>
+#include <wired/wi-socket-tls.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 #include <wired/wi-thread.h>
 #include <wired/wi-x509.h>
 
 #define _WI_SOCKET_BUFFER_MAX_SIZE      262144
-
-
-struct _wi_socket_tls {
-    wi_runtime_base_t                   base;
-    
-#ifdef HAVE_OPENSSL_SSL_H
-    SSL_CTX                             *ssl_ctx;
-    DH                                  *dh;
-    wi_boolean_t                        private_key;
-#endif
-};
 
 
 struct _wi_socket {
@@ -112,10 +102,6 @@ static unsigned long                    _wi_socket_ssl_id_function(void);
 static void                             _wi_socket_ssl_locking_function(int, int, const char *, int);
 #endif
 
-#ifdef HAVE_OPENSSL_SSL_H
-static void                             _wi_socket_tls_dealloc(wi_runtime_instance_t *);
-#endif
-
 static void                             _wi_socket_dealloc(wi_runtime_instance_t *);
 static wi_string_t *                    _wi_socket_description(wi_runtime_instance_t *);
 
@@ -129,19 +115,6 @@ static wi_integer_t                     _wi_socket_read_bytes(wi_socket_t *, wi_
 static wi_mutable_array_t               *_wi_socket_ssl_locks;
 #endif
 
-#ifdef HAVE_OPENSSL_SSL_H
-
-static wi_runtime_id_t                  _wi_socket_tls_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t               _wi_socket_tls_runtime_class = {
-    "wi_socket_tls_t",
-    _wi_socket_tls_dealloc,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-};
-
-#endif
 
 static wi_runtime_id_t                  _wi_socket_runtime_id = WI_RUNTIME_ID_NULL;
 static wi_runtime_class_t               _wi_socket_runtime_class = {
@@ -156,10 +129,6 @@ static wi_runtime_class_t               _wi_socket_runtime_class = {
 
 
 void wi_socket_register(void) {
-#ifdef HAVE_OPENSSL_SSL_H
-    _wi_socket_tls_runtime_id = wi_runtime_register_class(&_wi_socket_tls_runtime_class);
-#endif
-    
     _wi_socket_runtime_id = wi_runtime_register_class(&_wi_socket_runtime_class);
 }
 
@@ -224,138 +193,6 @@ void wi_socket_exit_thread(void) {
     ERR_remove_state(0);
 #endif
 }
-
-
-
-#pragma mark -
-
-#ifdef HAVE_OPENSSL_SSL_H
-
-wi_runtime_id_t wi_socket_tls_runtime_id(void) {
-    return _wi_socket_tls_runtime_id;
-}
-
-
-
-#pragma mark -
-
-wi_socket_tls_t * wi_socket_tls_alloc(void) {
-    return wi_runtime_create_instance(_wi_socket_tls_runtime_id, sizeof(wi_socket_tls_t));
-}
-
-
-
-wi_socket_tls_t * wi_socket_tls_init_with_type(wi_socket_tls_t *tls, wi_socket_tls_type_t type) {
-    SSL_METHOD  *method;
-    
-    switch(type) {
-        default:
-        case WI_SOCKET_TLS_CLIENT:
-            method = TLSv1_client_method();
-            break;
-
-        case WI_SOCKET_TLS_SERVER:
-            method = TLSv1_server_method();
-            break;
-    }
-    
-    tls->ssl_ctx = SSL_CTX_new(method);
-    
-    if(!tls->ssl_ctx) {
-        wi_error_set_openssl_error();
-        
-        wi_release(NULL);
-        
-        return NULL;
-    }
-    
-    SSL_CTX_set_mode(tls->ssl_ctx, SSL_MODE_AUTO_RETRY);
-    SSL_CTX_set_quiet_shutdown(tls->ssl_ctx, 1);
-    
-    return tls;
-}
-
-
-
-static void _wi_socket_tls_dealloc(wi_runtime_instance_t *instance) {
-    wi_socket_tls_t     *tls = instance;
-    
-    if(tls->ssl_ctx)
-        SSL_CTX_free(tls->ssl_ctx);
-    
-    if(tls->dh)
-        DH_free(tls->dh);
-}
-
-
-
-#pragma mark -
-
-wi_boolean_t wi_socket_tls_set_certificate(wi_socket_tls_t *tls, wi_x509_t *x509) {
-    if(SSL_CTX_use_certificate(tls->ssl_ctx, wi_x509_x509(x509)) != 1) {
-        wi_error_set_openssl_error();
-
-        return false;
-    }
-    
-    return true;
-}
-
-
-
-wi_boolean_t wi_socket_tls_set_private_key(wi_socket_tls_t *tls, wi_rsa_t *rsa) {
-    tls->private_key = false;
-    
-    if(SSL_CTX_use_RSAPrivateKey(tls->ssl_ctx, wi_rsa_rsa(rsa)) != 1) {
-        wi_error_set_openssl_error();
-
-        return false;
-    }
-    
-    tls->private_key = true;
-    
-    return true;
-}
-
-
-
-wi_boolean_t wi_socket_tls_set_ciphers(wi_socket_tls_t *tls, wi_string_t *ciphers) {
-    if(SSL_CTX_set_cipher_list(tls->ssl_ctx, wi_string_utf8_string(ciphers)) != 1) {
-        wi_error_set_libwired_error(WI_ERROR_SOCKET_NOVALIDCIPHER);
-
-        return false;
-    }
-    
-    return true;
-}
-
-
-
-wi_boolean_t wi_socket_tls_set_dh(wi_socket_tls_t *tls, const unsigned char *p, wi_uinteger_t p_size, const unsigned char *g, wi_uinteger_t g_size) {
-    tls->dh = DH_new();
-    
-    if(!tls->dh) {
-        wi_error_set_openssl_error();
-
-        return false;
-    }
-
-    tls->dh->p = BN_bin2bn(p, p_size, NULL);
-    tls->dh->g = BN_bin2bn(g, g_size, NULL);
-
-    if(!tls->dh->p || !tls->dh->g) {
-        wi_error_set_openssl_error();
-
-        DH_free(tls->dh);
-        tls->dh = NULL;
-        
-        return false;
-    }
-    
-    return true;
-}
-
-#endif
 
 
 
@@ -495,15 +332,17 @@ int wi_socket_descriptor(wi_socket_t *socket) {
 
 
 
+#ifdef WI_SSL
+
 void * wi_socket_ssl(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
     return socket->ssl;
-#else
-    return NULL;
-#endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_rsa_t * wi_socket_ssl_public_key(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
@@ -540,42 +379,50 @@ end:
         EVP_PKEY_free(pkey);
     
     return wi_autorelease(wi_rsa_init_with_rsa(wi_rsa_alloc(), rsa));
-#else
-    return NULL;
 #endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_string_t * wi_socket_cipher_version(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
     return wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl));
-#else
-    return NULL;
 #endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_string_t * wi_socket_cipher_name(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
     return wi_string_with_utf8_string(SSL_get_cipher_name(socket->ssl));
-#else
-    return NULL;
 #endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_uinteger_t wi_socket_cipher_bits(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
     return SSL_get_cipher_bits(socket->ssl, NULL);
-#else
-    return 0;
 #endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_string_t * wi_socket_certificate_name(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
@@ -618,12 +465,14 @@ end:
         EVP_PKEY_free(pkey);
 
     return wi_autorelease(string);
-#else
-    return NULL;
 #endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_uinteger_t wi_socket_certificate_bits(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
@@ -651,12 +500,14 @@ end:
         EVP_PKEY_free(pkey);
 
     return bits;
-#else
-    return 0;
 #endif
 }
 
+#endif
 
+
+
+#ifdef WI_SSL
 
 wi_string_t * wi_socket_certificate_hostname(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
@@ -679,10 +530,10 @@ wi_string_t * wi_socket_certificate_hostname(wi_socket_t *socket) {
     X509_free(x509);
     
     return wi_autorelease(string);
-#else
-    return NULL;
 #endif
 }
+
+#endif
 
 
 
@@ -1059,14 +910,15 @@ wi_boolean_t wi_socket_connect(wi_socket_t *socket, wi_time_interval_t timeout) 
 
 
 
-#ifdef HAVE_OPENSSL_SSL_H
+#ifdef WI_SSL
 
 wi_boolean_t wi_socket_connect_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_time_interval_t timeout) {
+#ifdef HAVE_OPENSSL_SSL_H
     wi_socket_state_t   state;
     int                 err, result;
     wi_boolean_t        blocking;
     
-    socket->ssl = SSL_new(tls->ssl_ctx);
+    socket->ssl = SSL_new(wi_socket_tls_ssl_context(tls));
     
     if(!socket->ssl) {
         wi_error_set_openssl_error();
@@ -1143,6 +995,7 @@ wi_boolean_t wi_socket_connect_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi
     }
     
     return true;
+#endif
 }
 
 #endif
@@ -1195,14 +1048,15 @@ wi_socket_t * wi_socket_accept(wi_socket_t *accept_socket, wi_time_interval_t ti
 
 
 
-#ifdef HAVE_OPENSSL_SSL_H
+#ifdef WI_SSL
 
 wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_time_interval_t timeout) {
+#ifdef HAVE_OPENSSL_SSL_H
     wi_socket_state_t   state;
     int                 err, result;
     wi_boolean_t        blocking;
     
-    socket->ssl = SSL_new(tls->ssl_ctx);
+    socket->ssl = SSL_new(wi_socket_tls_ssl_context(tls));
     
     if(!socket->ssl) {
         wi_error_set_openssl_error();
@@ -1216,8 +1070,8 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_
         return false;
     }
     
-    if(!tls->private_key && tls->dh) {
-        if(SSL_set_tmp_dh(socket->ssl, tls->dh) != 1) {
+    if(!wi_socket_tls_private_key(tls) && wi_socket_tls_dh(tls)) {
+        if(SSL_set_tmp_dh(socket->ssl, wi_socket_tls_dh(tls)) != 1) {
             wi_error_set_openssl_error();
             
             return false;
@@ -1287,6 +1141,7 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_
     }
     
     return true;
+#endif
 }
 
 #endif
@@ -1351,7 +1206,22 @@ wi_integer_t wi_socket_sendto_bytes(wi_socket_t *socket, const char *buffer, wi_
 
 
 wi_data_t * wi_socket_recvfrom_multiple_data(wi_array_t *array, wi_uinteger_t length, wi_address_t **address) {
-    return NULL;
+    wi_integer_t    bytes;
+    char            *buffer;
+    
+    buffer = wi_malloc(length);
+    bytes = wi_socket_recvfrom_multiple_bytes(array, buffer, length, address);
+    
+    if(bytes <= 0) {
+        wi_free(buffer);
+        
+        if(bytes == 0)
+            return wi_data();
+        else
+            return NULL;
+    }
+    
+    return wi_data_with_bytes_no_copy(buffer, bytes, length);
 }
 
 
@@ -1371,7 +1241,22 @@ wi_integer_t wi_socket_recvfrom_multiple_bytes(wi_array_t *array, char *buffer, 
 
 
 wi_data_t * wi_socket_recvfrom_data(wi_socket_t *socket, wi_uinteger_t length, wi_address_t **address) {
-    return NULL;
+    wi_integer_t    bytes;
+    char            *buffer;
+    
+    buffer = wi_malloc(length);
+    bytes = wi_socket_recvfrom_bytes(socket, buffer, length, address);
+    
+    if(bytes <= 0) {
+        wi_free(buffer);
+        
+        if(bytes == 0)
+            return wi_data();
+        else
+            return NULL;
+    }
+
+    return wi_data_with_bytes_no_copy(buffer, bytes, length);
 }
 
 
@@ -1397,6 +1282,12 @@ wi_integer_t wi_socket_recvfrom_bytes(wi_socket_t *socket, char *buffer, wi_uint
 
 
 #pragma mark -
+
+wi_integer_t wi_socket_write_data(wi_socket_t *socket, wi_time_interval_t timeout, wi_data_t *data) {
+    return wi_socket_write_bytes(socket, timeout, wi_data_bytes(data), wi_data_length(data));
+}
+
+
 
 wi_integer_t wi_socket_write_bytes(wi_socket_t *socket, wi_time_interval_t timeout, const void *buffer, wi_uinteger_t length) {
     wi_socket_state_t   state;
@@ -1475,6 +1366,27 @@ wi_integer_t wi_socket_write_bytes(wi_socket_t *socket, wi_time_interval_t timeo
 #endif
     
     return 0;
+}
+
+
+
+wi_data_t * wi_socket_read_data(wi_socket_t *socket, wi_time_interval_t timeout, wi_uinteger_t length) {
+    wi_integer_t    bytes;
+    char            *buffer;
+    
+    buffer = wi_malloc(length);
+    bytes = wi_socket_read_bytes(socket, timeout, buffer, length);
+    
+    if(bytes <= 0) {
+        wi_free(buffer);
+        
+        if(bytes == 0)
+            return wi_data();
+        else
+            return NULL;
+    }
+    
+    return wi_data_with_bytes_no_copy(buffer, bytes, true);
 }
 
 
