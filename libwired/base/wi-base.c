@@ -64,11 +64,6 @@ void wi_initialize(void) {
     wi_dictionary_register();
     wi_digest_register();
     wi_directory_enumerator_register();
-    
-#ifdef WI_STRING_ENCODING
-    wi_encoding_register();
-#endif
-    
     wi_enumerator_register();
     wi_error_register();
     wi_file_register();
@@ -83,7 +78,6 @@ void wi_initialize(void) {
     wi_log_register();
     wi_null_register();
     wi_number_register();
-
     wi_pool_register();
     wi_process_register();
     wi_random_register();
@@ -95,10 +89,13 @@ void wi_initialize(void) {
     
     wi_set_register();
     wi_socket_register();
-    
     wi_string_register();
-    wi_task_register();
     
+#ifdef WI_STRING_ENCODING
+    wi_string_encoding_register();
+#endif
+    
+    wi_task_register();
     wi_test_register();
     wi_thread_register();
 
@@ -116,11 +113,9 @@ void wi_initialize(void) {
 
     wi_lock_initialize();
     wi_runtime_initialize();
-
     wi_array_initialize();
     wi_dictionary_initialize();
     wi_set_initialize();
-
     wi_string_initialize();
 
     wi_address_initialize();
@@ -133,11 +128,6 @@ void wi_initialize(void) {
     wi_date_initialize();
     wi_digest_initialize();
     wi_directory_enumerator_initialize();
-    
-#ifdef WI_STRING_ENCODING
-    wi_encoding_initialize();
-#endif
-    
     wi_enumerator_initialize();
     wi_error_initialize();
     wi_file_initialize();
@@ -159,7 +149,11 @@ void wi_initialize(void) {
 #ifdef WI_RSA
     wi_rsa_initialize();
 #endif
-
+    
+#ifdef WI_STRING_ENCODING
+    wi_string_encoding_initialize();
+#endif
+    
     wi_socket_initialize();
     wi_task_initialize();
     wi_test_initialize();

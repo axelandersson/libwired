@@ -55,7 +55,7 @@ WI_EXPORT wi_data_t *                       wi_data_init_with_contents_of_file(w
 WI_EXPORT const void *                      wi_data_bytes(wi_data_t *);
 WI_EXPORT wi_uinteger_t                     wi_data_length(wi_data_t *);
 WI_EXPORT void                              wi_data_get_bytes(wi_data_t *, void *, wi_uinteger_t);
-WI_EXPORT wi_string_t *                     wi_data_string(wi_data_t *, wi_encoding_t *);
+WI_EXPORT wi_string_t *                     wi_data_string(wi_data_t *, wi_string_encoding_t *);
 
 WI_EXPORT wi_data_t *                       wi_data_by_appending_data(wi_data_t *, wi_data_t *);
 WI_EXPORT wi_data_t *                       wi_data_by_appending_bytes(wi_data_t *, const void *, wi_uinteger_t);

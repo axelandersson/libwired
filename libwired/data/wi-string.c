@@ -162,7 +162,7 @@ wi_string_t * wi_string_with_utf8_string(const char *c_string) {
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_with_c_string(const char *c_string, wi_encoding_t *encoding) {
+wi_string_t * wi_string_with_c_string(const char *c_string, wi_string_encoding_t *encoding) {
     return wi_autorelease(wi_string_init_with_c_string(wi_string_alloc(), c_string, encoding));
 }
 
@@ -191,8 +191,8 @@ wi_string_t * wi_string_with_format_and_arguments(wi_string_t *fmt, va_list ap) 
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_with_data(wi_data_t *data, wi_encoding_t *encoding) {
-    return wi_encoding_utf8_string_from_data(encoding, data);
+wi_string_t * wi_string_with_data(wi_data_t *data, wi_string_encoding_t *encoding) {
+    return wi_string_encoding_utf8_string_from_data(encoding, data);
 }
 
 #endif
@@ -207,8 +207,8 @@ wi_string_t * wi_string_with_utf8_data(wi_data_t *data) {
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_with_bytes(const void *buffer, wi_uinteger_t size, wi_encoding_t *encoding) {
-    return wi_encoding_utf8_string_from_bytes(encoding, buffer, size);
+wi_string_t * wi_string_with_bytes(const void *buffer, wi_uinteger_t size, wi_string_encoding_t *encoding) {
+    return wi_string_encoding_utf8_string_from_bytes(encoding, buffer, size);
 }
 
 #endif
@@ -223,7 +223,7 @@ wi_string_t * wi_string_with_utf8_bytes(const void *buffer, wi_uinteger_t size) 
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_with_contents_of_file(wi_string_t *path, wi_encoding_t *encoding) {
+wi_string_t * wi_string_with_contents_of_file(wi_string_t *path, wi_string_encoding_t *encoding) {
     return wi_autorelease(wi_string_init_with_contents_of_file(wi_string_alloc(), path, encoding));
 }
 
@@ -297,10 +297,10 @@ wi_string_t * wi_string_init_with_utf8_string(wi_string_t *string, const char *u
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_init_with_c_string(wi_string_t *string, const char *c_string, wi_encoding_t *encoding) {
+wi_string_t * wi_string_init_with_c_string(wi_string_t *string, const char *c_string, wi_string_encoding_t *encoding) {
     wi_release(string);
     
-    return wi_encoding_utf8_string_from_bytes(encoding, c_string, strlen(c_string));
+    return wi_retain(wi_string_encoding_utf8_string_from_bytes(encoding, c_string, strlen(c_string)));
 }
 
 #endif
@@ -309,10 +309,10 @@ wi_string_t * wi_string_init_with_c_string(wi_string_t *string, const char *c_st
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_init_with_data(wi_string_t *string, wi_data_t *data, wi_encoding_t *encoding) {
+wi_string_t * wi_string_init_with_data(wi_string_t *string, wi_data_t *data, wi_string_encoding_t *encoding) {
     wi_release(string);
     
-    return wi_encoding_utf8_string_from_data(encoding, data);
+    return wi_retain(wi_string_encoding_utf8_string_from_data(encoding, data));
 }
 
 #endif
@@ -327,10 +327,10 @@ wi_string_t * wi_string_init_with_utf8_data(wi_string_t *string, wi_data_t *data
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_init_with_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t size, wi_encoding_t *encoding) {
+wi_string_t * wi_string_init_with_bytes(wi_string_t *string, const void *buffer, wi_uinteger_t size, wi_string_encoding_t *encoding) {
     wi_release(string);
     
-    return wi_encoding_utf8_string_from_bytes(encoding, buffer, size);
+    return wi_retain(wi_string_encoding_utf8_string_from_bytes(encoding, buffer, size));
 }
 
 #endif
@@ -371,7 +371,7 @@ wi_string_t * wi_string_init_with_format_and_arguments(wi_string_t *string, wi_s
 
 #ifdef WI_STRING_ENCODING
 
-wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_string_t *path, wi_encoding_t *encoding) {
+wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_string_t *path, wi_string_encoding_t *encoding) {
     wi_data_t   *data;
     
     data = wi_data_with_contents_of_file(path);
@@ -379,7 +379,7 @@ wi_string_t * wi_string_init_with_contents_of_file(wi_string_t *string, wi_strin
     if(!data)
         return NULL;
     
-    return wi_string_with_data(data, encoding);
+    return wi_retain(wi_string_with_data(data, encoding));
 }
 
 #endif
@@ -475,8 +475,8 @@ const char * wi_string_utf8_string(wi_string_t *string) {
 
 #ifdef WI_STRING_ENCODING
 
-wi_data_t * wi_string_data(wi_string_t *string, wi_encoding_t *encoding) {
-    return wi_encoding_data_from_utf8_bytes(encoding, string->string, string->length);
+wi_data_t * wi_string_data(wi_string_t *string, wi_string_encoding_t *encoding) {
+    return wi_string_encoding_data_from_utf8_bytes(encoding, string->string, string->length);
 }
 
 #endif
@@ -1478,8 +1478,8 @@ double wi_string_double(wi_string_t *string) {
 
 #ifdef WI_STRING_ENCODING
 
-wi_boolean_t wi_string_write_string_to_path(wi_string_t *string, wi_string_t *path, wi_encoding_t *encoding) {
-    return wi_data_write_to_path(wi_encoding_data_from_utf8_bytes(encoding, string->string, string->length), path);
+wi_boolean_t wi_string_write_string_to_path(wi_string_t *string, wi_string_t *path, wi_string_encoding_t *encoding) {
+    return wi_data_write_to_path(wi_string_encoding_data_from_utf8_bytes(encoding, string->string, string->length), path);
 }
 
 #endif

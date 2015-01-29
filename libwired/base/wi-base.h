@@ -194,7 +194,7 @@ typedef struct _wi_array                wi_array_t;
 typedef struct _wi_array                wi_mutable_array_t;
 typedef struct _wi_string               wi_string_t;
 typedef struct _wi_string               wi_mutable_string_t;
-typedef struct _wi_encoding             wi_encoding_t;
+typedef struct _wi_string_encoding             wi_string_encoding_t;
 
 
 WI_EXPORT void                          wi_initialize(void);

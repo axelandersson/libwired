@@ -308,7 +308,7 @@ void wi_data_get_bytes(wi_data_t *data, void *bytes, wi_uinteger_t length) {
 
 
 
-wi_string_t * wi_data_string(wi_data_t *data, wi_encoding_t *encoding) {
+wi_string_t * wi_data_string(wi_data_t *data, wi_string_encoding_t *encoding) {
     return NULL;
 }
 

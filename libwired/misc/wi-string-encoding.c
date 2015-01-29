@@ -40,111 +40,118 @@ int wi_iconv_dummy = 0;
 
 #include <iconv.h>
 
-struct _wi_encoding {
+struct _wi_string_encoding {
     wi_runtime_base_t                   base;
     
     wi_string_t                         *charset;
-    wi_mutable_string_t                 *encoding;
+    wi_mutable_string_t                 *target_encoding;
+    wi_mutable_string_t                 *utf8_encoding;
 
     wi_uinteger_t                       options;
 };
 
 
-static void                             _wi_encoding_dealloc(wi_runtime_instance_t *);
-static wi_string_t *                    _wi_encoding_description(wi_runtime_instance_t *);
+static void                             _wi_string_encoding_dealloc(wi_runtime_instance_t *);
+static wi_string_t *                    _wi_string_encoding_description(wi_runtime_instance_t *);
 
 
-static wi_runtime_id_t                  _wi_encoding_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t               _wi_encoding_runtime_class = {
-    "wi_encoding_t",
-    _wi_encoding_dealloc,
+static wi_runtime_id_t                  _wi_string_encoding_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_string_encoding_runtime_class = {
+    "wi_string_encoding_t",
+    _wi_string_encoding_dealloc,
     NULL,
     NULL,
-    _wi_encoding_description,
+    _wi_string_encoding_description,
     NULL
 };
 
 
-void wi_encoding_register(void) {
-    _wi_encoding_runtime_id = wi_runtime_register_class(&_wi_encoding_runtime_class);
+void wi_string_encoding_register(void) {
+    _wi_string_encoding_runtime_id = wi_runtime_register_class(&_wi_string_encoding_runtime_class);
 }
 
 
 
-void wi_encoding_initialize(void) {
-}
-
-
-
-#pragma mark -
-
-wi_runtime_id_t wi_encoding_runtime_id(void) {
-    return _wi_encoding_runtime_id;
+void wi_string_encoding_initialize(void) {
 }
 
 
 
 #pragma mark -
 
-wi_encoding_t * wi_encoding_with_charset(wi_string_t *charset, wi_encoding_options_t options) {
-    return wi_autorelease(wi_encoding_init_with_charset(wi_encoding_alloc(), charset, options));
+wi_runtime_id_t wi_string_encoding_runtime_id(void) {
+    return _wi_string_encoding_runtime_id;
 }
 
 
 
 #pragma mark -
 
-wi_encoding_t * wi_encoding_alloc(void) {
-    return wi_runtime_create_instance(_wi_encoding_runtime_id, sizeof(wi_encoding_t));
+wi_string_encoding_t * wi_string_encoding_with_charset(wi_string_t *charset, wi_string_encoding_options_t options) {
+    return wi_autorelease(wi_string_encoding_init_with_charset(wi_string_encoding_alloc(), charset, options));
 }
 
 
 
-wi_encoding_t * wi_encoding_init_with_charset(wi_encoding_t *encoding, wi_string_t *charset, wi_encoding_options_t options) {
-    encoding->charset   = wi_copy(charset);
-    encoding->encoding  = wi_mutable_copy(charset);
-    encoding->options   = options;
+#pragma mark -
+
+wi_string_encoding_t * wi_string_encoding_alloc(void) {
+    return wi_runtime_create_instance(_wi_string_encoding_runtime_id, sizeof(wi_string_encoding_t));
+}
+
+
+
+wi_string_encoding_t * wi_string_encoding_init_with_charset(wi_string_encoding_t *encoding, wi_string_t *charset, wi_string_encoding_options_t options) {
+    encoding->charset           = wi_copy(charset);
+    encoding->target_encoding   = wi_mutable_copy(charset);
+    encoding->utf8_encoding     = wi_string_init_with_utf8_string(wi_mutable_string_alloc(), "UTF-8");
+    encoding->options           = options;
     
-    if(options & WI_STRING_ENCODING_IGNORE)
-        wi_mutable_string_append_string(encoding->encoding, WI_STR("//IGNORE"));
-        
-    if(options & WI_STRING_ENCODING_TRANSLITERATE)
-        wi_mutable_string_append_string(encoding->encoding, WI_STR("//TRANSLIT"));
+    if(options & WI_STRING_ENCODING_IGNORE) {
+        wi_mutable_string_append_string(encoding->target_encoding, WI_STR("//IGNORE"));
+        wi_mutable_string_append_string(encoding->utf8_encoding, WI_STR("//IGNORE"));
+    }
+    
+    if(options & WI_STRING_ENCODING_TRANSLITERATE) {
+        wi_mutable_string_append_string(encoding->target_encoding, WI_STR("//TRANSLIT"));
+        wi_mutable_string_append_string(encoding->utf8_encoding, WI_STR("//TRANSLIT"));
+    }
     
     return encoding;
 }
 
 
 
-static void _wi_encoding_dealloc(wi_runtime_instance_t *instance) {
-    wi_encoding_t   *encoding = instance;
+static void _wi_string_encoding_dealloc(wi_runtime_instance_t *instance) {
+    wi_string_encoding_t   *encoding = instance;
     
     wi_release(encoding->charset);
-    wi_release(encoding->encoding);
+    wi_release(encoding->target_encoding);
+    wi_release(encoding->utf8_encoding);
 }
 
 
 
-static wi_string_t * _wi_encoding_description(wi_runtime_instance_t *instance) {
-    wi_encoding_t   *encoding = instance;
+static wi_string_t * _wi_string_encoding_description(wi_runtime_instance_t *instance) {
+    wi_string_encoding_t   *encoding = instance;
     
     return wi_string_with_format(WI_STR("<%@ %p>{encoding = %@}"),
         wi_runtime_class_name(encoding),
         encoding,
-        encoding->encoding);
+        encoding->target_encoding);
 }
 
 
 
 #pragma mark -
 
-wi_string_t * wi_encoding_charset(wi_encoding_t *encoding) {
+wi_string_t * wi_string_encoding_charset(wi_string_encoding_t *encoding) {
     return encoding->charset;
 }
 
 
 
-wi_encoding_options_t wi_encoding_options(wi_encoding_t *encoding) {
+wi_string_encoding_options_t wi_string_encoding_options(wi_string_encoding_t *encoding) {
     return encoding->options;
 }
 
@@ -152,22 +159,22 @@ wi_encoding_options_t wi_encoding_options(wi_encoding_t *encoding) {
 
 #pragma mark -
 
-wi_string_t * wi_encoding_utf8_string_from_data(wi_encoding_t *encoding, wi_data_t *data) {
-    return wi_encoding_utf8_string_from_bytes(encoding, wi_data_bytes(data), wi_data_length(data));
+wi_string_t * wi_string_encoding_utf8_string_from_data(wi_string_encoding_t *encoding, wi_data_t *data) {
+    return wi_string_encoding_utf8_string_from_bytes(encoding, wi_data_bytes(data), wi_data_length(data));
 }
 
 
 
-wi_string_t * wi_encoding_utf8_string_from_bytes(wi_encoding_t *encoding, const char *buffer, wi_uinteger_t size) {
+wi_string_t * wi_string_encoding_utf8_string_from_bytes(wi_string_encoding_t *encoding, const char *buffer, wi_uinteger_t size) {
     wi_string_t     *string;
-    char            *inbuffer, *outbuffer;
+    char            *inbuffer, *outbuffer, *outbufferp;
     wi_uinteger_t   inbytes, outbytes;
     size_t          bytes, inbytesleft, outbytesleft;
     iconv_t         iconvd;
     
-    iconvd = iconv_open("UTF-8", wi_string_utf8_string(encoding->encoding));
+    iconvd = iconv_open(wi_string_utf8_string(encoding->utf8_encoding), wi_string_utf8_string(encoding->target_encoding));
     
-    if(iconv == (iconv_t) -1) {
+    if(iconvd == (iconv_t) -1) {
         wi_error_set_errno(errno);
         
         return NULL;
@@ -177,12 +184,12 @@ wi_string_t * wi_encoding_utf8_string_from_bytes(wi_encoding_t *encoding, const 
     outbytes = outbytesleft = size * 4;
     
     inbuffer = (char *) buffer;
-    outbuffer = wi_malloc(outbytes);
+    outbuffer = outbufferp = wi_malloc(outbytes);
     
     bytes = iconv(iconvd, &inbuffer, &inbytesleft, &outbuffer, &outbytesleft);
     
     if(bytes == (size_t) -1) {
-        wi_free(outbuffer);
+        wi_free(outbufferp);
         iconv_close(iconvd);
         
         wi_error_set_errno(errno);
@@ -190,9 +197,9 @@ wi_string_t * wi_encoding_utf8_string_from_bytes(wi_encoding_t *encoding, const 
         return NULL;
     }
 
-    string = wi_string_init_with_utf8_bytes(wi_string_alloc(), outbuffer, outbytes - outbytesleft);
+    string = wi_string_init_with_utf8_bytes(wi_string_alloc(), outbufferp, outbytes - outbytesleft);
     
-    wi_free(outbuffer);
+    wi_free(outbufferp);
     iconv_close(iconvd);
     
     return wi_autorelease(string);
@@ -200,16 +207,16 @@ wi_string_t * wi_encoding_utf8_string_from_bytes(wi_encoding_t *encoding, const 
 
 
 
-wi_data_t * wi_encoding_data_from_utf8_bytes(wi_encoding_t *encoding, const char *buffer, wi_uinteger_t size) {
+wi_data_t * wi_string_encoding_data_from_utf8_bytes(wi_string_encoding_t *encoding, const char *buffer, wi_uinteger_t size) {
     wi_data_t       *data;
-    char            *inbuffer, *outbuffer;
+    char            *inbuffer, *outbuffer, *outbufferp;
     wi_uinteger_t   inbytes, outbytes;
     size_t          bytes, inbytesleft, outbytesleft;
     iconv_t         iconvd;
     
-    iconvd = iconv_open(wi_string_utf8_string(encoding->encoding), "UTF-8");
+    iconvd = iconv_open(wi_string_utf8_string(encoding->target_encoding), wi_string_utf8_string(encoding->utf8_encoding));
     
-    if(iconv == (iconv_t) -1) {
+    if(iconvd == (iconv_t) -1) {
         wi_error_set_errno(errno);
         
         return NULL;
@@ -219,12 +226,12 @@ wi_data_t * wi_encoding_data_from_utf8_bytes(wi_encoding_t *encoding, const char
     outbytes = outbytesleft = size * 4;
     
     inbuffer = (char *) buffer;
-    outbuffer = wi_malloc(outbytes);
+    outbuffer = outbufferp = wi_malloc(outbytes);
     
     bytes = iconv(iconvd, &inbuffer, &inbytesleft, &outbuffer, &outbytesleft);
     
     if(bytes == (size_t) -1) {
-        wi_free(outbuffer);
+        wi_free(outbufferp);
         iconv_close(iconvd);
         
         wi_error_set_errno(errno);
@@ -232,9 +239,9 @@ wi_data_t * wi_encoding_data_from_utf8_bytes(wi_encoding_t *encoding, const char
         return NULL;
     }
     
-    data = wi_data_init_with_bytes(wi_data_alloc(), outbuffer, outbytes - outbytesleft);
+    data = wi_data_init_with_bytes(wi_data_alloc(), outbufferp, outbytes - outbytesleft);
     
-    wi_free(outbuffer);
+    wi_free(outbufferp);
     iconv_close(iconvd);
     
     return wi_autorelease(data);
