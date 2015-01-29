@@ -5260,6 +5260,17 @@ if test "x$ac_cv_lib_crypto_SHA1_Init" = xyes; then :
 
 
     if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_DH"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DH"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_DH"
+        fi
+    fi
+
+
+    if test -z "$CPPFLAGS"; then
         CPPFLAGS="-DWI_RSA"
     else
         MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_RSA"`

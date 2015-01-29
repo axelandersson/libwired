@@ -1071,7 +1071,7 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_
     }
     
     if(!wi_socket_tls_private_key(tls) && wi_socket_tls_dh(tls)) {
-        if(SSL_set_tmp_dh(socket->ssl, wi_socket_tls_dh(tls)) != 1) {
+        if(SSL_set_tmp_dh(socket->ssl, wi_dh_dh(wi_socket_tls_dh(tls))) != 1) {
             wi_error_set_openssl_error();
             
             return false;

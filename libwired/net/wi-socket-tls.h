@@ -27,6 +27,7 @@
 #ifndef WI_SOCKET_TLS_H
 #define WI_SOCKET_TLS_H 1
 
+#include <wired/wi-dh.h>
 #include <wired/wi-rsa.h>
 #include <wired/wi-x509.h>
 
@@ -51,8 +52,8 @@ WI_EXPORT wi_boolean_t                  wi_socket_tls_set_certificate(wi_socket_
 WI_EXPORT wi_x509_t *                   wi_socket_tls_certificate(wi_socket_tls_t *);
 WI_EXPORT wi_boolean_t                  wi_socket_tls_set_private_key(wi_socket_tls_t *, wi_rsa_t *);
 WI_EXPORT wi_rsa_t *                    wi_socket_tls_private_key(wi_socket_tls_t *);
-WI_EXPORT wi_boolean_t                  wi_socket_tls_set_dh(wi_socket_tls_t *, const unsigned char *, wi_uinteger_t, const unsigned char *, wi_uinteger_t);
-WI_EXPORT void *                        wi_socket_tls_dh(wi_socket_tls_t *);
+WI_EXPORT void                          wi_socket_tls_set_dh(wi_socket_tls_t *, wi_dh_t *);
+WI_EXPORT wi_dh_t *                     wi_socket_tls_dh(wi_socket_tls_t *);
 WI_EXPORT wi_boolean_t                  wi_socket_tls_set_ciphers(wi_socket_tls_t *, wi_string_t *);
 WI_EXPORT wi_string_t *                 wi_socket_tls_ciphers(wi_socket_tls_t *);
 

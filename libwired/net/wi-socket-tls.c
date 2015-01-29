@@ -68,6 +68,7 @@ int wi_socket_tls_dummy = 1;
 #include <wired/wi-assert.h>
 #include <wired/wi-address.h>
 #include <wired/wi-date.h>
+#include <wired/wi-dh.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-lock.h>
 #include <wired/wi-private.h>
@@ -82,10 +83,10 @@ struct _wi_socket_tls {
     wi_runtime_base_t                   base;
     
     SSL_CTX                             *ssl_ctx;
-    DH                                  *dh;
     
     wi_x509_t                           *certificate;
     wi_rsa_t                            *private_key;
+    wi_dh_t                             *dh;
     wi_string_t                         *ciphers;
 };
 
@@ -170,11 +171,9 @@ static void _wi_socket_tls_dealloc(wi_runtime_instance_t *instance) {
     if(tls->ssl_ctx)
         SSL_CTX_free(tls->ssl_ctx);
     
-    if(tls->dh)
-        DH_free(tls->dh);
-    
     wi_release(tls->certificate);
     wi_release(tls->private_key);
+    wi_release(tls->dh);
     wi_release(tls->ciphers);
 }
 
@@ -237,33 +236,14 @@ wi_rsa_t * wi_socket_tls_private_key(wi_socket_tls_t *tls) {
 
 
 
-wi_boolean_t wi_socket_tls_set_dh(wi_socket_tls_t *tls, const unsigned char *p, wi_uinteger_t p_size, const unsigned char *g, wi_uinteger_t g_size) {
-    tls->dh = DH_new();
-    
-    if(!tls->dh) {
-        wi_error_set_openssl_error();
-
-        return false;
-    }
-
-    tls->dh->p = BN_bin2bn(p, p_size, NULL);
-    tls->dh->g = BN_bin2bn(g, g_size, NULL);
-
-    if(!tls->dh->p || !tls->dh->g) {
-        wi_error_set_openssl_error();
-
-        DH_free(tls->dh);
-        tls->dh = NULL;
-        
-        return false;
-    }
-    
-    return true;
+void wi_socket_tls_set_dh(wi_socket_tls_t *tls, wi_dh_t *dh) {
+    wi_release(tls->dh);
+    tls->dh = wi_retain(dh);
 }
 
 
 
-void * wi_socket_tls_dh(wi_socket_tls_t *tls) {
+wi_dh_t * wi_socket_tls_dh(wi_socket_tls_t *tls) {
     return tls->dh;
 }
 

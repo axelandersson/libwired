@@ -35,6 +35,8 @@ wi_tests_run_test("wi_test_date_runtime_functions", wi_test_date_runtime_functio
 wi_tests_run_test("wi_test_date_comparison", wi_test_date_comparison);
 wi_tests_run_test("wi_test_date_accessors", wi_test_date_accessors);
 wi_tests_run_test("wi_test_date_mutation", wi_test_date_mutation);
+wi_tests_run_test("wi_test_dh_creation", wi_test_dh_creation);
+wi_tests_run_test("wi_test_dh_runtime_functions", wi_test_dh_runtime_functions);
 wi_tests_run_test("wi_test_dictionary_creation", wi_test_dictionary_creation);
 wi_tests_run_test("wi_test_dictionary_serialization", wi_test_dictionary_serialization);
 wi_tests_run_test("wi_test_dictionary_runtime_functions", wi_test_dictionary_runtime_functions);

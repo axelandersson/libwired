@@ -182,6 +182,7 @@ AC_DEFUN([WI_INCLUDE_CRYPTO_LIBRARY], [
             WI_APPEND_FLAG([LIBS], [-lcrypto])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_DIGESTS])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_CIPHERS])
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_DH])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_RSA])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_X509])
         ], [

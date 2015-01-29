@@ -24,55 +24,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WIRED_H
-#define WIRED_H 1
+#ifndef WI_DH_H
+#define WI_DH_H 1
 
-#include <wired/wi-address.h>
-#include <wired/wi-array.h>
-#include <wired/wi-assert.h>
 #include <wired/wi-base.h>
-#include <wired/wi-byteorder.h>
-#include <wired/wi-cipher.h>
-#include <wired/wi-compat.h>
 #include <wired/wi-data.h>
-#include <wired/wi-date.h>
-#include <wired/wi-dh.h>
-#include <wired/wi-dictionary.h>
-#include <wired/wi-digest.h>
-#include <wired/wi-directory-enumerator.h>
-#include <wired/wi-enumerator.h>
-#include <wired/wi-error.h>
-#include <wired/wi-file.h>
-#include <wired/wi-filesystem.h>
-#include <wired/wi-filesystem-events.h>
-#include <wired/wi-fts.h>
-#include <wired/wi-host.h>
-#include <wired/wi-indexset.h>
-#include <wired/wi-json.h>
-#include <wired/wi-lock.h>
-#include <wired/wi-log.h>
-#include <wired/wi-macros.h>
-#include <wired/wi-null.h>
-#include <wired/wi-number.h>
-#include <wired/wi-plist.h>
-#include <wired/wi-pool.h>
-#include <wired/wi-process.h>
-#include <wired/wi-random.h>
-#include <wired/wi-rsa.h>
-#include <wired/wi-regexp.h>
 #include <wired/wi-runtime.h>
-#include <wired/wi-set.h>
-#include <wired/wi-socket.h>
-#include <wired/wi-string.h>
-#include <wired/wi-string-encoding.h>
-#include <wired/wi-system.h>
-#include <wired/wi-task.h>
-#include <wired/wi-test.h>
-#include <wired/wi-timer.h>
-#include <wired/wi-thread.h>
-#include <wired/wi-url.h>
-#include <wired/wi-uuid.h>
-#include <wired/wi-version.h>
-#include <wired/wi-x509.h>
 
-#endif /* WIRED_H */
+typedef struct _wi_dh                   wi_dh_t;
+
+
+WI_EXPORT wi_runtime_id_t               wi_dh_runtime_id(void);
+
+WI_EXPORT wi_dh_t *                     wi_dh_alloc(void);
+WI_EXPORT wi_dh_t *                     wi_dh_init_with_bits(wi_dh_t *, wi_uinteger_t);
+WI_EXPORT wi_dh_t *                     wi_dh_init_with_data(wi_dh_t *, wi_data_t *, wi_data_t *);
+
+WI_EXPORT void *                        wi_dh_dh(wi_dh_t *);
+
+WI_EXPORT void                          wi_dh_get_data(wi_dh_t *, wi_data_t **, wi_data_t **);
+
+#endif /* WI_DH_H */

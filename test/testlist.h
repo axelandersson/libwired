@@ -35,6 +35,8 @@ WI_TEST_EXPORT void                     wi_test_date_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_date_comparison(void);
 WI_TEST_EXPORT void                     wi_test_date_accessors(void);
 WI_TEST_EXPORT void                     wi_test_date_mutation(void);
+WI_TEST_EXPORT void                     wi_test_dh_creation(void);
+WI_TEST_EXPORT void                     wi_test_dh_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_dictionary_creation(void);
 WI_TEST_EXPORT void                     wi_test_dictionary_serialization(void);
 WI_TEST_EXPORT void                     wi_test_dictionary_runtime_functions(void);

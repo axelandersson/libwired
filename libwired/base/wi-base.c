@@ -61,6 +61,11 @@ void wi_initialize(void) {
     
     wi_data_register();
     wi_date_register();
+    
+#ifdef WI_DH
+    wi_dh_register();
+#endif
+    
     wi_dictionary_register();
     wi_digest_register();
     wi_directory_enumerator_register();
@@ -131,6 +136,11 @@ void wi_initialize(void) {
     
     wi_data_initialize();
     wi_date_initialize();
+
+#ifdef WI_DH
+    wi_dh_initialize();
+#endif
+    
     wi_digest_initialize();
     wi_directory_enumerator_initialize();
     wi_enumerator_initialize();
