@@ -235,6 +235,7 @@ typedef struct _wi_url                      wi_url_t;
 typedef struct _wi_url                      wi_mutable_url_t;
 typedef struct _wi_uuid                     wi_uuid_t;
 typedef struct _wi_x509                     wi_x509_t;
+typedef struct _wi_xml_node                 wi_xml_node_t;
 
 
 WI_EXPORT void                              wi_initialize(void);

@@ -313,7 +313,7 @@ wi_array_t * wi_array_init_with_plist_file(wi_array_t *array, wi_string_t *path)
     
     wi_release(array);
     
-    instance = wi_plist_read_instance_from_file(path);
+    instance = wi_plist_read_instance_from_path(path);
     
     if(!instance)
         return NULL;

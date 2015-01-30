@@ -5656,17 +5656,6 @@ fi
 
 
     if test -z "$CPPFLAGS"; then
-        CPPFLAGS="-DWI_ICONV"
-    else
-        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_ICONV"`
-
-        if test "$MATCH" = "0"; then
-            CPPFLAGS="$CPPFLAGS -DWI_ICONV"
-        fi
-    fi
-
-
-    if test -z "$CPPFLAGS"; then
         CPPFLAGS="-DWI_STRING_ENCODING"
     else
         MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_STRING_ENCODING"`
@@ -5815,12 +5804,12 @@ fi
 
 
     if test -z "$CPPFLAGS"; then
-        CPPFLAGS="-DWI_LIBXML2"
+        CPPFLAGS="-DWI_XML"
     else
-        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_LIBXML2"`
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_XML"`
 
         if test "$MATCH" = "0"; then
-            CPPFLAGS="$CPPFLAGS -DWI_LIBXML2"
+            CPPFLAGS="$CPPFLAGS -DWI_XML"
         fi
     fi
 

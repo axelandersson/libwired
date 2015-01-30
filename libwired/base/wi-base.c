@@ -136,6 +136,10 @@ void wi_initialize(void) {
 #ifdef WI_X509
     wi_x509_register();
 #endif
+    
+#ifdef WI_XML
+    wi_xml_node_register();
+#endif
 
 #ifdef WI_PTHREADS
     wi_condition_lock_initialize();
@@ -212,6 +216,10 @@ void wi_initialize(void) {
 
 #ifdef WI_X509
     wi_x509_initialize();
+#endif
+    
+#ifdef WI_XML
+    wi_xml_node_initialize();
 #endif
 }
 

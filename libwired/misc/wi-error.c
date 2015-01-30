@@ -45,7 +45,7 @@
 #include <CommonCrypto/CommonCryptor.h>
 #endif
 
-#ifdef WI_LIBXML2
+#ifdef HAVE_LIBXML_PARSER_H
 #include <libxml/xmlerror.h>
 #endif
 
@@ -79,7 +79,7 @@ static void                             _wi_error_dealloc(wi_runtime_instance_t 
 
 static wi_error_t *                     _wi_error_get_error(void);
 
-#ifdef WI_LIBXML2
+#ifdef HAVE_LIBXML_PARSER_H
 static void                             _wi_error_xml_error_handler(void *, const char *, ...);
 #endif
 
@@ -194,7 +194,7 @@ static wi_error_t * _wi_error_get_error(void) {
 
 
 
-#ifdef WI_LIBXML2
+#ifdef HAVE_LIBXML_PARSER_H
 
 static void _wi_error_xml_error_handler(void *context, const char *message, ...) {
 }
@@ -214,7 +214,7 @@ void wi_error_enter_thread(void) {
     
     wi_error_set_error(WI_ERROR_DOMAIN_NONE, WI_ERROR_NONE);
     
-#ifdef WI_LIBXML2
+#ifdef HAVE_LIBXML_PARSER_H
     xmlSetGenericErrorFunc(NULL, _wi_error_xml_error_handler);
 #endif
 }
@@ -392,7 +392,7 @@ void wi_error_set_commoncrypto_error(int code) {
 
 
 
-#ifdef WI_LIBXML2
+#ifdef HAVE_LIBXML_PARSER_H
 
 void wi_error_set_libxml2_error(void) {
     xmlErrorPtr     xml_error;

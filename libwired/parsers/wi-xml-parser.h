@@ -24,16 +24,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WI_PLIST_H
-#define WI_PLIST_H 1
+#ifndef WI_XML_PARSER_H
+#define WI_XML_PARSER_H 1
 
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-WI_EXPORT wi_runtime_instance_t *       wi_plist_read_instance_from_path(wi_string_t *);
-WI_EXPORT wi_runtime_instance_t *       wi_plist_instance_for_string(wi_string_t *);
+WI_EXPORT wi_xml_node_t *               wi_xml_parser_read_node_from_path(wi_string_t *);
+WI_EXPORT wi_xml_node_t *               wi_xml_parser_node_from_data(wi_data_t *);
 
-WI_EXPORT wi_boolean_t                  wi_plist_write_instance_to_path(wi_runtime_instance_t *, wi_string_t *);
-WI_EXPORT wi_string_t *                 wi_plist_string_for_instance(wi_runtime_instance_t *);
 
-#endif /* WI_PLIST_H */
+WI_EXPORT wi_runtime_id_t               wi_xml_node_runtime_id(void);
+
+WI_EXPORT wi_string_t *                 wi_xml_node_element(wi_xml_node_t *);
+WI_EXPORT wi_string_t *                 wi_xml_node_text(wi_xml_node_t *);
+WI_EXPORT wi_dictionary_t *             wi_xml_node_attributes(wi_xml_node_t *);
+WI_EXPORT wi_uinteger_t                 wi_xml_node_number_of_children(wi_xml_node_t *);
+WI_EXPORT wi_xml_node_t *               wi_xml_node_child_at_index(wi_xml_node_t *, wi_uinteger_t);
+
+#endif /* WI_XML_PARSER_H */

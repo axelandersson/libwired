@@ -166,3 +166,5 @@ WI_TEST_EXPORT void                     wi_test_uuid_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_x509_creation(void);
 WI_TEST_EXPORT void                     wi_test_x509_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_x509_accessors(void);
+WI_TEST_EXPORT void                     wi_test_xml_parser_success(void);
+WI_TEST_EXPORT void                     wi_test_xml_parser_failure(void);

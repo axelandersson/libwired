@@ -362,7 +362,7 @@ wi_dictionary_t * wi_dictionary_init_with_plist_file(wi_dictionary_t *dictionary
     
     wi_release(dictionary);
     
-    instance = wi_plist_read_instance_from_file(path);
+    instance = wi_plist_read_instance_from_path(path);
     
     if(!instance)
         return NULL;

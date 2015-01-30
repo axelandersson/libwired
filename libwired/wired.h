@@ -79,5 +79,6 @@
 #include <wired/wi-uuid.h>
 #include <wired/wi-version.h>
 #include <wired/wi-x509.h>
+#include <wired/wi-xml-parser.h>
 
 #endif /* WIRED_H */

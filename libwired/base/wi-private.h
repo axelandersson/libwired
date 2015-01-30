@@ -103,6 +103,7 @@ WI_EXPORT void                              wi_url_register(void);
 WI_EXPORT void                              wi_uuid_register(void);
 WI_EXPORT void                              wi_version_register(void);
 WI_EXPORT void                              wi_x509_register(void);
+WI_EXPORT void                              wi_xml_node_register(void);
 
 WI_EXPORT void                              wi_address_initialize(void);
 WI_EXPORT void                              wi_array_initialize(void);
@@ -146,6 +147,7 @@ WI_EXPORT void                              wi_url_initialize(void);
 WI_EXPORT void                              wi_uuid_initialize(void);
 WI_EXPORT void                              wi_version_initialize(void);
 WI_EXPORT void                              wi_x509_initialize(void);
+WI_EXPORT void                              wi_xml_node_initialize(void);
 
 
 WI_EXPORT void                              wi_process_load(int, const char **);
@@ -192,7 +194,7 @@ WI_EXPORT void                              wi_error_set_openssl_ssl_error_with_
 WI_EXPORT void                              wi_error_set_commoncrypto_error(int);
 #endif
 
-#ifdef WI_LIBXML2
+#ifdef HAVE_LIBXML_PARSER_H
 WI_EXPORT void                              wi_error_set_libxml2_error(void);
 #endif
 

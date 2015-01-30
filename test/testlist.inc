@@ -166,3 +166,5 @@ wi_tests_run_test("wi_test_uuid_runtime_functions", wi_test_uuid_runtime_functio
 wi_tests_run_test("wi_test_x509_creation", wi_test_x509_creation);
 wi_tests_run_test("wi_test_x509_runtime_functions", wi_test_x509_runtime_functions);
 wi_tests_run_test("wi_test_x509_accessors", wi_test_x509_accessors);
+wi_tests_run_test("wi_test_xml_parser_success", wi_test_xml_parser_success);
+wi_tests_run_test("wi_test_xml_parser_failure", wi_test_xml_parser_failure);

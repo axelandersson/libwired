@@ -61,7 +61,7 @@ static wi_string_t *                    _wi_libxml2_node_content(xmlNodePtr);
 static xmlNodePtr                       _wi_libxml2_node_new_child(xmlNodePtr, wi_string_t *, wi_string_t *);
 
 
-wi_runtime_instance_t * wi_plist_read_instance_from_file(wi_string_t *path) {
+wi_runtime_instance_t * wi_plist_read_instance_from_path(wi_string_t *path) {
     wi_runtime_instance_t   *instance;
     xmlDocPtr               doc;
     

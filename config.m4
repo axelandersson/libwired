@@ -342,7 +342,6 @@ AC_DEFUN([WI_INCLUDE_ICONV_LIBRARY], [
             AC_MSG_ERROR([no])
         ])
 
-        WI_APPEND_FLAG([CPPFLAGS], [-DWI_ICONV])
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_STRING_ENCODING])
 
         wi_include_iconv_library_done="yes"
@@ -374,7 +373,7 @@ AC_DEFUN([WI_INCLUDE_LIBXML2_LIBRARY], [
             _WI_MSG_LIB_ERROR([libxml2])
         ])
 
-        WI_APPEND_FLAG([CPPFLAGS], [-DWI_LIBXML2])
+        WI_APPEND_FLAG([CPPFLAGS], [-DWI_XML])
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_PLIST])
 
         wi_include_libxml2_library_done="yes"
