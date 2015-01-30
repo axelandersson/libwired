@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2015 Axel Andersson
  *  All rights reserved.
- *
+ * 
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
  *  are met:
@@ -10,7 +10,7 @@
  *  2. Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,31 +24,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WI_TASK_H
-#define WI_TASK_H
+#ifndef WI_PIPE_H
+#define WI_PIPE_H 1
 
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-WI_EXPORT wi_runtime_id_t               wi_task_runtime_id(void);
+#define WI_PIPE_BUFFER_SIZE         BUFSIZ
 
-WI_EXPORT wi_task_t *                   wi_task_launched_task_with_path(wi_string_t *, wi_array_t *);
 
-WI_EXPORT wi_task_t *                   wi_task_alloc(void);
-WI_EXPORT wi_task_t *                   wi_task_init(wi_task_t *);
+WI_EXPORT wi_runtime_id_t           wi_pipe_runtime_id(void);
 
-WI_EXPORT void                          wi_task_set_launch_path(wi_task_t *, wi_string_t *);
-WI_EXPORT wi_string_t *                 wi_task_launch_path(wi_task_t *);
-WI_EXPORT void                          wi_task_set_arguments(wi_task_t *, wi_array_t *);
-WI_EXPORT wi_array_t *                  wi_task_arguments(wi_task_t *);
-WI_EXPORT void                          wi_task_set_standard_input(wi_task_t *, wi_runtime_instance_t *);
-WI_EXPORT wi_runtime_instance_t *       wi_task_standard_input(wi_task_t *);
-WI_EXPORT void                          wi_task_set_standard_output(wi_task_t *, wi_runtime_instance_t *);
-WI_EXPORT wi_runtime_instance_t *       wi_task_standard_output(wi_task_t *);
-WI_EXPORT void                          wi_task_set_standard_error(wi_task_t *, wi_runtime_instance_t *);
-WI_EXPORT wi_runtime_instance_t *       wi_task_standard_error(wi_task_t *);
+WI_EXPORT wi_pipe_t *               wi_pipe(void);
 
-WI_EXPORT wi_boolean_t                  wi_task_launch(wi_task_t *);
-WI_EXPORT wi_integer_t                  wi_task_wait_until_exit(wi_task_t *);
+WI_EXPORT wi_pipe_t *               wi_pipe_alloc(void);
+WI_EXPORT wi_pipe_t *               wi_pipe_init(wi_pipe_t *);
 
-#endif /* WI_TASK_H */
+WI_EXPORT int                       wi_pipe_descriptor_for_reading(wi_pipe_t *);
+WI_EXPORT int                       wi_pipe_descriptor_for_writing(wi_pipe_t *);
+
+WI_EXPORT wi_data_t *               wi_pipe_read(wi_pipe_t *, wi_uinteger_t);
+WI_EXPORT wi_data_t *               wi_pipe_read_to_end_of_pipe(wi_pipe_t *);
+WI_EXPORT wi_integer_t              wi_pipe_read_bytes(wi_pipe_t *, void *, wi_uinteger_t);
+
+WI_EXPORT wi_integer_t              wi_pipe_write(wi_pipe_t *, wi_data_t *);
+WI_EXPORT wi_integer_t              wi_pipe_write_bytes(wi_pipe_t *, const void *, wi_uinteger_t);
+
+WI_EXPORT void                      wi_pipe_close(wi_pipe_t *);
+
+#endif /* WI_PIPE_H */

@@ -88,6 +88,9 @@ wi_tests_run_test("wi_test_number_runtime_functions", wi_test_number_runtime_fun
 wi_tests_run_test("wi_test_number_accessors", wi_test_number_accessors);
 wi_tests_run_test("wi_test_number_conversion", wi_test_number_conversion);
 wi_tests_run_test("wi_test_number_values", wi_test_number_values);
+wi_tests_run_test("wi_test_pipe_creation", wi_test_pipe_creation);
+wi_tests_run_test("wi_test_pipe_runtime_functions", wi_test_pipe_runtime_functions);
+wi_tests_run_test("wi_test_pipe_reading_and_writing", wi_test_pipe_reading_and_writing);
 wi_tests_run_test("wi_test_plist", wi_test_plist);
 wi_tests_run_test("wi_test_process", wi_test_process);
 wi_tests_run_test("wi_test_readwrite_lock_creation", wi_test_readwrite_lock_creation);
@@ -150,6 +153,8 @@ wi_tests_run_test("wi_test_system", wi_test_system);
 wi_tests_run_test("wi_test_task_creation", wi_test_task_creation);
 wi_tests_run_test("wi_test_task_runtime_functions", wi_test_task_runtime_functions);
 wi_tests_run_test("wi_test_task_launching", wi_test_task_launching);
+wi_tests_run_test("wi_test_task_reading_from_pipe", wi_test_task_reading_from_pipe);
+wi_tests_run_test("wi_test_task_writing_to_file", wi_test_task_writing_to_file);
 wi_tests_run_test("wi_test_timer_creation", wi_test_timer_creation);
 wi_tests_run_test("wi_test_timer_runtime_functions", wi_test_timer_runtime_functions);
 wi_tests_run_test("wi_test_timer_scheduling", wi_test_timer_scheduling);

@@ -34,8 +34,11 @@
 #include <string.h>
 
 #include <wired/wi-array.h>
+#include <wired/wi-file.h>
+#include <wired/wi-pipe.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-private.h>
+#include <wired/wi-socket.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 #include <wired/wi-task.h>
@@ -45,6 +48,10 @@ struct _wi_task {
     
     wi_string_t                         *launch_path;
     wi_mutable_array_t                  *arguments;
+    
+    wi_runtime_instance_t               *standard_output;
+    wi_runtime_instance_t               *standard_error;
+    wi_runtime_instance_t               *standard_input;
     
     pid_t                               pid;
     wi_boolean_t                        running;
@@ -169,12 +176,90 @@ wi_array_t * wi_task_arguments(wi_task_t *task) {
 
 
 
+void wi_task_set_standard_input(wi_task_t *task, wi_runtime_instance_t *standard_input) {
+    wi_release(task->standard_input);
+    task->standard_input = wi_retain(standard_input);
+}
+
+
+
+wi_runtime_instance_t * wi_task_standard_input(wi_task_t *task) {
+    return task->standard_input;
+}
+
+
+
+void wi_task_set_standard_output(wi_task_t *task, wi_runtime_instance_t *standard_output) {
+    wi_release(task->standard_output);
+    task->standard_output = wi_retain(standard_output);
+}
+
+
+
+wi_runtime_instance_t * wi_task_standard_output(wi_task_t *task) {
+    return task->standard_output;
+}
+
+
+
+void wi_task_set_standard_error(wi_task_t *task, wi_runtime_instance_t *standard_error) {
+    wi_release(task->standard_error);
+    task->standard_error = wi_retain(standard_error);
+}
+
+
+
+wi_runtime_instance_t * wi_task_standard_error(wi_task_t *task) {
+    return task->standard_error;
+}
+
+
+
 #pragma mark -
 
 wi_boolean_t wi_task_launch(wi_task_t *task) {
     char    **argv;
     pid_t   pid;
-    int     i, count;
+    int     fd, i, count, stdind, stdoutd, stderrd;
+    
+    if(task->standard_input) {
+        if(wi_runtime_id(task->standard_input) == wi_pipe_runtime_id())
+            stdind = wi_pipe_descriptor_for_reading(task->standard_input);
+        else if(wi_runtime_id(task->standard_input) == wi_file_runtime_id())
+            stdind = wi_file_descriptor(task->standard_input);
+        else
+            stdind = -1;
+        
+        WI_ASSERT(stdind != -1, "unsupported instance %@ for standard input", task->standard_input);
+    } else {
+        stdind = -1;
+    }
+    
+    if(task->standard_output) {
+        if(wi_runtime_id(task->standard_output) == wi_pipe_runtime_id())
+            stdoutd = wi_pipe_descriptor_for_writing(task->standard_output);
+        else if(wi_runtime_id(task->standard_output) == wi_file_runtime_id())
+            stdoutd = wi_file_descriptor(task->standard_output);
+        else
+            stdoutd = -1;
+        
+        WI_ASSERT(stdoutd != -1, "unsupported outstance %@ for standard output", task->standard_output);
+    } else {
+        stdoutd = -1;
+    }
+    
+    if(task->standard_error) {
+        if(wi_runtime_id(task->standard_error) == wi_pipe_runtime_id())
+            stderrd = wi_pipe_descriptor_for_writing(task->standard_error);
+        else if(wi_runtime_id(task->standard_error) == wi_file_runtime_id())
+            stderrd = wi_file_descriptor(task->standard_error);
+        else
+            stderrd = -1;
+        
+        WI_ASSERT(stderrd != -1, "unsupported outstance %@ for standard error", task->standard_error);
+    } else {
+        stderrd = -1;
+    }
     
     pid = fork();
     
@@ -186,6 +271,15 @@ wi_boolean_t wi_task_launch(wi_task_t *task) {
     
     if(pid == 0) {
         count = getdtablesize();
+        
+        if(stdind >= 0)
+            (void) dup2(stdind, STDIN_FILENO);
+        
+        if(stdoutd >= 0)
+            (void) dup2(stdoutd, STDOUT_FILENO);
+        
+        if(stderrd >= 0)
+            (void) dup2(stderrd, STDERR_FILENO);
         
         for(i = 3; i < count; i++)
             (void) close(i);
@@ -202,6 +296,15 @@ wi_boolean_t wi_task_launch(wi_task_t *task) {
             exit(1);
         }
     } else {
+        if(stdind >= 0)
+            (void) close(stdind);
+        
+        if(stdoutd >= 0)
+            (void) close(stdoutd);
+        
+        if(stderrd >= 0)
+            (void) close(stderrd);
+        
         task->pid = pid;
         task->running = true;
     }

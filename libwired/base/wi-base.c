@@ -92,6 +92,7 @@ void wi_initialize(void) {
     wi_log_register();
     wi_null_register();
     wi_number_register();
+    wi_pipe_register();
     wi_pool_register();
     wi_process_register();
     wi_random_register();
@@ -177,6 +178,7 @@ void wi_initialize(void) {
     wi_log_initialize();
     wi_null_initialize();
     wi_number_initialize();
+    wi_pipe_initialize();
     wi_pool_initialize();
     wi_process_initialize();
     wi_random_initialize();

@@ -29,11 +29,15 @@
 WI_TEST_EXPORT void                     wi_test_task_creation(void);
 WI_TEST_EXPORT void                     wi_test_task_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_task_launching(void);
+WI_TEST_EXPORT void                     wi_test_task_reading_from_pipe(void);
+WI_TEST_EXPORT void                     wi_test_task_writing_to_file(void);
 
 
 void wi_test_task_creation(void) {
     wi_task_t   *task;
+    wi_pipe_t   *pipe;
     
+    pipe = wi_pipe();
     task = wi_autorelease(wi_task_init(wi_task_alloc()));
     
     WI_TEST_ASSERT_NOT_NULL(task, "");
@@ -45,6 +49,18 @@ void wi_test_task_creation(void) {
     wi_task_set_arguments(task, wi_array_with_data(WI_STR("hello world"), NULL));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_task_arguments(task), wi_array_with_data(WI_STR("hello world"), NULL), "");
+    
+    wi_task_set_standard_input(task, pipe);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_task_standard_input(task), pipe, "");
+    
+    wi_task_set_standard_output(task, pipe);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_task_standard_output(task), pipe, "");
+    
+    wi_task_set_standard_error(task, pipe);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_task_standard_error(task), pipe, "");
 }
 
 
@@ -64,6 +80,7 @@ void wi_test_task_runtime_functions(void) {
 
 
 void wi_test_task_launching(void) {
+    wi_pipe_t       *pipe;
     wi_task_t       *task;
     wi_integer_t    status;
     
@@ -76,4 +93,70 @@ void wi_test_task_launching(void) {
     status = wi_task_wait_until_exit(task);
     
     WI_TEST_ASSERT_EQUALS(status, 1, "");
+}
+
+
+
+void wi_test_task_reading_from_pipe(void) {
+    wi_pipe_t       *output_pipe, *error_pipe;
+    wi_task_t       *task;
+    wi_data_t       *data;
+    wi_string_t     *string;
+    wi_integer_t    status;
+    
+    output_pipe = wi_pipe();
+    error_pipe = wi_pipe();
+    
+    task = wi_autorelease(wi_task_init(wi_task_alloc()));
+    wi_task_set_launch_path(task, WI_STR("echo"));
+    wi_task_set_arguments(task, wi_array_with_data(WI_STR("hello world"), NULL));
+    wi_task_set_standard_output(task, output_pipe);
+    wi_task_set_standard_error(task, error_pipe);
+    wi_task_launch(task);
+    
+    status = wi_task_wait_until_exit(task);
+    
+    WI_TEST_ASSERT_EQUALS(status, 0, "");
+
+    data = wi_pipe_read_to_end_of_pipe(output_pipe);
+    string = wi_string_with_utf8_data(data);
+    
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(string, WI_STR("hello world"), 0), WI_NOT_FOUND, "");
+    
+    data = wi_pipe_read_to_end_of_pipe(error_pipe);
+    string = wi_string_with_utf8_data(data);
+    
+    WI_TEST_ASSERT_EQUALS(wi_string_index_of_string(string, WI_STR("hello world"), 0), WI_NOT_FOUND, "");
+}
+
+
+
+
+void wi_test_task_writing_to_file(void) {
+    wi_file_t       *file;
+    wi_task_t       *task;
+    wi_string_t     *path, *contents;
+    wi_integer_t    status;
+    
+    path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-task.XXXXXXX"));
+    file = wi_file_for_writing(path);
+    
+    WI_TEST_ASSERT_NOT_NULL(file, "");
+    
+    task = wi_autorelease(wi_task_init(wi_task_alloc()));
+    wi_task_set_launch_path(task, WI_STR("echo"));
+    wi_task_set_arguments(task, wi_array_with_data(WI_STR("hello world"), NULL));
+    wi_task_set_standard_output(task, file);
+    wi_task_set_standard_error(task, file);
+    wi_task_launch(task);
+    
+    status = wi_task_wait_until_exit(task);
+    
+    WI_TEST_ASSERT_EQUALS(status, 0, "");
+    
+    contents = wi_string_with_utf8_contents_of_file(path);
+    
+    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(contents, WI_STR("hello world"), 0), WI_NOT_FOUND, "");
+    
+    wi_filesystem_delete_path(path);
 }

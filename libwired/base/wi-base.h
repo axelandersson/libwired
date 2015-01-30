@@ -213,6 +213,7 @@ typedef struct _wi_lock                     wi_lock_t;
 typedef struct _wi_md5                      wi_md5_t;
 typedef struct _wi_null                     wi_null_t;
 typedef struct _wi_number                   wi_number_t;
+typedef struct _wi_pipe                     wi_pipe_t;
 typedef struct _wi_pool                     wi_pool_t;
 typedef struct _wi_process                  wi_process_t;
 typedef struct _wi_readwrite_lock           wi_readwrite_lock_t;

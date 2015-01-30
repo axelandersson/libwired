@@ -64,9 +64,6 @@ struct _wi_file {
 static void                             _wi_file_dealloc(wi_runtime_instance_t *);
 static wi_string_t *                    _wi_file_description(wi_runtime_instance_t *);
 
-static wi_integer_t                     _wi_file_read_bytes(wi_file_t *, void *, wi_uinteger_t);
-static wi_integer_t                     _wi_file_write_bytes(wi_file_t *, const void *, wi_uinteger_t);
-
 
 static wi_runtime_id_t                  _wi_file_runtime_id = WI_RUNTIME_ID_NULL;
 static wi_runtime_class_t               _wi_file_runtime_class = {
@@ -310,34 +307,27 @@ wi_integer_t wi_file_read_bytes(wi_file_t *file, void *buffer, wi_uinteger_t len
     offset = 0;
     
     while(offset < length) {
-        bytes = _wi_file_read_bytes(file, buffer + offset, length - offset);
+        bytes = read(file->fd, buffer + offset, length - offset);
         
-        if(bytes <= 0) {
-            if(bytes < 0)
-                return -1;
-            
-            break;
+        if(bytes > 0) {
+            offset += bytes;
+            file->offset += bytes;
+        } else {
+            if(bytes == 0) {
+                return offset;
+            } else {
+                if(errno == EINTR) {
+                    continue;
+                } else {
+                    wi_error_set_errno(errno);
+                    
+                    return -1;
+                }
+            }
         }
-        
-        offset += bytes;
     }
     
     return offset;
-}
-
-
-
-static wi_integer_t _wi_file_read_bytes(wi_file_t *file, void *buffer, wi_uinteger_t length) {
-    wi_integer_t    bytes;
-    
-    bytes = read(file->fd, buffer, length);
-    
-    if(bytes >= 0)
-        file->offset += bytes;
-    else
-        wi_error_set_errno(errno);
-    
-    return bytes;
 }
 
 
@@ -359,34 +349,27 @@ wi_integer_t wi_file_write_bytes(wi_file_t *file, const void *buffer, wi_uintege
     offset = 0;
     
     while(offset < length) {
-        bytes = _wi_file_write_bytes(file, buffer + offset, length - offset);
+        bytes = write(file->fd, buffer + offset, length - offset);
         
-        if(bytes <= 0) {
-            if(bytes < 0)
-                return -1;
-            
-            break;
+        if(bytes > 0) {
+            offset += bytes;
+            file->offset += bytes;
+        } else {
+            if(bytes == 0) {
+                return offset;
+            } else {
+                if(errno == EINTR) {
+                    continue;
+                } else {
+                    wi_error_set_errno(errno);
+                    
+                    return -1;
+                }
+            }
         }
-        
-        offset += bytes;
     }
     
     return offset;
-}
-
-
-
-static wi_integer_t _wi_file_write_bytes(wi_file_t *file, const void *buffer, wi_uinteger_t length) {
-    wi_integer_t    bytes;
-    
-    bytes = write(file->fd, buffer, length);
-    
-    if(bytes >= 0)
-        file->offset += bytes;
-    else
-        wi_error_set_errno(errno);
-    
-    return bytes;
 }
 
 

@@ -55,6 +55,7 @@
 #include <wired/wi-macros.h>
 #include <wired/wi-null.h>
 #include <wired/wi-number.h>
+#include <wired/wi-pipe.h>
 #include <wired/wi-plist.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-process.h>
