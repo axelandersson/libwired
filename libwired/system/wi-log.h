@@ -57,9 +57,13 @@ WI_EXPORT void                      wi_log_set_level(wi_log_level_t);
 WI_EXPORT wi_log_level_t            wi_log_level(void);
 
 WI_EXPORT void                      wi_log_add_stdout_logger(wi_log_style_t);
+WI_EXPORT void                      wi_log_remove_stdout_logger(void);
 WI_EXPORT void                      wi_log_add_file_logger(wi_string_t *, wi_uinteger_t);
+WI_EXPORT void                      wi_log_remove_file_logger(void);
 WI_EXPORT void                      wi_log_add_syslog_logger(int);
+WI_EXPORT void                      wi_log_remove_syslog_logger(void);
 WI_EXPORT void                      wi_log_add_callback_logger(wi_log_callback_func_t);
+WI_EXPORT void                      wi_log_remove_callback_logger(void);
 
 WI_EXPORT int                       wi_log_syslog_facility_with_name(wi_string_t *);
 

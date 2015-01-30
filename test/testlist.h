@@ -73,6 +73,8 @@ WI_TEST_EXPORT void                     wi_test_indexset_enumeration_with_index(
 WI_TEST_EXPORT void                     wi_test_indexset_enumeration_with_range(void);
 WI_TEST_EXPORT void                     wi_test_indexset_mutation(void);
 WI_TEST_EXPORT void                     wi_test_json(void);
+WI_TEST_EXPORT void                     wi_test_log_file_logging(void);
+WI_TEST_EXPORT void                     wi_test_log_callback_logging(void);
 WI_TEST_EXPORT void                     wi_test_null_creation(void);
 WI_TEST_EXPORT void                     wi_test_null_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_number_creation(void);

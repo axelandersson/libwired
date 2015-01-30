@@ -109,13 +109,24 @@ wi_log_level_t wi_log_level(void) {
 #pragma mark -
 
 void wi_log_add_stdout_logger(wi_log_style_t style) {
+    WI_ASSERT(!_wi_log_stdout_enabled, "can't have more than one stdout logger");
+    
     _wi_log_stdout_enabled = true;
     _wi_log_stdout_style = style;
 }
 
 
 
+void wi_log_remove_stdout_logger(void) {
+    _wi_log_stdout_enabled = false;
+    
+}
+
+
+
 void wi_log_add_file_logger(wi_string_t *path, wi_uinteger_t limit) {
+    WI_ASSERT(!_wi_log_file_enabled, "can't have more than one file logger");
+    
     _wi_log_file_enabled = true;
     _wi_log_file_path = wi_retain(path);
     _wi_log_file_limit = limit;
@@ -123,7 +134,18 @@ void wi_log_add_file_logger(wi_string_t *path, wi_uinteger_t limit) {
 
 
 
+void wi_log_remove_file_logger(void) {
+    _wi_log_file_enabled = false;
+    
+    wi_release(_wi_log_file_path);
+    _wi_log_file_path = NULL;
+}
+
+
+
 void wi_log_add_syslog_logger(int facility) {
+    WI_ASSERT(!_wi_log_syslog_enabled, "can't have more than one syslog logger");
+    
     _wi_log_syslog_enabled = true;
     _wi_log_syslog_facility = facility;
     
@@ -132,9 +154,25 @@ void wi_log_add_syslog_logger(int facility) {
 
 
 
+void wi_log_remove_syslog_logger(void) {
+    _wi_log_syslog_enabled = false;
+    
+    closelog();
+}
+
+
+
 void wi_log_add_callback_logger(wi_log_callback_func_t function) {
+    WI_ASSERT(!_wi_log_callback_enabled, "can't have more than one callback logger");
+    
     _wi_log_callback_enabled = true;
     _wi_log_callback_function = function;
+}
+
+
+
+void wi_log_remove_callback_logger(void) {
+    _wi_log_callback_enabled = false;
 }
 
 
@@ -244,7 +282,7 @@ static void _wi_log_vlog(wi_log_level_t level, wi_string_t *fmt, va_list ap) {
             fclose(fp);
             
             if(_wi_log_file_lines > 0 && _wi_log_file_limit > 0) {
-                if(_wi_log_file_lines % (int) ((float) _wi_log_file_limit / 10.0f) == 0) {
+                if(_wi_log_file_lines >= (int) ((double) _wi_log_file_limit * 1.1)) {
                     _wi_log_truncate_file(path);
                     
                     _wi_log_file_lines = _wi_log_file_limit;

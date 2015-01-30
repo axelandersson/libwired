@@ -73,6 +73,8 @@ wi_tests_run_test("wi_test_indexset_enumeration_with_index", wi_test_indexset_en
 wi_tests_run_test("wi_test_indexset_enumeration_with_range", wi_test_indexset_enumeration_with_range);
 wi_tests_run_test("wi_test_indexset_mutation", wi_test_indexset_mutation);
 wi_tests_run_test("wi_test_json", wi_test_json);
+wi_tests_run_test("wi_test_log_file_logging", wi_test_log_file_logging);
+wi_tests_run_test("wi_test_log_callback_logging", wi_test_log_callback_logging);
 wi_tests_run_test("wi_test_null_creation", wi_test_null_creation);
 wi_tests_run_test("wi_test_null_runtime_functions", wi_test_null_runtime_functions);
 wi_tests_run_test("wi_test_number_creation", wi_test_number_creation);
