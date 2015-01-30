@@ -64,6 +64,7 @@ typedef wi_boolean_t                        wi_enumerator_func_t(wi_runtime_inst
 WI_EXPORT void                              wi_address_register(void);
 WI_EXPORT void                              wi_array_register(void);
 WI_EXPORT void                              wi_cipher_register(void);
+WI_EXPORT void                              wi_condition_lock_register(void);
 WI_EXPORT void                              wi_data_register(void);
 WI_EXPORT void                              wi_date_register(void);
 WI_EXPORT void                              wi_dh_register(void);
@@ -83,6 +84,8 @@ WI_EXPORT void                              wi_number_register(void);
 WI_EXPORT void                              wi_pool_register(void);
 WI_EXPORT void                              wi_process_register(void);
 WI_EXPORT void                              wi_random_register(void);
+WI_EXPORT void                              wi_readwrite_lock_register(void);
+WI_EXPORT void                              wi_recursive_lock_register(void);
 WI_EXPORT void                              wi_regexp_register(void);
 WI_EXPORT void                              wi_rsa_register(void);
 WI_EXPORT void                              wi_runtime_register(void);
@@ -103,6 +106,7 @@ WI_EXPORT void                              wi_x509_register(void);
 WI_EXPORT void                              wi_address_initialize(void);
 WI_EXPORT void                              wi_array_initialize(void);
 WI_EXPORT void                              wi_cipher_initialize(void);
+WI_EXPORT void                              wi_condition_lock_initialize(void);
 WI_EXPORT void                              wi_data_initialize(void);
 WI_EXPORT void                              wi_date_initialize(void);
 WI_EXPORT void                              wi_dh_initialize(void);
@@ -122,6 +126,8 @@ WI_EXPORT void                              wi_number_initialize(void);
 WI_EXPORT void                              wi_pool_initialize(void);
 WI_EXPORT void                              wi_process_initialize(void);
 WI_EXPORT void                              wi_random_initialize(void);
+WI_EXPORT void                              wi_readwrite_lock_initialize(void);
+WI_EXPORT void                              wi_recursive_lock_initialize(void);
 WI_EXPORT void                              wi_regexp_initialize(void);
 WI_EXPORT void                              wi_rsa_initialize(void);
 WI_EXPORT void                              wi_runtime_initialize(void);
@@ -138,6 +144,7 @@ WI_EXPORT void                              wi_url_initialize(void);
 WI_EXPORT void                              wi_uuid_initialize(void);
 WI_EXPORT void                              wi_version_initialize(void);
 WI_EXPORT void                              wi_x509_initialize(void);
+
 
 WI_EXPORT void                              wi_process_load(int, const char **);
 

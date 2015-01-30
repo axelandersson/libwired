@@ -45,10 +45,10 @@
 #include <wired/wi-base.h>
 #include <wired/wi-compat.h>
 #include <wired/wi-file.h>
-#include <wired/wi-lock.h>
 #include <wired/wi-log.h>
 #include <wired/wi-process.h>
 #include <wired/wi-private.h>
+#include <wired/wi-recursive-lock.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 

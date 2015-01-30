@@ -60,6 +60,10 @@ void wi_initialize(void) {
     wi_cipher_register();
 #endif
     
+#ifdef WI_PTHREADS
+    wi_condition_lock_register();
+#endif
+    
     wi_data_register();
     wi_date_register();
     
@@ -80,13 +84,23 @@ void wi_initialize(void) {
     
     wi_host_register();
     wi_indexset_register();
+    
+#ifdef WI_PTHREADS
     wi_lock_register();
+#endif
+    
     wi_log_register();
     wi_null_register();
     wi_number_register();
     wi_pool_register();
     wi_process_register();
     wi_random_register();
+
+#ifdef WI_PTHREADS
+    wi_readwrite_lock_register();
+    wi_recursive_lock_register();
+#endif
+    
     wi_regexp_register();
     
 #ifdef WI_RSA
@@ -122,7 +136,13 @@ void wi_initialize(void) {
     wi_x509_register();
 #endif
 
+#ifdef WI_PTHREADS
+    wi_condition_lock_initialize();
     wi_lock_initialize();
+    wi_readwrite_lock_initialize();
+    wi_recursive_lock_initialize();
+#endif
+    
     wi_runtime_initialize();
     wi_array_initialize();
     wi_dictionary_initialize();

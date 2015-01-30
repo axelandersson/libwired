@@ -32,9 +32,9 @@
 
 #include <wired/wi-assert.h>
 #include <wired/wi-file.h>
-#include <wired/wi-lock.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-private.h>
+#include <wired/wi-recursive-lock.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-socket.h>
 #include <wired/wi-string.h>

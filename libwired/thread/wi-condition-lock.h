@@ -24,19 +24,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WI_LOCK_H
-#define WI_LOCK_H 1
+#ifndef WI_CONDITION_LOCK_H
+#define WI_CONDITION_LOCK_H 1
 
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-WI_EXPORT wi_runtime_id_t               wi_lock_runtime_id(void);
+WI_EXPORT wi_runtime_id_t               wi_condition_lock_runtime_id(void);
 
-WI_EXPORT wi_lock_t *                   wi_lock_alloc(void);
-WI_EXPORT wi_lock_t *                   wi_lock_init(wi_lock_t *);
+WI_EXPORT wi_condition_lock_t *         wi_condition_lock_alloc(void);
+WI_EXPORT wi_condition_lock_t *         wi_condition_lock_init(wi_condition_lock_t *);
+WI_EXPORT wi_condition_lock_t *         wi_condition_lock_init_with_condition(wi_condition_lock_t *, int);
 
-WI_EXPORT void                          wi_lock_lock(wi_lock_t *);
-WI_EXPORT wi_boolean_t                  wi_lock_try_lock(wi_lock_t *);
-WI_EXPORT void                          wi_lock_unlock(wi_lock_t *);
+WI_EXPORT void                          wi_condition_lock_lock(wi_condition_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_condition_lock_lock_when_condition(wi_condition_lock_t *, int, wi_time_interval_t);
+WI_EXPORT wi_boolean_t                  wi_condition_lock_try_lock(wi_condition_lock_t *);
+WI_EXPORT wi_boolean_t                  wi_condition_lock_try_lock_when_condition(wi_condition_lock_t *, int);
+WI_EXPORT void                          wi_condition_lock_unlock(wi_condition_lock_t *);
+WI_EXPORT void                          wi_condition_lock_unlock_with_condition(wi_condition_lock_t *, int);
+WI_EXPORT int                           wi_condition_lock_condition(wi_condition_lock_t *);
 
-#endif /* WI_LOCK_H */
+#endif /* WI_CONDITION_LOCK_H */

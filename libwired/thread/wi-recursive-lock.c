@@ -28,7 +28,7 @@
 
 #ifndef WI_PTHREADS
 
-int wi_lock_dummy = 1;
+int wi_recursive_lock_dummy = 1;
 
 #else
 
@@ -39,23 +39,25 @@ int wi_lock_dummy = 1;
 
 #include <wired/wi-assert.h>
 #include <wired/wi-date.h>
-#include <wired/wi-lock.h>
 #include <wired/wi-private.h>
+#include <wired/wi-recursive-lock.h>
 #include <wired/wi-string.h>
 #include <wired/wi-runtime.h>
 
-struct _wi_lock {
+struct _wi_recursive_lock {
     wi_runtime_base_t                   base;
-    
+
+#ifdef WI_PTHREADS
     pthread_mutex_t                     mutex;
+#endif
 };
 
-static void                             _wi_lock_dealloc(wi_runtime_instance_t *);
+static void                             _wi_recursive_lock_dealloc(wi_runtime_instance_t *);
 
-static wi_runtime_id_t                  _wi_lock_runtime_id = WI_RUNTIME_ID_NULL;
-static wi_runtime_class_t               _wi_lock_runtime_class = {
-    "wi_lock_t",
-    _wi_lock_dealloc,
+static wi_runtime_id_t                  _wi_recursive_lock_runtime_id = WI_RUNTIME_ID_NULL;
+static wi_runtime_class_t               _wi_recursive_lock_runtime_class = {
+    "wi_recursive_lock_t",
+    _wi_recursive_lock_dealloc,
     NULL,
     NULL,
     NULL,
@@ -64,49 +66,49 @@ static wi_runtime_class_t               _wi_lock_runtime_class = {
 
 
 
-void wi_lock_register(void) {
-    _wi_lock_runtime_id = wi_runtime_register_class(&_wi_lock_runtime_class);
+void wi_recursive_lock_register(void) {
+    _wi_recursive_lock_runtime_id = wi_runtime_register_class(&_wi_recursive_lock_runtime_class);
 }
 
 
 
-void wi_lock_initialize(void) {
-}
-
-
-
-#pragma mark -
-
-wi_runtime_id_t wi_lock_runtime_id(void) {
-    return _wi_lock_runtime_id;
+void wi_recursive_lock_initialize(void) {
 }
 
 
 
 #pragma mark -
 
-wi_lock_t * wi_lock_alloc(void) {
-    return wi_runtime_create_instance(_wi_lock_runtime_id, sizeof(wi_lock_t));
+wi_runtime_id_t wi_recursive_lock_runtime_id(void) {
+    return _wi_recursive_lock_runtime_id;
 }
 
 
 
-wi_lock_t * wi_lock_init(wi_lock_t *lock) {
+#pragma mark -
+
+wi_recursive_lock_t * wi_recursive_lock_alloc(void) {
+    return wi_runtime_create_instance(_wi_recursive_lock_runtime_id, sizeof(wi_recursive_lock_t));
+}
+
+
+
+wi_recursive_lock_t * wi_recursive_lock_init(wi_recursive_lock_t *lock) {
     pthread_mutexattr_t     attr;
     int                     err;
     
     if((err = pthread_mutexattr_init(&attr)) != 0)
         WI_ASSERT(false, "pthread_mutexattr_init: %s", strerror(err));
 
-    if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK)) != 0)
+    if((err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE)) != 0)
         WI_ASSERT(false, "pthread_mutexattr_settype: %s", strerror(err));
-
+    
     if((err = pthread_mutex_init(&lock->mutex, &attr)) != 0)
         WI_ASSERT(false, "pthread_mutex_init: %s", strerror(err));
-    
+
     if((err = pthread_mutexattr_destroy(&attr)) != 0)
         WI_ASSERT(false, "pthread_mutexattr_destroy: %s", strerror(err));
-    
+
     return lock;
 }
 
@@ -114,9 +116,9 @@ wi_lock_t * wi_lock_init(wi_lock_t *lock) {
 
 #pragma mark -
 
-static void _wi_lock_dealloc(wi_runtime_instance_t *instance) {
-    wi_lock_t       *lock = instance;
-    int             err;
+static void _wi_recursive_lock_dealloc(wi_runtime_instance_t *instance) {
+    wi_recursive_lock_t     *lock = instance;
+    int                     err;
 
     if((err = pthread_mutex_destroy(&lock->mutex)) != 0)
         WI_ASSERT(false, "pthread_mutex_destroy: %s", strerror(err));
@@ -126,7 +128,7 @@ static void _wi_lock_dealloc(wi_runtime_instance_t *instance) {
 
 #pragma mark -
 
-void wi_lock_lock(wi_lock_t *lock) {
+void wi_recursive_lock_lock(wi_recursive_lock_t *lock) {
     int     err;
     
     if((err = pthread_mutex_lock(&lock->mutex)) != 0)
@@ -135,13 +137,13 @@ void wi_lock_lock(wi_lock_t *lock) {
 
 
 
-wi_boolean_t wi_lock_try_lock(wi_lock_t *lock) {
+wi_boolean_t wi_recursive_lock_try_lock(wi_recursive_lock_t *lock) {
     return (pthread_mutex_trylock(&lock->mutex) == 0);
 }
 
 
 
-void wi_lock_unlock(wi_lock_t *lock) {
+void wi_recursive_lock_unlock(wi_recursive_lock_t *lock) {
     int     err;
     
     if((err = pthread_mutex_unlock(&lock->mutex)) != 0)

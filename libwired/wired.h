@@ -34,6 +34,7 @@
 #include <wired/wi-byteorder.h>
 #include <wired/wi-cipher.h>
 #include <wired/wi-compat.h>
+#include <wired/wi-condition-lock.h>
 #include <wired/wi-data.h>
 #include <wired/wi-date.h>
 #include <wired/wi-dh.h>
@@ -59,6 +60,8 @@
 #include <wired/wi-process.h>
 #include <wired/wi-random.h>
 #include <wired/wi-rsa.h>
+#include <wired/wi-readwrite-lock.h>
+#include <wired/wi-recursive-lock.h>
 #include <wired/wi-regexp.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-set.h>
