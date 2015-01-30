@@ -27,12 +27,8 @@
 #ifndef WI_SOCKET_TLS_H
 #define WI_SOCKET_TLS_H 1
 
-#include <wired/wi-dh.h>
-#include <wired/wi-rsa.h>
-#include <wired/wi-x509.h>
-
-typedef struct _wi_socket_tls           wi_socket_tls_t;
-
+#include <wired/wi-base.h>
+#include <wired/wi-runtime.h>
 
 enum _wi_socket_tls_type {
     WI_SOCKET_TLS_CLIENT,

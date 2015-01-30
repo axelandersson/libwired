@@ -30,9 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_null                 wi_null_t;
-
-
 WI_EXPORT wi_runtime_id_t               wi_null_runtime_id(void);
 
 WI_EXPORT wi_runtime_instance_t *       wi_null(void);

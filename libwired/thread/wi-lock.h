@@ -30,15 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_lock                 wi_lock_t;
-
-typedef struct _wi_recursive_lock       wi_recursive_lock_t;
-
-typedef struct _wi_readwrite_lock       wi_readwrite_lock_t;
-
-typedef struct _wi_condition_lock       wi_condition_lock_t;
-
-
 WI_EXPORT wi_runtime_id_t               wi_lock_runtime_id(void);
 
 WI_EXPORT wi_lock_t *                   wi_lock_alloc(void);

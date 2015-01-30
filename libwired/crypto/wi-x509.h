@@ -28,11 +28,7 @@
 #define WI_X509_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-rsa.h>
 #include <wired/wi-runtime.h>
-
-typedef struct _wi_x509                 wi_x509_t;
-
 
 WI_EXPORT wi_runtime_id_t               wi_x509_runtime_id(void);
 

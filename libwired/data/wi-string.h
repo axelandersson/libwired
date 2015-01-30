@@ -28,9 +28,7 @@
 #define WI_STRING_H 1
 
 #include <stdarg.h>
-#include <wired/wi-data.h>
 #include <wired/wi-base.h>
-#include <wired/wi-pool.h>
 #include <wired/wi-runtime.h>
 
 #define WI_STR(utf8_string) \

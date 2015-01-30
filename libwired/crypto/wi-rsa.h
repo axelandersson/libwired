@@ -28,11 +28,7 @@
 #define WI_RSA_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-data.h>
 #include <wired/wi-runtime.h>
-
-typedef struct _wi_rsa                  wi_rsa_t;
-
 
 WI_EXPORT wi_runtime_id_t               wi_rsa_runtime_id(void);
 

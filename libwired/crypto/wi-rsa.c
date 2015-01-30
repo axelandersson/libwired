@@ -38,9 +38,11 @@ int wi_rsa_dummy = 0;
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 
+#ifdef HAVE_OPENSSL_SHA_H
 #include <openssl/pem.h>
 #include <openssl/rand.h>
 #include <openssl/rsa.h>
+#endif
 
 struct _wi_rsa {
     wi_runtime_base_t                   base;

@@ -35,17 +35,17 @@ enum _wi_string_encoding_options {
     WI_STRING_ENCODING_TRANSLITERATE        = (1 << 1),
     WI_STRING_ENCODING_ALL                  = (WI_STRING_ENCODING_IGNORE | WI_STRING_ENCODING_TRANSLITERATE)
 };
-typedef enum _wi_string_encoding_options           wi_string_encoding_options_t;
+typedef enum _wi_string_encoding_options    wi_string_encoding_options_t;
 
 
 WI_EXPORT wi_runtime_id_t                   wi_string_encoding_runtime_id(void);
 
-WI_EXPORT wi_string_encoding_t *                   wi_string_encoding_with_charset(wi_string_t *, wi_string_encoding_options_t);
+WI_EXPORT wi_string_encoding_t *            wi_string_encoding_with_charset(wi_string_t *, wi_string_encoding_options_t);
 
-WI_EXPORT wi_string_encoding_t *                   wi_string_encoding_alloc(void);
-WI_EXPORT wi_string_encoding_t *                   wi_string_encoding_init_with_charset(wi_string_encoding_t *, wi_string_t *, wi_string_encoding_options_t);
+WI_EXPORT wi_string_encoding_t *            wi_string_encoding_alloc(void);
+WI_EXPORT wi_string_encoding_t *            wi_string_encoding_init_with_charset(wi_string_encoding_t *, wi_string_t *, wi_string_encoding_options_t);
 
 WI_EXPORT wi_string_t *                     wi_string_encoding_charset(wi_string_encoding_t *);
-WI_EXPORT wi_string_encoding_options_t             wi_string_encoding_options(wi_string_encoding_t *);
+WI_EXPORT wi_string_encoding_options_t      wi_string_encoding_options(wi_string_encoding_t *);
 
 #endif /* WI_STRING_ENCODING_H */

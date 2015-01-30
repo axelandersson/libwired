@@ -36,6 +36,7 @@
 #include <wired/wi-enumerator.h>
 #include <wired/wi-lock.h>
 #include <wired/wi-macros.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-set.h>

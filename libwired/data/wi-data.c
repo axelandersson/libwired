@@ -36,6 +36,7 @@
 #include <wired/wi-file.h>
 #include <wired/wi-filesystem.h>
 #include <wired/wi-macros.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-random.h>
 #include <wired/wi-runtime.h>

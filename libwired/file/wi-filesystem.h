@@ -29,9 +29,6 @@
 
 #include <sys/param.h>
 #include <wired/wi-base.h>
-#include <wired/wi-date.h>
-#include <wired/wi-directory-enumerator.h>
-#include <wired/wi-file.h>
 #include <wired/wi-runtime.h>
 
 #define WI_PATH_SIZE                        MAXPATHLEN

@@ -30,9 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_task                 wi_task_t;
-
-
 WI_EXPORT wi_runtime_id_t               wi_task_runtime_id(void);
 
 WI_EXPORT wi_task_t *                   wi_task_launched_task_with_path(wi_string_t *, wi_array_t *);

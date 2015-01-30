@@ -28,6 +28,7 @@
 #define WI_LOG_H 1
 
 #include <wired/wi-base.h>
+#include <wired/wi-runtime.h>
 
 #define WI_LOG_INSTANCE(object) \
     wi_log_info(WI_STR("%s = %@"), #object, (object))

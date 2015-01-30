@@ -62,8 +62,10 @@
 #include <wired/wi-assert.h>
 #include <wired/wi-address.h>
 #include <wired/wi-date.h>
+#include <wired/wi-dh.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-lock.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-rsa.h>
 #include <wired/wi-socket.h>

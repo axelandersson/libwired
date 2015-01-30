@@ -41,6 +41,7 @@ void wi_test_process(void) {
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_name(process)) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_path(process)) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_array_count(wi_process_arguments(process)) >= 0, "");
+    WI_TEST_ASSERT_TRUE(wi_dictionary_contains_key(wi_process_environment(process), WI_STR("HOME")), "");
     
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_process_hostname(process)) > 0, "");
 

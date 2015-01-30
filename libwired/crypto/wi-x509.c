@@ -32,16 +32,17 @@ int wi_x509_dummy = 0;
 
 #else
 
-#include <wired/wi-data.h>
-#include <wired/wi-private.h>
-#include <wired/wi-string.h>
-#include <wired/wi-system.h>
-#include <wired/wi-x509.h>
-
 #include <openssl/pem.h>
 #include <openssl/rand.h>
 #include <openssl/rsa.h>
 #include <openssl/x509.h>
+
+#include <wired/wi-data.h>
+#include <wired/wi-private.h>
+#include <wired/wi-rsa.h>
+#include <wired/wi-string.h>
+#include <wired/wi-system.h>
+#include <wired/wi-x509.h>
 
 struct _wi_x509 {
     wi_runtime_base_t                   base;

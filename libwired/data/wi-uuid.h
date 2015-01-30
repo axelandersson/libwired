@@ -33,9 +33,6 @@
 #define WI_UUID_BUFFER_SIZE         16
 
 
-typedef struct _wi_uuid             wi_uuid_t;
-
-
 WI_EXPORT wi_runtime_id_t           wi_uuid_runtime_id(void);
 
 WI_EXPORT wi_uuid_t *               wi_uuid(void);

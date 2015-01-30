@@ -32,6 +32,7 @@
 #include <wired/wi-assert.h>
 #include <wired/wi-date.h>
 #include <wired/wi-log.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
 #include <wired/wi-test.h>

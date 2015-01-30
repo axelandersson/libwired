@@ -56,12 +56,16 @@
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
 
+extern char **environ;
+
+
 struct _wi_process {
     wi_runtime_base_t                   base;
     
     wi_string_t                         *name;
     wi_string_t                         *path;
     wi_array_t                          *arguments;
+    wi_dictionary_t                     *environment;
     
     wi_string_t                         *os_name;
     wi_string_t                         *os_release;
@@ -131,16 +135,18 @@ static wi_process_t * _wi_process_alloc(void) {
 
 
 static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc, const char **argv) {
-    wi_mutable_array_t  *array;
-    wi_string_t         *string;
-    wi_uinteger_t       i;
-    struct utsname      name;
+    wi_mutable_array_t          *array;
+    wi_mutable_dictionary_t     *dictionary;
+    wi_string_t                 *string;
+    wi_uinteger_t               i;
+    wi_range_t                  range;
+    struct utsname              name;
 #if defined(HAVE_NXGETLOCALARCHINFO)
-    const NXArchInfo    *archinfo;
-    cpu_type_t          cputype;
-    size_t              cputypesize;
+    const NXArchInfo            *archinfo;
+    cpu_type_t                  cputype;
+    size_t                      cputypesize;
 #elif defined(HAVE_SYSINFO) && defined(SI_ARCHITECTURE)
-    char                buffer[SYS_NMLN];
+    char                        buffer[SYS_NMLN];
 #endif
     
     array = wi_mutable_array();
@@ -162,6 +168,25 @@ static wi_process_t * _wi_process_init_with_argv(wi_process_t *process, int argc
         process->arguments = wi_array_init(wi_array_alloc());
     else
         process->arguments = wi_retain(wi_array_subarray_with_range(array, wi_make_range(1, wi_array_count(array) - 1)));
+    
+    dictionary = wi_mutable_dictionary();
+    
+    if(environ) {
+        for(i = 0; environ[i] != NULL; i++) {
+            string = wi_string_with_utf8_string(environ[i]);
+            range = wi_string_range_of_string(string, WI_STR("="), 0);
+            
+            if(range.location != WI_NOT_FOUND && range.location != wi_string_length(string)) {
+                wi_mutable_dictionary_set_data_for_key(dictionary,
+                                                       wi_string_substring_from_index(string, range.location + 1),
+                                                       wi_string_substring_to_index(string, range.location));
+            }
+        }
+    }
+    
+    wi_runtime_make_immutable(dictionary);
+    
+    process->environment = wi_retain(dictionary);
     
     uname(&name);
     
@@ -241,6 +266,12 @@ wi_string_t * wi_process_path(wi_process_t *process) {
 
 wi_array_t * wi_process_arguments(wi_process_t *process) {
     return process->arguments;
+}
+
+
+
+wi_dictionary_t * wi_process_environment(wi_process_t *process) {
+    return process->environment;
 }
 
 

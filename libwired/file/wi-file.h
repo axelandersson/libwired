@@ -32,7 +32,6 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <wired/wi-base.h>
-#include <wired/wi-data.h>
 #include <wired/wi-runtime.h>
 
 #define WI_PATH_SIZE                MAXPATHLEN
@@ -81,9 +80,6 @@ enum _wi_file_mode {
     WI_FILE_UPDATING                = (1 << 2)
 };
 typedef enum _wi_file_mode          wi_file_mode_t;
-
-
-typedef struct _wi_file             wi_file_t;
 
 
 WI_EXPORT wi_runtime_id_t           wi_file_runtime_id(void);

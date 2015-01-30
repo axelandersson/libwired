@@ -133,6 +133,9 @@ wi_tests_run_test("wi_test_string_mutation_replacing", wi_test_string_mutation_r
 wi_tests_run_test("wi_test_string_mutation_deleting", wi_test_string_mutation_deleting);
 wi_tests_run_test("wi_test_string_mutation_paths", wi_test_string_mutation_paths);
 wi_tests_run_test("wi_test_system", wi_test_system);
+wi_tests_run_test("wi_test_task_creation", wi_test_task_creation);
+wi_tests_run_test("wi_test_task_runtime_functions", wi_test_task_runtime_functions);
+wi_tests_run_test("wi_test_task_launching", wi_test_task_launching);
 wi_tests_run_test("wi_test_timer", wi_test_timer);
 wi_tests_run_test("wi_test_url_creation", wi_test_url_creation);
 wi_tests_run_test("wi_test_url_runtime_functions", wi_test_url_runtime_functions);

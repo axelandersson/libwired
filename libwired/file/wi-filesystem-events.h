@@ -28,12 +28,9 @@
 #define WI_FILESYSTEM_EVENTS_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-date.h>
 #include <wired/wi-runtime.h>
 
 typedef void                                wi_filesystem_events_callback_t(wi_string_t *);
-
-typedef struct _wi_filesystem_events        wi_filesystem_events_t;
 
 
 WI_EXPORT wi_runtime_id_t                   wi_filesystem_events_runtime_id(void);

@@ -30,10 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_data                     wi_data_t;
-typedef struct _wi_data                     wi_mutable_data_t;
-
-
 WI_EXPORT wi_runtime_id_t                   wi_data_runtime_id(void);
 
 WI_EXPORT wi_data_t *                       wi_data(void);

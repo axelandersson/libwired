@@ -37,8 +37,6 @@ enum _wi_directory_enumerator_status {
 };
 typedef enum _wi_directory_enumerator_status    wi_directory_enumerator_status_t;
 
-typedef struct _wi_directory_enumerator         wi_directory_enumerator_t;
-
 
 WI_EXPORT wi_directory_enumerator_status_t      wi_directory_enumerator_get_next_path(wi_directory_enumerator_t *, wi_string_t **);
 WI_EXPORT void                                  wi_directory_enumerator_skip_descendents(wi_directory_enumerator_t *);

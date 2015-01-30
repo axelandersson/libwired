@@ -63,6 +63,7 @@
 #include <wired/wi-runtime.h>
 #include <wired/wi-set.h>
 #include <wired/wi-socket.h>
+#include <wired/wi-socket-tls.h>
 #include <wired/wi-string.h>
 #include <wired/wi-string-encoding.h>
 #include <wired/wi-system.h>

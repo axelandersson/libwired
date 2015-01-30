@@ -32,51 +32,21 @@ int wi_socket_tls_dummy = 1;
 
 #else
 
-#include <sys/param.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-#ifdef HAVE_NETINET_IN_SYSTM_H
-#include <netinet/in_systm.h>
-#endif
-
-#ifdef HAVE_NETINET_IP_H
-#include <netinet/ip.h>
-#endif
-
-#include <netinet/tcp.h>
-#include <netdb.h>
-#include <net/if.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-
 #ifdef HAVE_OPENSSL_SSL_H
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 #endif
 
-#ifdef HAVE_IFADDRS_H
-#include <ifaddrs.h>
-#endif
-
-#include <wired/wi-array.h>
 #include <wired/wi-assert.h>
-#include <wired/wi-address.h>
 #include <wired/wi-date.h>
 #include <wired/wi-dh.h>
 #include <wired/wi-macros.h>
-#include <wired/wi-lock.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-rsa.h>
-#include <wired/wi-socket.h>
+#include <wired/wi-socket-tls.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
-#include <wired/wi-thread.h>
 #include <wired/wi-x509.h>
 
 struct _wi_socket_tls {

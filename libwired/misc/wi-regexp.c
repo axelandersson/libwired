@@ -33,6 +33,7 @@
 
 #include <wired/wi-assert.h>
 #include <wired/wi-compat.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-regexp.h>
 #include <wired/wi-runtime.h>

@@ -31,15 +31,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <wired/wi-base.h>
-#include <wired/wi-rsa.h>
 #include <wired/wi-runtime.h>
-#include <wired/wi-socket-tls.h>
-#include <wired/wi-x509.h>
 
 #define WI_SOCKET_BUFFER_SIZE           BUFSIZ
-
-
-typedef struct _wi_socket               wi_socket_t;
 
 
 enum _wi_socket_type {

@@ -35,9 +35,6 @@
     wi_number_with_int32((number))
 
 
-typedef struct _wi_number                   wi_number_t;
-
-
 enum _wi_number_type {
     WI_NUMBER_BOOL,
     WI_NUMBER_CHAR,

@@ -38,6 +38,7 @@ int wi_timer_dummy = 0;
 #include <wired/wi-lock.h>
 #include <wired/wi-log.h>
 #include <wired/wi-macros.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>

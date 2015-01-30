@@ -31,9 +31,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
  
-typedef struct _wi_error                    wi_error_t;
-
-
 enum _wi_error_domain {
     WI_ERROR_DOMAIN_NONE                    = 0,
     WI_ERROR_DOMAIN_ERRNO,

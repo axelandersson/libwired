@@ -30,10 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_url              wi_url_t;
-typedef struct _wi_url              wi_mutable_url_t;
-
-
 WI_EXPORT wi_runtime_id_t           wi_url_runtime_id(void);
 
 WI_EXPORT wi_url_t *                wi_url_with_string(wi_string_t *);

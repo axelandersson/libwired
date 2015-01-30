@@ -34,6 +34,7 @@
 #include <wired/wi-assert.h>
 #include <wired/wi-base.h>
 #include <wired/wi-data.h>
+#include <wired/wi-dictionary.h>
 #include <wired/wi-directory-enumerator.h>
 #include <wired/wi-enumerator.h>
 #include <wired/wi-error.h>

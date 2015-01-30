@@ -53,11 +53,12 @@
 #include <wired/wi-base.h>
 #include <wired/wi-log.h>
 #include <wired/wi-runtime.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 
-void wi_switch_user(uid_t uid, gid_t gid) {
+wi_boolean_t wi_switch_user(uid_t uid, gid_t gid) {
     struct passwd   *user;
     
     if(gid != getegid()) {
@@ -65,23 +66,28 @@ void wi_switch_user(uid_t uid, gid_t gid) {
         
         if(user) {
             if(initgroups(user->pw_name, gid) < 0) {
-                wi_log_error(WI_STR("Could not set group privileges: %s"),
-                    strerror(errno));
+                wi_error_set_errno(errno);
+                
+                return false;
             }
         }
             
         if(setgid(gid) < 0) {
-            wi_log_error(WI_STR("Could not drop group privileges: %s"),
-                strerror(errno));
+            wi_error_set_errno(errno);
+            
+            return false;
         }
     }
 
     if(uid != geteuid()) {
         if(setuid(uid) < 0) {
-            wi_log_error(WI_STR("Could not drop user privileges: %s"),
-                strerror(errno));
+            wi_error_set_errno(errno);
+            
+            return false;
         }
     }
+    
+    return true;
 }
 
 
@@ -162,45 +168,6 @@ wi_uinteger_t wi_page_size(void) {
 
 
 #pragma mark -
-
-pid_t wi_fork(void) {
-    pid_t   pid;
-    
-    pid = fork();
-    
-    if(pid < 0)
-        wi_error_set_errno(errno);
-    
-    return pid;
-}
-
-
-
-wi_boolean_t wi_execv(wi_string_t *program, wi_array_t *arguments) {
-    char            **argv;
-    wi_uinteger_t   i;
-    
-    argv = wi_malloc((wi_array_count(arguments) + 2) * sizeof(char *));
-    argv[0] = wi_strdup(wi_string_utf8_string(program));
-    
-    for(i = 0; i < wi_array_count(arguments); i++)
-        argv[i + 1] = wi_strdup(wi_string_utf8_string(WI_ARRAY(arguments, i)));
-    
-    if(execv(argv[0], (char * const *) argv) < 0) {
-        wi_error_set_errno(errno);
-        
-        for(i = 0; i < wi_array_count(arguments) + 1; i++)
-            wi_free(argv[i]);
-        
-        wi_free(argv);
-        
-        return false;
-    }
-    
-    return true;
-}
-
-
 
 void * wi_malloc(size_t size) {
     void    *pointer;

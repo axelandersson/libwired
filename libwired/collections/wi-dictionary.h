@@ -28,11 +28,7 @@
 #define WI_DICTIONARY_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-enumerator.h>
 #include <wired/wi-runtime.h>
-
-typedef struct _wi_dictionary                       wi_dictionary_t;
-typedef struct _wi_dictionary                       wi_mutable_dictionary_t;
 
 struct _wi_dictionary_key_callbacks {
     wi_retain_func_t                                *retain;

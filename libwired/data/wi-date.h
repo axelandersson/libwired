@@ -31,10 +31,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_date                 wi_date_t;
-typedef struct _wi_date                 wi_mutable_date_t;
-
-
 WI_EXPORT wi_time_interval_t            wi_time_interval(void);
 WI_EXPORT wi_string_t *                 wi_time_interval_string(wi_time_interval_t);
 WI_EXPORT wi_string_t *                 wi_time_interval_string_with_format(wi_time_interval_t, wi_string_t *);

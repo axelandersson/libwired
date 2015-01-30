@@ -30,9 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_regexp               wi_regexp_t;
-
-
 struct _wi_regexp_match {
     wi_range_t                          range;
 };

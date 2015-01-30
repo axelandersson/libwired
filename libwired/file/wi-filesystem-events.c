@@ -50,6 +50,7 @@ int wi_filesystem_events_dummy = 1;
 
 #include <wired/wi-error.h>
 #include <wired/wi-filesystem-events.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
 

@@ -28,7 +28,6 @@
 #define WI_CIPHER_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-data.h>
 #include <wired/wi-runtime.h>
 
 enum _wi_cipher_type {
@@ -39,9 +38,6 @@ enum _wi_cipher_type {
     WI_CIPHER_3DES192
 };
 typedef enum _wi_cipher_type            wi_cipher_type_t;
-
-
-typedef struct _wi_cipher               wi_cipher_t;
 
 
 WI_EXPORT wi_runtime_id_t               wi_cipher_runtime_id(void);

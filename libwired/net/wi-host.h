@@ -30,9 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_host             wi_host_t;
-
-
 WI_EXPORT wi_runtime_id_t           wi_host_runtime_id(void);
 
 WI_EXPORT wi_host_t *               wi_host(void);

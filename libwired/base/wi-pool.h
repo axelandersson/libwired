@@ -33,9 +33,6 @@
 #define wi_autorelease(instance)    _wi_autorelease((instance), __FILE__, __LINE__)
 
 
-typedef struct _wi_pool             wi_pool_t;
-
-
 WI_EXPORT wi_runtime_id_t           wi_pool_runtime_id(void);
 
 WI_EXPORT wi_pool_t *               wi_pool_alloc(void);

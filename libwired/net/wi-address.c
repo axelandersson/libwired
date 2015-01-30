@@ -45,6 +45,8 @@
 
 #include <wired/wi-address.h>
 #include <wired/wi-compat.h>
+#include <wired/wi-dictionary.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>

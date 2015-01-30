@@ -28,10 +28,7 @@
 #define WI_THREAD_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-dictionary.h>
 #include <wired/wi-runtime.h>
-
-typedef struct _wi_thread               wi_thread_t;
 
 typedef void                            wi_thread_func_t(wi_runtime_instance_t *);
 

@@ -28,6 +28,7 @@
 
 #include <wired/wi-data.h>
 #include <wired/wi-digest.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>

@@ -34,6 +34,7 @@
 #include <string.h>
 
 #include <wired/wi-array.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
@@ -195,7 +196,7 @@ wi_boolean_t wi_task_launch(wi_task_t *task) {
         for(i = 0; i < wi_array_count(task->arguments); i++)
             argv[i + 1] = wi_strdup(wi_string_utf8_string(WI_ARRAY(task->arguments, i)));
         
-        if(execv(argv[0], (char * const *) argv) < 0) {
+        if(execvp(argv[0], (char * const *) argv) < 0) {
             printf("execve: %s: %s\n", argv[0], strerror(errno));
             
             exit(1);
@@ -212,8 +213,13 @@ wi_boolean_t wi_task_launch(wi_task_t *task) {
 
 wi_integer_t wi_task_wait_until_exit(wi_task_t *task) {
     int     status;
+    pid_t   pid;
     
-    if(waitpid(task->pid, &status, 0) < 0) {
+    do {
+        pid = waitpid(task->pid, &status, 0);
+    } while(pid < 0 && errno == EINTR);
+    
+    if(pid < 0) {
         wi_error_set_errno(errno);
         
         return -1;
@@ -221,5 +227,5 @@ wi_integer_t wi_task_wait_until_exit(wi_task_t *task) {
     
     task->running = false;
     
-    return status;
+    return WEXITSTATUS(status);
 }

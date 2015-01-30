@@ -30,9 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_indexset                 wi_indexset_t;
-typedef struct _wi_indexset                 wi_mutable_indexset_t;
-
 WI_EXPORT wi_runtime_id_t                   wi_indexset_runtime_id(void);
 
 WI_EXPORT wi_indexset_t *                   wi_indexset(void);

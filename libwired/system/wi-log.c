@@ -42,6 +42,7 @@
 #include <time.h>
 #include <errno.h>
 
+#include <wired/wi-base.h>
 #include <wired/wi-compat.h>
 #include <wired/wi-file.h>
 #include <wired/wi-lock.h>

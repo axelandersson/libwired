@@ -30,8 +30,6 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef struct _wi_timer        wi_timer_t;
-
 typedef void                    wi_timer_func_t(wi_timer_t *);
 
 

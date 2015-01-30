@@ -28,15 +28,10 @@
 #define WI_DIGEST_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-data.h>
 #include <wired/wi-runtime.h>
 
 #define WI_MD5_DIGEST_LENGTH            16
 #define WI_SHA1_DIGEST_LENGTH           20
-
-typedef struct _wi_md5                  wi_md5_t;
-typedef struct _wi_sha1                 wi_sha1_t;
-
 
 WI_EXPORT void                          wi_md5_digest(const void *, wi_uinteger_t, unsigned char *);
 WI_EXPORT wi_string_t *                 wi_md5_digest_string(wi_data_t *);

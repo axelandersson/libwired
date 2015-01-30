@@ -28,11 +28,7 @@
 #define WI_SET_H 1
 
 #include <wired/wi-base.h>
-#include <wired/wi-enumerator.h>
 #include <wired/wi-runtime.h>
-
-typedef struct _wi_set                      wi_set_t;
-typedef struct _wi_set                      wi_mutable_set_t;
 
 struct _wi_set_callbacks {
     wi_retain_func_t                        *retain;

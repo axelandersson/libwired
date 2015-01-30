@@ -35,9 +35,12 @@
 #include <wired/wi-array.h>
 #include <wired/wi-assert.h>
 #include <wired/wi-compat.h>
+#include <wired/wi-dictionary.h>
+#include <wired/wi-indexset.h>
 #include <wired/wi-lock.h>
 #include <wired/wi-log.h>
 #include <wired/wi-plist.h>
+#include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
