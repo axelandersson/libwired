@@ -224,7 +224,7 @@ static void _wi_timer_dealloc(wi_runtime_instance_t *instance) {
 static wi_string_t * _wi_timer_description(wi_runtime_instance_t *instance) {
     wi_timer_t  *timer = instance;
 
-    return wi_string_with_format(WI_STR("<%@ %p>{interval = %.2fs}"),
+    return wi_string_with_format(WI_STR("<%@ %p>{interval = %.3fs}"),
         wi_runtime_class_name(instance),
         instance,
         timer->interval);
@@ -323,6 +323,14 @@ void wi_timer_invalidate(wi_timer_t *timer) {
         if(!timer->incallback)
             wi_condition_lock_unlock_with_condition(_wi_timer_lock, 1);
     }
+}
+
+
+
+#pragma mark -
+
+wi_time_interval_t wi_timer_time_interval(wi_timer_t *timer) {
+    return timer->interval;
 }
 
 

@@ -43,6 +43,8 @@ WI_EXPORT void                  wi_timer_reschedule(wi_timer_t *, wi_time_interv
 WI_EXPORT void                  wi_timer_fire(wi_timer_t *);
 WI_EXPORT void                  wi_timer_invalidate(wi_timer_t *);
 
+WI_EXPORT wi_time_interval_t    wi_timer_time_interval(wi_timer_t *);
+
 WI_EXPORT void                  wi_timer_set_data(wi_timer_t *, void *);
 WI_EXPORT void *                wi_timer_data(wi_timer_t *);
 
