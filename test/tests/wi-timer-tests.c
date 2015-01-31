@@ -81,14 +81,14 @@ void wi_test_timer_scheduling(void) {
     
     wi_timer_schedule(timer);
     
-    if(wi_condition_lock_lock_when_condition(_wi_test_timer_lock, 1, 1.0)) {
-        WI_TEST_ASSERT_EQUALS(_wi_test_timer_hits, 5U, "");
-        
-        wi_condition_lock_unlock(_wi_test_timer_lock);
-    } else {
+    if(!wi_condition_lock_lock_when_condition(_wi_test_timer_lock, 1, 1.0)) {
         WI_TEST_FAIL("timed out waiting for timer, currently at %u %s",
-            _wi_test_timer_hits, _wi_test_timer_hits == 1 ? "hit" : "hits");
+                     _wi_test_timer_hits, _wi_test_timer_hits == 1 ? "hit" : "hits");
     }
+    
+    WI_TEST_ASSERT_EQUALS(_wi_test_timer_hits, 5U, "");
+    
+    wi_condition_lock_unlock(_wi_test_timer_lock);
 #endif
 }
 

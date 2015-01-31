@@ -122,13 +122,19 @@ wi_socket_tls_t * wi_socket_tls_init_with_type(wi_socket_tls_t *tls, wi_socket_t
     if(!tls->ssl_ctx) {
         wi_error_set_openssl_error();
         
-        wi_release(NULL);
+        wi_release(tls);
         
         return NULL;
     }
     
     SSL_CTX_set_mode(tls->ssl_ctx, SSL_MODE_AUTO_RETRY);
     SSL_CTX_set_quiet_shutdown(tls->ssl_ctx, 1);
+    
+    if(!wi_socket_tls_set_ciphers(tls, WI_STR("ALL"))) {
+        wi_release(tls);
+        
+        return NULL;
+    }
     
     return tls;
 }

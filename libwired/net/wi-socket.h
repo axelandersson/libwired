@@ -74,6 +74,7 @@ WI_EXPORT wi_uinteger_t                 wi_socket_cipher_bits(wi_socket_t *);
 WI_EXPORT wi_string_t *                 wi_socket_certificate_name(wi_socket_t *);
 WI_EXPORT wi_uinteger_t                 wi_socket_certificate_bits(wi_socket_t *);
 WI_EXPORT wi_string_t *                 wi_socket_certificate_hostname(wi_socket_t *);
+WI_EXPORT int                           wi_socket_error(wi_socket_t *);
 
 WI_EXPORT void                          wi_socket_set_port(wi_socket_t *, wi_uinteger_t);
 WI_EXPORT wi_uinteger_t                 wi_socket_port(wi_socket_t *);
@@ -87,7 +88,6 @@ WI_EXPORT wi_boolean_t                  wi_socket_set_timeout(wi_socket_t *, wi_
 WI_EXPORT wi_time_interval_t            wi_socket_timeout(wi_socket_t *);
 WI_EXPORT void                          wi_socket_set_interactive(wi_socket_t *, wi_boolean_t);
 WI_EXPORT wi_boolean_t                  wi_socket_interactive(wi_socket_t *);
-WI_EXPORT int                           wi_socket_error(wi_socket_t *);
 
 WI_EXPORT wi_socket_t *                 wi_socket_wait_multiple(wi_array_t *, wi_time_interval_t);
 WI_EXPORT wi_socket_state_t             wi_socket_wait(wi_socket_t *, wi_time_interval_t);

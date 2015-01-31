@@ -42,7 +42,7 @@ void wi_test_socket_tls_creation(void) {
     WI_TEST_ASSERT_NULL(wi_socket_tls_certificate(tls), "");
     WI_TEST_ASSERT_NULL(wi_socket_tls_private_key(tls), "");
     WI_TEST_ASSERT_NULL(wi_socket_tls_dh(tls), "");
-    WI_TEST_ASSERT_NULL(wi_socket_tls_ciphers(tls), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_ciphers(tls), WI_STR("ALL"), "");
 
     tls = wi_autorelease(wi_socket_tls_init_with_type(wi_socket_tls_alloc(), WI_SOCKET_TLS_SERVER));
     
@@ -51,7 +51,7 @@ void wi_test_socket_tls_creation(void) {
     WI_TEST_ASSERT_NULL(wi_socket_tls_certificate(tls), "");
     WI_TEST_ASSERT_NULL(wi_socket_tls_private_key(tls), "");
     WI_TEST_ASSERT_NULL(wi_socket_tls_dh(tls), "");
-    WI_TEST_ASSERT_NULL(wi_socket_tls_ciphers(tls), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_ciphers(tls), WI_STR("ALL"), "");
 #endif
 }
 

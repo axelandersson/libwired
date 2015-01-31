@@ -92,8 +92,6 @@ struct _wi_socket {
     
     void                                *data;
     
-    wi_mutable_string_t                 *buffer;
-    
     wi_boolean_t                        interactive;
     wi_boolean_t                        close;
 };
@@ -222,43 +220,44 @@ wi_socket_t * wi_socket_alloc(void) {
 
 
 
-wi_socket_t * wi_socket_init_with_address(wi_socket_t *_socket, wi_address_t *address, wi_socket_type_t type) {
-    _socket->address    = wi_mutable_copy(address);
-    _socket->close      = true;
-    _socket->buffer     = wi_string_init_with_capacity(wi_mutable_string_alloc(), WI_SOCKET_BUFFER_SIZE);
-    _socket->type       = type;
-    _socket->sd         = socket(wi_address_family(_socket->address), _socket->type, 0);
+wi_socket_t * wi_socket_init_with_address(wi_socket_t *socket_, wi_address_t *address, wi_socket_type_t type) {
+    int     family;
     
-    if(_socket->sd < 0) {
+    socket_->address    = wi_mutable_copy(address);
+    socket_->close      = true;
+    socket_->type       = type;
+    family              = wi_address_family(address) == WI_ADDRESS_IPV4 ? AF_INET : AF_INET6;
+    socket_->sd         = socket(family, socket_->type, 0);
+    
+    if(socket_->sd < 0) {
         wi_error_set_errno(errno);
         
-        wi_release(_socket);
+        wi_release(socket_);
         
         return NULL;
     }
     
-    if(!_wi_socket_set_option_int(_socket, SOL_SOCKET, SO_REUSEADDR, 1)) {
-        wi_release(_socket);
+    if(!_wi_socket_set_option_int(socket_, SOL_SOCKET, SO_REUSEADDR, 1)) {
+        wi_release(socket_);
         
         return NULL;
     }
     
 #ifdef SO_REUSEPORT
-    if(!_wi_socket_set_option_int(_socket, SOL_SOCKET, SO_REUSEPORT, 1)) {
-        wi_release(_socket);
+    if(!_wi_socket_set_option_int(socket_, SOL_SOCKET, SO_REUSEPORT, 1)) {
+        wi_release(socket_);
         
         return NULL;
     }
 #endif
 
-    return _socket;
+    return socket_;
 }
 
 
 
 wi_socket_t * wi_socket_init_with_descriptor(wi_socket_t *socket, int sd) {
-    socket->sd      = sd;
-    socket->buffer  = wi_string_init_with_capacity(wi_mutable_string_alloc(), WI_SOCKET_BUFFER_SIZE);
+    socket->sd = sd;
     
     return socket;
 }
@@ -271,7 +270,6 @@ static void _wi_socket_dealloc(wi_runtime_instance_t *instance) {
     wi_socket_close(socket);
     
     wi_release(socket->address);
-    wi_release(socket->buffer);
 }
 
 
@@ -370,8 +368,11 @@ wi_rsa_t * wi_socket_ssl_public_key(wi_socket_t *socket) {
     
     rsa = EVP_PKEY_get1_RSA(pkey);
     
-    if(!rsa)
+    if(!rsa) {
         wi_error_set_openssl_error();
+        
+        goto end;
+    }
 
 end:
     if(x509)
@@ -379,6 +380,9 @@ end:
     
     if(pkey)
         EVP_PKEY_free(pkey);
+    
+    if(!rsa)
+        return NULL;
     
     return wi_autorelease(wi_rsa_init_with_rsa(wi_rsa_alloc(), rsa));
 #endif
@@ -392,7 +396,7 @@ end:
 
 wi_string_t * wi_socket_cipher_version(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
-    return wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl));
+    return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl)) : NULL;
 #endif
 }
 
@@ -404,7 +408,7 @@ wi_string_t * wi_socket_cipher_version(wi_socket_t *socket) {
 
 wi_string_t * wi_socket_cipher_name(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
-    return wi_string_with_utf8_string(SSL_get_cipher_name(socket->ssl));
+    return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_name(socket->ssl)) : NULL;
 #endif
 }
 
@@ -416,7 +420,7 @@ wi_string_t * wi_socket_cipher_name(wi_socket_t *socket) {
 
 wi_uinteger_t wi_socket_cipher_bits(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
-    return SSL_get_cipher_bits(socket->ssl, NULL);
+    return socket->ssl ? SSL_get_cipher_bits(socket->ssl, NULL) : 0;
 #endif
 }
 
@@ -536,6 +540,19 @@ wi_string_t * wi_socket_certificate_hostname(wi_socket_t *socket) {
 }
 
 #endif
+
+
+
+int wi_socket_error(wi_socket_t *socket) {
+    int     error;
+    
+    WI_ASSERT(socket->type == WI_SOCKET_TCP, "%@ is not a TCP socket", socket);
+    
+    if(!_wi_socket_get_option_int(socket, SOL_SOCKET, SO_ERROR, &error))
+        return errno;
+    
+    return error;
+}
 
 
 
@@ -679,19 +696,6 @@ wi_boolean_t wi_socket_interactive(wi_socket_t *socket) {
 
 
 
-int wi_socket_error(wi_socket_t *socket) {
-    int     error;
-    
-    WI_ASSERT(socket->type == WI_SOCKET_TCP, "%@ is not a TCP socket", socket);
-    
-    if(!_wi_socket_get_option_int(socket, SOL_SOCKET, SO_ERROR, &error))
-        return errno;
-    
-    return error;
-}
-
-
-
 #pragma mark -
 
 wi_socket_t * wi_socket_wait_multiple(wi_array_t *array, wi_time_interval_t timeout) {
@@ -710,12 +714,6 @@ wi_socket_t * wi_socket_wait_multiple(wi_array_t *array, wi_time_interval_t time
     enumerator = wi_array_data_enumerator(array);
     
     while((socket = wi_enumerator_next_data(enumerator))) {
-        if(wi_string_length(socket->buffer) > 0) {
-            waiting_socket = socket;
-            
-            break;
-        }
-        
         if(socket->direction & WI_SOCKET_READ)
             FD_SET(socket->sd, &rfds);
 
@@ -725,9 +723,6 @@ wi_socket_t * wi_socket_wait_multiple(wi_array_t *array, wi_time_interval_t time
         if(socket->sd > max_sd)
             max_sd = socket->sd;
     }
-
-    if(waiting_socket)
-        return waiting_socket;
     
     state = select(max_sd + 1, &rfds, &wfds, NULL, (timeout > 0.0) ? &tv : NULL);
     
@@ -753,9 +748,6 @@ wi_socket_t * wi_socket_wait_multiple(wi_array_t *array, wi_time_interval_t time
 
 
 wi_socket_state_t wi_socket_wait(wi_socket_t *socket, wi_time_interval_t timeout) {
-    if(wi_string_length(socket->buffer) > 0)
-        return WI_SOCKET_READY;
-
     return wi_socket_wait_descriptor(socket->sd,
                                      timeout,
                                      (socket->direction & WI_SOCKET_READ),
@@ -1463,56 +1455,27 @@ static wi_integer_t _wi_socket_read_bytes(wi_socket_t *socket, wi_time_interval_
     wi_socket_state_t   state;
     wi_integer_t        bytes;
     
-#ifdef HAVE_OPENSSL_SSL_H
-    if(socket->ssl) {
-        if(timeout > 0.0 && SSL_pending(socket->ssl) == 0) {
-            state = wi_socket_wait_descriptor(socket->sd, timeout, true, false);
+    if(timeout > 0.0) {
+        state = wi_socket_wait_descriptor(socket->sd, timeout, true, false);
+        
+        if(state != WI_SOCKET_READY) {
+            if(state == WI_SOCKET_TIMEOUT)
+                wi_error_set_errno(ETIMEDOUT);
             
-            if(state != WI_SOCKET_READY) {
-                if(state == WI_SOCKET_TIMEOUT)
-                    wi_error_set_errno(ETIMEDOUT);
-                
-                return -1;
-            }
+            return -1;
         }
-        
-        ERR_clear_error();
-        
-        bytes = SSL_read(socket->ssl, buffer, length);
-        
-        if(bytes <= 0) {
-            wi_error_set_openssl_ssl_error_with_result(socket->ssl, bytes);
-            
-            ERR_clear_error();
-        }
-        
-        return bytes;
-    } else {
-#endif
-        if(timeout > 0.0) {
-            state = wi_socket_wait_descriptor(socket->sd, timeout, true, false);
-            
-            if(state != WI_SOCKET_READY) {
-                if(state == WI_SOCKET_TIMEOUT)
-                    wi_error_set_errno(ETIMEDOUT);
-                
-                return -1;
-            }
-        }
-        
-        bytes = read(socket->sd, buffer, length);
-        
-        if(bytes <= 0) {
-            if(bytes < 0)
-                wi_error_set_errno(errno);
-            else
-                wi_error_set_libwired_error(WI_ERROR_SOCKET_EOF);
-        }
-        
-        return bytes;
-#ifdef HAVE_OPENSSL_SSL_H
     }
-#endif
+    
+    bytes = read(socket->sd, buffer, length);
+    
+    if(bytes <= 0) {
+        if(bytes < 0)
+            wi_error_set_errno(errno);
+        else
+            wi_error_set_libwired_error(WI_ERROR_SOCKET_EOF);
+    }
+    
+    return bytes;
     
     return 0;
 }
