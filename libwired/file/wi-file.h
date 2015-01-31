@@ -40,40 +40,6 @@
 
 typedef uint64_t                    wi_file_offset_t;
 
-struct _wi_file_stat {
-    uint32_t                        dev;
-    uint64_t                        ino;
-    uint32_t                        mode;
-    uint32_t                        nlink;
-    uint32_t                        uid;
-    uint32_t                        gid;
-    uint32_t                        rdev;
-    uint32_t                        atime;
-    uint32_t                        mtime;
-    uint32_t                        ctime;
-    uint32_t                        birthtime;
-    uint64_t                        size;
-    uint64_t                        blocks;
-    uint32_t                        blksize;
-};
-typedef struct _wi_file_stat        wi_file_stat_t;
-
-struct _wi_file_statfs {
-    uint32_t                        bsize;
-    uint32_t                        frsize;
-    uint64_t                        blocks;
-    uint64_t                        bfree;
-    uint64_t                        bavail;
-    uint64_t                        files;
-    uint64_t                        ffree;
-    uint64_t                        favail;
-    uint32_t                        fsid;
-    uint64_t                        flag;
-    uint64_t                        namemax;
-};
-typedef struct _wi_file_statfs      wi_file_statfs_t;
-
-
 enum _wi_file_mode {
     WI_FILE_READING                 = (1 << 0),
     WI_FILE_WRITING                 = (1 << 1),
