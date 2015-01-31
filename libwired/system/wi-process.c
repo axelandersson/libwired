@@ -246,7 +246,7 @@ static wi_string_t * _wi_process_description(wi_runtime_instance_t *instance) {
 
 void wi_process_set_name(wi_process_t *process, wi_string_t *name) {
 #ifdef HAVE_SETPROCTITLE
-    setproctitle("%s", wi_string_cstring(process->name));
+    setproctitle("%s", wi_string_utf8_string(process->name));
 #endif
 }
 
