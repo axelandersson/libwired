@@ -81,17 +81,15 @@ WI_EXPORT wi_time_interval_t            wi_socket_timeout(wi_socket_t *);
 WI_EXPORT void                          wi_socket_set_interactive(wi_socket_t *, wi_boolean_t);
 WI_EXPORT wi_boolean_t                  wi_socket_interactive(wi_socket_t *);
 
+WI_EXPORT wi_x509_t *                   wi_socket_tls_remote_certificate(wi_socket_t *);
 WI_EXPORT wi_string_t *                 wi_socket_tls_remote_cipher_version(wi_socket_t *);
 WI_EXPORT wi_string_t *                 wi_socket_tls_remote_cipher_name(wi_socket_t *);
 WI_EXPORT wi_uinteger_t                 wi_socket_tls_remote_cipher_bits(wi_socket_t *);
-WI_EXPORT wi_x509_t *                   wi_socket_tls_remote_certificate(wi_socket_t *);
 
 WI_EXPORT void                          wi_socket_set_tls_certificate(wi_socket_t *, wi_x509_t *);
 WI_EXPORT wi_x509_t *                   wi_socket_tls_certificate(wi_socket_t *);
-WI_EXPORT void                          wi_socket_set_tls_private_key(wi_socket_t *, wi_rsa_t *);
-WI_EXPORT wi_rsa_t *                    wi_socket_tls_private_key(wi_socket_t *);
-WI_EXPORT void                          wi_socket_set_tls_dh(wi_socket_t *, wi_dh_t *);
-WI_EXPORT wi_dh_t *                     wi_socket_tls_dh(wi_socket_t *);
+WI_EXPORT void                          wi_socket_set_tls_private_key(wi_socket_t *, wi_runtime_instance_t *);
+WI_EXPORT wi_runtime_instance_t *       wi_socket_tls_private_key(wi_socket_t *);
 WI_EXPORT void                          wi_socket_set_tls_ciphers(wi_socket_t *, wi_string_t *);
 WI_EXPORT wi_string_t *                 wi_socket_tls_ciphers(wi_socket_t *);
 

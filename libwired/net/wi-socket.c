@@ -91,9 +91,8 @@ struct _wi_socket {
 #endif
     
 #ifdef WI_SSL
-    wi_x509_t                           *tls_x509;
-    wi_rsa_t                            *tls_rsa;
-    wi_dh_t                             *tls_dh;
+    wi_x509_t                           *tls_certificate;
+    wi_runtime_instance_t               *tls_private_key;
     wi_string_t                         *tls_ciphers;
 #endif
     
@@ -279,9 +278,8 @@ static void _wi_socket_dealloc(wi_runtime_instance_t *instance) {
     wi_release(socket->address);
     
 #ifdef WI_SSL
-    wi_release(socket->tls_x509);
-    wi_release(socket->tls_rsa);
-    wi_release(socket->tls_dh);
+    wi_release(socket->tls_certificate);
+    wi_release(socket->tls_private_key);
     wi_release(socket->tls_ciphers);
 #endif
 }
@@ -504,6 +502,21 @@ wi_boolean_t wi_socket_interactive(wi_socket_t *socket) {
 
 #ifdef WI_SSL
 
+wi_x509_t * wi_socket_tls_remote_certificate(wi_socket_t *socket) {
+#ifdef HAVE_OPENSSL_SSL_H
+    X509    *x509;
+    
+    x509 = SSL_get_peer_certificate(socket->ssl);
+    
+    if(!x509)
+        return NULL;
+    
+    return wi_autorelease(wi_x509_init_with_openssl_x509(wi_x509_alloc(), x509));
+#endif
+}
+
+
+
 wi_string_t * wi_socket_tls_remote_cipher_version(wi_socket_t *socket) {
 #ifdef HAVE_OPENSSL_SSL_H
     return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl)) : NULL;
@@ -526,21 +539,6 @@ wi_uinteger_t wi_socket_tls_remote_cipher_bits(wi_socket_t *socket) {
 #endif
 }
 
-
-
-wi_x509_t * wi_socket_tls_remote_certificate(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    X509    *x509;
-
-    x509 = SSL_get_peer_certificate(socket->ssl);
-
-    if(!x509)
-        return NULL;
-    
-    return wi_autorelease(wi_x509_init_with_openssl_x509(wi_x509_alloc(), x509));
-#endif
-}
-
 #endif
 
 
@@ -549,47 +547,37 @@ wi_x509_t * wi_socket_tls_remote_certificate(wi_socket_t *socket) {
 
 #ifdef WI_SSL
 
-void wi_socket_set_tls_certificate(wi_socket_t *socket, wi_x509_t *x509) {
-    wi_release(socket->tls_x509);
-    socket->tls_x509 = NULL;
+void wi_socket_set_tls_certificate(wi_socket_t *socket, wi_x509_t *certificate) {
+    wi_retain(certificate);
+    wi_release(socket->tls_certificate);
     
-    socket->tls_x509 = wi_retain(x509);
+    socket->tls_certificate = certificate;
 }
 
 
 
 wi_x509_t * wi_socket_tls_certificate(wi_socket_t *socket) {
-    return socket->tls_x509;
+    return socket->tls_certificate;
 }
 
 
 
-void wi_socket_set_tls_private_key(wi_socket_t *socket, wi_rsa_t *rsa) {
-    wi_release(socket->tls_rsa);
-    socket->tls_rsa = NULL;
+void wi_socket_set_tls_private_key(wi_socket_t *socket, wi_runtime_instance_t *private_key) {
+    WI_ASSERT(wi_runtime_id(private_key) == wi_rsa_runtime_id() || wi_runtime_id(private_key) == wi_dh_runtime_id(),
+              "unsupported private key instance %@", private_key);
     
-    socket->tls_rsa = wi_retain(rsa);
+    wi_retain(private_key);
+    wi_release(socket->tls_private_key);
+    
+    socket->tls_private_key = private_key;
 }
 
 
 
-wi_rsa_t * wi_socket_tls_private_key(wi_socket_t *socket) {
-    return socket->tls_rsa;
+wi_runtime_instance_t * wi_socket_tls_private_key(wi_socket_t *socket) {
+    return socket->tls_private_key;
 }
 
-
-
-
-void wi_socket_set_tls_dh(wi_socket_t *socket, wi_dh_t *dh) {
-    wi_release(socket->tls_dh);
-    socket->tls_dh = wi_retain(dh);
-}
-
-
-
-wi_dh_t * wi_socket_tls_dh(wi_socket_t *socket) {
-    return socket->tls_dh;
-}
 
 
 
@@ -899,11 +887,7 @@ void wi_socket_close(wi_socket_t *socket) {
     }
 }
 
-
-
 #pragma mark -
-
-
 
 
 
@@ -1037,19 +1021,21 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_time_interval_t timeou
         return false;
     }
     
-    if(socket->tls_x509) {
-        if(SSL_CTX_use_certificate(socket->ssl_ctx, wi_x509_openssl_x509(socket->tls_x509)) != 1) {
+    if(socket->tls_certificate) {
+        if(SSL_CTX_use_certificate(socket->ssl_ctx, wi_x509_openssl_x509(socket->tls_certificate)) != 1) {
             wi_error_set_openssl_error();
             
             return false;
         }
     }
     
-    if(socket->tls_rsa) {
-        if(SSL_CTX_use_RSAPrivateKey(socket->ssl_ctx, wi_rsa_openssl_rsa(socket->tls_rsa)) != 1) {
-            wi_error_set_openssl_error();
-            
-            return false;
+    if(socket->tls_private_key) {
+        if(wi_runtime_id(socket->tls_private_key) == wi_rsa_runtime_id()) {
+            if(SSL_CTX_use_RSAPrivateKey(socket->ssl_ctx, wi_rsa_openssl_rsa(socket->tls_private_key)) != 1) {
+                wi_error_set_openssl_error();
+                
+                return false;
+            }
         }
     }
     
@@ -1067,11 +1053,13 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_time_interval_t timeou
         return false;
     }
     
-    if(!socket->tls_rsa && socket->tls_dh) {
-        if(SSL_set_tmp_dh(socket->ssl, wi_dh_openssl_dh(socket->tls_dh)) != 1) {
-            wi_error_set_openssl_error();
-            
-            return false;
+    if(socket->tls_private_key) {
+        if(wi_runtime_id(socket->tls_private_key) == wi_dh_runtime_id()) {
+            if(SSL_set_tmp_dh(socket->ssl, wi_dh_openssl_dh(socket->tls_private_key)) != 1) {
+                wi_error_set_openssl_error();
+                
+                return false;
+            }
         }
     }
     

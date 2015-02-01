@@ -306,10 +306,6 @@ static void _wi_test_socket_secure_client_server_thread(wi_runtime_instance_t *i
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_private_key(client_socket), rsa, "");
     
-    wi_socket_set_tls_dh(client_socket, dh);
-
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_dh(client_socket), dh, "");
-    
     wi_socket_set_tls_ciphers(client_socket, WI_STR("ALL"));
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_ciphers(client_socket), WI_STR("ALL"), "");
