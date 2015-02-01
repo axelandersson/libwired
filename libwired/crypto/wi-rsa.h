@@ -34,12 +34,10 @@ WI_EXPORT wi_runtime_id_t               wi_rsa_runtime_id(void);
 
 WI_EXPORT wi_rsa_t *                    wi_rsa_alloc(void);
 WI_EXPORT wi_rsa_t *                    wi_rsa_init_with_bits(wi_rsa_t *, wi_uinteger_t);
-WI_EXPORT wi_rsa_t *                    wi_rsa_init_with_rsa(wi_rsa_t *, void *);
 WI_EXPORT wi_rsa_t *                    wi_rsa_init_with_pem_file(wi_rsa_t *, wi_string_t *);
 WI_EXPORT wi_rsa_t *                    wi_rsa_init_with_private_key(wi_rsa_t *, wi_data_t *);
 WI_EXPORT wi_rsa_t *                    wi_rsa_init_with_public_key(wi_rsa_t *, wi_data_t *);
 
-WI_EXPORT void *                        wi_rsa_rsa(wi_rsa_t *);
 WI_EXPORT wi_data_t *                   wi_rsa_public_key(wi_rsa_t *);
 WI_EXPORT wi_data_t *                   wi_rsa_private_key(wi_rsa_t *);
 WI_EXPORT wi_uinteger_t                 wi_rsa_bits(wi_rsa_t *);

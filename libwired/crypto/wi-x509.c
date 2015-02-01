@@ -121,7 +121,8 @@ wi_x509_t * wi_x509_init_with_common_name(wi_x509_t *x509, wi_rsa_t *rsa, wi_str
         goto err;
 
     pkey = EVP_PKEY_new();
-    EVP_PKEY_set1_RSA(pkey, wi_rsa_rsa(rsa));
+    
+    EVP_PKEY_set1_RSA(pkey, wi_rsa_openssl_rsa(rsa));
     
     if(X509_REQ_set_pubkey(req, pkey) != 1)
         goto err;
@@ -217,6 +218,14 @@ wi_x509_t * wi_x509_init_with_pem_file(wi_x509_t *x509, wi_string_t *path) {
 
 
 
+wi_x509_t * wi_x509_init_with_openssl_x509(wi_x509_t *x509, void *openssl_x509) {
+    x509->x509 = openssl_x509;
+    
+    return x509;
+}
+
+
+
 static void _wi_x509_dealloc(wi_runtime_instance_t *instance) {
     wi_x509_t   *x509 = instance;
     
@@ -257,7 +266,57 @@ wi_string_t * wi_x509_common_name(wi_x509_t *x509) {
 
 
 
-void * wi_x509_x509(wi_x509_t *x509) {
+wi_x509_key_type_t wi_x509_public_key_type(wi_x509_t *x509) {
+    EVP_PKEY            *pkey;
+    wi_x509_key_type_t  type;
+    
+    pkey = X509_get_pubkey(x509->x509);
+    
+    if(!pkey)
+        return WI_X509_KEY_UNKNOWN;
+    
+    switch(EVP_PKEY_type(pkey->type)) {
+        case EVP_PKEY_RSA:
+            type = WI_X509_KEY_RSA;
+            break;
+            
+        case EVP_PKEY_DSA:
+            type = WI_X509_KEY_DSA;
+            break;
+            
+        case EVP_PKEY_DH:
+            type = WI_X509_KEY_DH;
+            break;
+    }
+    
+    EVP_PKEY_free(pkey);
+    
+    return type;
+}
+
+
+
+wi_uinteger_t wi_x509_public_key_bits(wi_x509_t *x509) {
+    EVP_PKEY        *pkey;
+    wi_uinteger_t   bits;
+    
+    pkey = X509_get_pubkey(x509->x509);
+    
+    if(!pkey)
+        return 0;
+    
+    bits = 8 * EVP_PKEY_size(pkey);
+    
+    EVP_PKEY_free(pkey);
+    
+    return bits;
+}
+
+
+
+#pragma mark -
+
+void * wi_x509_openssl_x509(wi_x509_t *x509) {
     return x509->x509;
 }
 

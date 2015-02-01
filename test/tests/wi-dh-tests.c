@@ -35,20 +35,18 @@ void wi_test_dh_creation(void) {
     wi_dh_t     *dh;
     wi_data_t   *p1, *g1, *p2, *g2;
     
-    dh = wi_autorelease(wi_dh_init_with_bits(wi_dh_alloc(), 512));
+    dh = wi_autorelease(wi_dh_init_with_bits(wi_dh_alloc(), 64));
     
     WI_TEST_ASSERT_NOT_NULL(dh, "");
-    WI_TEST_ASSERT_NOT_NULL(wi_dh_dh(dh), "");
     
     wi_dh_get_data(dh, &p1, &g1);
     
-    WI_TEST_ASSERT_EQUALS(wi_data_length(p1), 64, "");
+    WI_TEST_ASSERT_EQUALS(wi_data_length(p1), 8, "");
     WI_TEST_ASSERT_EQUALS(wi_data_length(g1), 1, "");
     
     dh = wi_autorelease(wi_dh_init_with_data(wi_dh_alloc(), p1, g1));
     
     WI_TEST_ASSERT_NOT_NULL(dh, "");
-    WI_TEST_ASSERT_NOT_NULL(wi_dh_dh(dh), "");
     
     wi_dh_get_data(dh, &p2, &g2);
     
@@ -64,7 +62,7 @@ void wi_test_dh_runtime_functions(void) {
     wi_dh_t     *dh1, *dh2;
     wi_data_t   *p, *g;
     
-    dh1 = wi_autorelease(wi_dh_init_with_bits(wi_dh_alloc(), 512));
+    dh1 = wi_autorelease(wi_dh_init_with_bits(wi_dh_alloc(), 64));
     dh2 = wi_autorelease(wi_copy(dh1));
     
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(dh1), wi_dh_runtime_id(), "");

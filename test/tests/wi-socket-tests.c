@@ -53,17 +53,6 @@ void wi_test_socket_creation(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_address(socket), address, "");
     WI_TEST_ASSERT_TRUE(wi_socket_descriptor(socket) > 0, "");
     
-#ifdef WI_SSL
-    WI_TEST_ASSERT_NULL(wi_socket_ssl(socket), "");
-    WI_TEST_ASSERT_NULL(wi_socket_ssl_public_key(socket), "");
-    WI_TEST_ASSERT_NULL(wi_socket_cipher_version(socket), "");
-    WI_TEST_ASSERT_NULL(wi_socket_cipher_name(socket), "");
-    WI_TEST_ASSERT_EQUALS(wi_socket_cipher_bits(socket), 0U, "");
-    WI_TEST_ASSERT_NULL(wi_socket_certificate_name(socket), "");
-    WI_TEST_ASSERT_EQUALS(wi_socket_certificate_bits(socket), 0U, "");
-    WI_TEST_ASSERT_NULL(wi_socket_certificate_hostname(socket), "");
-#endif
-    
     socket = wi_autorelease(wi_socket_init_with_descriptor(wi_socket_alloc(), 1));
 
     WI_TEST_ASSERT_NOT_NULL(socket, "");
@@ -218,6 +207,7 @@ void wi_test_socket_secure_client_server(void) {
     wi_socket_t         *client_socket, *waiting_socket;
     wi_address_t        *server_address;
     wi_data_t           *data;
+    wi_x509_t           *x509;
     wi_socket_state_t   state;
     wi_boolean_t        result;
     
@@ -239,25 +229,26 @@ void wi_test_socket_secure_client_server(void) {
     wi_socket_set_direction(client_socket, WI_SOCKET_WRITE | WI_SOCKET_READ);
     wi_socket_set_port(client_socket, 4871);
     
-    result = wi_socket_connect(client_socket, 2.0);
+    result = wi_socket_connect(client_socket, 5.0);
     
     WI_TEST_ASSERT_TRUE(result, "");
+
+    wi_socket_set_tls_ciphers(client_socket, WI_STR("ALL"));
     
-    tls = wi_autorelease(wi_socket_tls_init_with_type(wi_socket_tls_alloc(), WI_SOCKET_TLS_CLIENT));
-    result = wi_socket_connect_tls(client_socket, tls, 2.0);
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_ciphers(client_socket), WI_STR("ALL"), "");
+    
+    result = wi_socket_connect_tls(client_socket, 5.0);
     
     WI_TEST_ASSERT_TRUE(result, "%m");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_socket_tls_remote_cipher_version(client_socket)) > 0, "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(wi_socket_tls_remote_cipher_name(client_socket)) > 0, "");
+    WI_TEST_ASSERT_TRUE(wi_socket_tls_remote_cipher_bits(client_socket) > 0, "");
     
-    WI_TEST_ASSERT_NOT_NULL(wi_socket_ssl(client_socket), "");
-    WI_TEST_ASSERT_NOT_NULL(wi_socket_ssl_public_key(client_socket), "");
-    WI_TEST_ASSERT_NOT_NULL(wi_socket_cipher_version(client_socket), "");
-    WI_TEST_ASSERT_NOT_NULL(wi_socket_cipher_name(client_socket), "");
-    WI_TEST_ASSERT_TRUE(wi_socket_cipher_bits(client_socket) > 0, "");
-    WI_TEST_ASSERT_NOT_NULL(wi_socket_certificate_name(client_socket), "");
-    WI_TEST_ASSERT_EQUALS(wi_socket_certificate_bits(client_socket), 512U, "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_certificate_hostname(client_socket), WI_STR("helloworldserver"), "");
+    x509 = wi_socket_tls_remote_certificate(client_socket);
     
-    data = wi_socket_read_data(client_socket, 2.0, 11);
+    WI_TEST_ASSERT_NOT_NULL(x509, "");
+    
+    data = wi_socket_read_data(client_socket, 5.0, 11);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(data, wi_string_utf8_data(WI_STR("hello world")), "");
     
@@ -276,6 +267,7 @@ static void _wi_test_socket_secure_client_server_thread(wi_runtime_instance_t *i
     wi_address_t        *server_address, *client_address;
     wi_rsa_t            *rsa;
     wi_x509_t           *x509;
+    wi_dh_t             *dh;
     wi_boolean_t        result;
     
     pool = wi_pool_init(wi_pool_alloc());
@@ -297,24 +289,36 @@ static void _wi_test_socket_secure_client_server_thread(wi_runtime_instance_t *i
     
     wi_condition_lock_unlock_with_condition(_wi_test_socket_condition_lock, 1);
     
-    client_socket = wi_socket_accept(server_socket, 2.0, &client_address);
+    client_socket = wi_socket_accept(server_socket, 5.0, &client_address);
     
     WI_TEST_ASSERT_NOT_NULL(client_socket, "");
     WI_TEST_ASSERT_NOT_NULL(client_address, "");
     
     rsa = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
     x509 = wi_autorelease(wi_x509_init_with_common_name(wi_x509_alloc(), rsa, WI_STR("helloworldserver")));
+    dh = wi_autorelease(wi_dh_init_with_bits(wi_dh_alloc(), 64));
     
-    tls = wi_autorelease(wi_socket_tls_init_with_type(wi_socket_tls_alloc(), WI_SOCKET_TLS_SERVER));
+    wi_socket_set_tls_certificate(client_socket, x509);
     
-    wi_socket_tls_set_certificate(tls, x509);
-    wi_socket_tls_set_private_key(tls, rsa);
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_certificate(client_socket), x509, "");
     
-    result = wi_socket_accept_tls(client_socket, tls, 2.0);
+    wi_socket_set_tls_private_key(client_socket, rsa);
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_private_key(client_socket), rsa, "");
+    
+    wi_socket_set_tls_dh(client_socket, dh);
+
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_dh(client_socket), dh, "");
+    
+    wi_socket_set_tls_ciphers(client_socket, WI_STR("ALL"));
+
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_socket_tls_ciphers(client_socket), WI_STR("ALL"), "");
+
+    result = wi_socket_accept_tls(client_socket, 5.0);
     
     WI_TEST_ASSERT_TRUE(result, "%m");
     
-    wi_socket_write_data(client_socket, 2.0, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")));
+    wi_socket_write_data(client_socket, 5.0, wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ=")));
     
     wi_release(pool);
 }

@@ -125,9 +125,6 @@ wi_tests_run_test("wi_test_socket_runtime_functions", wi_test_socket_runtime_fun
 wi_tests_run_test("wi_test_socket_settings", wi_test_socket_settings);
 wi_tests_run_test("wi_test_socket_plaintext_client_server", wi_test_socket_plaintext_client_server);
 wi_tests_run_test("wi_test_socket_secure_client_server", wi_test_socket_secure_client_server);
-wi_tests_run_test("wi_test_socket_tls_creation", wi_test_socket_tls_creation);
-wi_tests_run_test("wi_test_socket_tls_runtime_functions", wi_test_socket_tls_runtime_functions);
-wi_tests_run_test("wi_test_socket_tls_mutation", wi_test_socket_tls_mutation);
 wi_tests_run_test("wi_test_string_encoding_creation", wi_test_string_encoding_creation);
 wi_tests_run_test("wi_test_string_encoding_runtime_functions", wi_test_string_encoding_runtime_functions);
 wi_tests_run_test("wi_test_string_encoding_conversion", wi_test_string_encoding_conversion);

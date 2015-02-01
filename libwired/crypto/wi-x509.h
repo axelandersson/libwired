@@ -30,6 +30,15 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
+enum _wi_x509_key_type {
+    WI_X509_KEY_UNKNOWN,
+    WI_X509_KEY_RSA,
+    WI_X509_KEY_DSA,
+    WI_X509_KEY_DH
+};
+typedef enum _wi_x509_key_type          wi_x509_key_type_t;
+
+
 WI_EXPORT wi_runtime_id_t               wi_x509_runtime_id(void);
 
 WI_EXPORT wi_x509_t *                   wi_x509_alloc(void);
@@ -37,6 +46,7 @@ WI_EXPORT wi_x509_t *                   wi_x509_init_with_common_name(wi_x509_t 
 WI_EXPORT wi_x509_t *                   wi_x509_init_with_pem_file(wi_x509_t *, wi_string_t *);
 
 WI_EXPORT wi_string_t *                 wi_x509_common_name(wi_x509_t *);
-WI_EXPORT void *                        wi_x509_x509(wi_x509_t *);
+WI_EXPORT wi_x509_key_type_t            wi_x509_public_key_type(wi_x509_t *);
+WI_EXPORT wi_uinteger_t                 wi_x509_public_key_bits(wi_x509_t *);
 
 #endif /* WI_X509_H */

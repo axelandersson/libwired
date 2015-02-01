@@ -103,7 +103,6 @@ void wi_test_rsa_accessors(void) {
     
     rsa = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
     
-    WI_TEST_ASSERT_NOT_NULL(wi_rsa_rsa(rsa), "");
     WI_TEST_ASSERT_TRUE(wi_data_length(wi_rsa_public_key(rsa)) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_data_length(wi_rsa_private_key(rsa)) > 0, "");
     WI_TEST_ASSERT_EQUALS(wi_rsa_bits(rsa), 512U, "");

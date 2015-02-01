@@ -228,12 +228,6 @@ static wi_string_t * _wi_rsa_description(wi_runtime_instance_t *instance) {
 
 #pragma mark -
 
-void * wi_rsa_rsa(wi_rsa_t *rsa) {
-    return rsa->rsa;
-}
-
-
-
 wi_data_t * wi_rsa_public_key(wi_rsa_t *rsa) {
     unsigned char   *buffer;
     int             length;
@@ -285,6 +279,15 @@ wi_data_t * wi_rsa_private_key(wi_rsa_t *rsa) {
 wi_uinteger_t wi_rsa_bits(wi_rsa_t *rsa) {
     return RSA_size(rsa->rsa) * 8;
 }
+
+
+
+#pragma mark -
+
+void * wi_rsa_openssl_rsa(wi_rsa_t *rsa) {
+    return rsa->rsa;
+}
+
 
 
 

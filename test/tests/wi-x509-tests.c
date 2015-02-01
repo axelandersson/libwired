@@ -92,6 +92,5 @@ void wi_test_x509_accessors(void) {
     x509 = wi_autorelease(wi_x509_init_with_common_name(wi_x509_alloc(), rsa, WI_STR("foobar")));
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_x509_common_name(x509), WI_STR("foobar"), "");
-    WI_TEST_ASSERT_NOT_NULL(wi_x509_x509(x509), "");
 #endif
 }

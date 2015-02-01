@@ -177,14 +177,6 @@ static wi_string_t * _wi_dh_description(wi_runtime_instance_t *instance) {
 
 #pragma mark -
 
-void * wi_dh_dh(wi_dh_t *dh) {
-    return dh->dh;
-}
-
-
-
-#pragma mark -
-
 void wi_dh_get_data(wi_dh_t *dh, wi_data_t **p, wi_data_t **g) {
     unsigned char   *p_buffer, *g_buffer;
     int             p_length, g_length;
@@ -200,6 +192,14 @@ void wi_dh_get_data(wi_dh_t *dh, wi_data_t **p, wi_data_t **g) {
     
     *p = wi_data_with_bytes_no_copy(p_buffer, p_length, true);
     *g = wi_data_with_bytes_no_copy(g_buffer, g_length, true);
+}
+
+
+
+#pragma mark -
+
+void * wi_dh_openssl_dh(wi_dh_t *dh) {
+    return dh->dh;
 }
 
 #endif

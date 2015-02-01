@@ -92,7 +92,6 @@ WI_EXPORT void                              wi_rsa_register(void);
 WI_EXPORT void                              wi_runtime_register(void);
 WI_EXPORT void                              wi_set_register(void);
 WI_EXPORT void                              wi_socket_register(void);
-WI_EXPORT void                              wi_socket_tls_register(void);
 WI_EXPORT void                              wi_string_register(void);
 WI_EXPORT void                              wi_string_encoding_register(void);
 WI_EXPORT void                              wi_task_register(void);
@@ -136,7 +135,6 @@ WI_EXPORT void                              wi_rsa_initialize(void);
 WI_EXPORT void                              wi_runtime_initialize(void);
 WI_EXPORT void                              wi_set_initialize(void);
 WI_EXPORT void                              wi_socket_initialize(void);
-WI_EXPORT void                              wi_socket_tls_initialize(void);
 WI_EXPORT void                              wi_string_initialize(void);
 WI_EXPORT void                              wi_string_encoding_initialize(void);
 WI_EXPORT void                              wi_task_initialize(void);
@@ -158,10 +156,18 @@ WI_EXPORT wi_hash_code_t                    wi_hash_int(int);
 WI_EXPORT wi_hash_code_t                    wi_hash_double(double);
 WI_EXPORT wi_hash_code_t                    wi_hash_data(const unsigned char *, wi_uinteger_t);
 
-WI_EXPORT wi_string_t *                     wi_string_encoding_utf8_string_from_data(wi_string_encoding_t *, wi_data_t *);
-WI_EXPORT wi_string_t *                     wi_string_encoding_utf8_string_from_bytes(wi_string_encoding_t *, const char *, wi_uinteger_t);
-WI_EXPORT wi_data_t *                       wi_string_encoding_data_from_utf8_bytes(wi_string_encoding_t *, const char *, wi_uinteger_t);
-    
+WI_EXPORT wi_array_callbacks_t              wi_array_callbacks(wi_array_t *);
+WI_EXPORT wi_dictionary_key_callbacks_t     wi_dictionary_key_callbacks(wi_dictionary_t *);
+WI_EXPORT wi_dictionary_value_callbacks_t   wi_dictionary_value_callbacks(wi_dictionary_t *);
+WI_EXPORT wi_set_callbacks_t                wi_set_callbacks(wi_set_t *);
+
+#ifdef HAVE_OPENSSL_SSL_H
+WI_EXPORT void *                            wi_dh_openssl_dh(wi_dh_t *);
+#endif
+
+WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_alloc(void);
+WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_init_with_path(wi_directory_enumerator_t *, wi_string_t *);
+
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_alloc(void);
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
 
@@ -171,11 +177,6 @@ WI_EXPORT wi_boolean_t                      wi_enumerator_dictionary_key_enumera
 WI_EXPORT wi_boolean_t                      wi_enumerator_dictionary_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 WI_EXPORT wi_boolean_t                      wi_enumerator_indexset_index_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
 WI_EXPORT wi_boolean_t                      wi_enumerator_set_data_enumerator(wi_runtime_instance_t *, wi_enumerator_context_t *, void **);
-
-WI_EXPORT wi_array_callbacks_t              wi_array_callbacks(wi_array_t *);
-WI_EXPORT wi_dictionary_key_callbacks_t     wi_dictionary_key_callbacks(wi_dictionary_t *);
-WI_EXPORT wi_dictionary_value_callbacks_t   wi_dictionary_value_callbacks(wi_dictionary_t *);
-WI_EXPORT wi_set_callbacks_t                wi_set_callbacks(wi_set_t *);
 
 WI_EXPORT void                              wi_error_enter_thread(void);
 WI_EXPORT void                              wi_error_set_error(wi_error_domain_t, int);
@@ -204,15 +205,26 @@ WI_EXPORT void                              wi_error_set_libwired_error(int);
 WI_EXPORT void                              wi_error_set_libwired_error_with_string(int, wi_string_t *);
 WI_EXPORT void                              wi_error_set_libwired_error_with_format(int, wi_string_t *, ...);
 
-WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_alloc(void);
-WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_init_with_path(wi_directory_enumerator_t *, wi_string_t *);
+#ifdef HAVE_OPENSSL_SSL_H
+WI_EXPORT wi_rsa_t *                        wi_rsa_init_with_openssl_rsa(wi_rsa_t *, void *);
+WI_EXPORT void *                            wi_rsa_openssl_rsa(wi_rsa_t *);
+#endif
 
 WI_EXPORT void                              wi_runtime_make_immutable(wi_runtime_instance_t *);
+
+WI_EXPORT wi_string_t *                     wi_string_encoding_utf8_string_from_data(wi_string_encoding_t *, wi_data_t *);
+WI_EXPORT wi_string_t *                     wi_string_encoding_utf8_string_from_bytes(wi_string_encoding_t *, const char *, wi_uinteger_t);
+WI_EXPORT wi_data_t *                       wi_string_encoding_data_from_utf8_bytes(wi_string_encoding_t *, const char *, wi_uinteger_t);
 
 WI_EXPORT void                              wi_socket_exit_thread(void);
 
 WI_EXPORT void                              wi_thread_set_poolstack(wi_thread_t *, void *);
 WI_EXPORT void *                            wi_thread_poolstack(wi_thread_t *);
 WI_EXPORT void                              wi_thread_set_name(wi_thread_t *, wi_string_t *);
+
+#ifdef HAVE_OPENSSL_SSL_H
+WI_EXPORT wi_x509_t *                       wi_x509_init_with_openssl_x509(wi_x509_t *, void *);
+WI_EXPORT void *                            wi_x509_openssl_x509(wi_x509_t *);
+#endif
 
 #endif /* WI_PRIVATE_H */

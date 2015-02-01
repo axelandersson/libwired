@@ -110,11 +110,6 @@ void wi_initialize(void) {
     
     wi_set_register();
     wi_socket_register();
-    
-#ifdef WI_SSL
-    wi_socket_tls_register();
-#endif
-    
     wi_string_register();
     
 #ifdef WI_STRING_ENCODING
@@ -197,11 +192,6 @@ void wi_initialize(void) {
 #endif
     
     wi_socket_initialize();
-    
-#ifdef WI_SSL
-    wi_socket_tls_initialize();
-#endif
-    
     wi_task_initialize();
     wi_test_initialize();
     wi_thread_initialize();

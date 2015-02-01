@@ -69,7 +69,6 @@
 #include <wired/wi-private.h>
 #include <wired/wi-rsa.h>
 #include <wired/wi-socket.h>
-#include <wired/wi-socket-tls.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 #include <wired/wi-thread.h>
@@ -87,7 +86,15 @@ struct _wi_socket {
     int                                 sd;
 
 #ifdef HAVE_OPENSSL_SSL_H
+    SSL_CTX                             *ssl_ctx;
     SSL                                 *ssl;
+#endif
+    
+#ifdef WI_SSL
+    wi_x509_t                           *tls_x509;
+    wi_rsa_t                            *tls_rsa;
+    wi_dh_t                             *tls_dh;
+    wi_string_t                         *tls_ciphers;
 #endif
     
     void                                *data;
@@ -270,6 +277,13 @@ static void _wi_socket_dealloc(wi_runtime_instance_t *instance) {
     wi_socket_close(socket);
     
     wi_release(socket->address);
+    
+#ifdef WI_SSL
+    wi_release(socket->tls_x509);
+    wi_release(socket->tls_rsa);
+    wi_release(socket->tls_dh);
+    wi_release(socket->tls_ciphers);
+#endif
 }
 
 
@@ -332,217 +346,6 @@ int wi_socket_descriptor(wi_socket_t *socket) {
 
 
 
-#ifdef WI_SSL
-
-void * wi_socket_ssl(wi_socket_t *socket) {
-    return socket->ssl;
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_rsa_t * wi_socket_ssl_public_key(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    RSA         *rsa = NULL;
-    X509        *x509 = NULL;
-    EVP_PKEY    *pkey = NULL;
-
-    x509 = SSL_get_peer_certificate(socket->ssl);
-
-    if(!x509) {
-        wi_error_set_openssl_error();
-        
-        goto end;
-    }
-    
-    pkey = X509_get_pubkey(x509);
-    
-    if(!pkey) {
-        wi_error_set_openssl_error();
-
-        goto end;
-    }
-    
-    rsa = EVP_PKEY_get1_RSA(pkey);
-    
-    if(!rsa) {
-        wi_error_set_openssl_error();
-        
-        goto end;
-    }
-
-end:
-    if(x509)
-        X509_free(x509);
-    
-    if(pkey)
-        EVP_PKEY_free(pkey);
-    
-    if(!rsa)
-        return NULL;
-    
-    return wi_autorelease(wi_rsa_init_with_rsa(wi_rsa_alloc(), rsa));
-#endif
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_string_t * wi_socket_cipher_version(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl)) : NULL;
-#endif
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_string_t * wi_socket_cipher_name(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_name(socket->ssl)) : NULL;
-#endif
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_uinteger_t wi_socket_cipher_bits(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    return socket->ssl ? SSL_get_cipher_bits(socket->ssl, NULL) : 0;
-#endif
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_string_t * wi_socket_certificate_name(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    X509            *x509 = NULL;
-    EVP_PKEY        *pkey = NULL;
-    wi_string_t     *string = NULL;
-
-    x509 = SSL_get_peer_certificate(socket->ssl);
-
-    if(!x509)
-        goto end;
-
-    pkey = X509_get_pubkey(x509);
-
-    if(!pkey)
-        goto end;
-    
-    switch(EVP_PKEY_type(pkey->type)) {
-        case EVP_PKEY_RSA:
-            string = wi_string_init_with_utf8_string(wi_string_alloc(), "RSA");
-            break;
-
-        case EVP_PKEY_DSA:
-            string = wi_string_init_with_utf8_string(wi_string_alloc(), "DSA");
-            break;
-
-        case EVP_PKEY_DH:
-            string = wi_string_init_with_utf8_string(wi_string_alloc(), "DH");
-            break;
-
-        default:
-            break;
-    }
-    
-end:
-    if(x509)
-        X509_free(x509);
-
-    if(pkey)
-        EVP_PKEY_free(pkey);
-
-    return wi_autorelease(string);
-#endif
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_uinteger_t wi_socket_certificate_bits(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    X509            *x509 = NULL;
-    EVP_PKEY        *pkey = NULL;
-    wi_uinteger_t   bits = 0;
-
-    x509 = SSL_get_peer_certificate(socket->ssl);
-
-    if(!x509)
-        goto end;
-
-    pkey = X509_get_pubkey(x509);
-
-    if(!pkey)
-        goto end;
-    
-    bits = 8 * EVP_PKEY_size(pkey);
-    
-end:
-    if(x509)
-        X509_free(x509);
-
-    if(pkey)
-        EVP_PKEY_free(pkey);
-
-    return bits;
-#endif
-}
-
-#endif
-
-
-
-#ifdef WI_SSL
-
-wi_string_t * wi_socket_certificate_hostname(wi_socket_t *socket) {
-#ifdef HAVE_OPENSSL_SSL_H
-    X509            *x509;
-    wi_string_t     *string;
-    char            hostname[MAXHOSTNAMELEN];
-
-    x509 = SSL_get_peer_certificate(socket->ssl);
-
-    if(!x509)
-        return NULL;
-
-    X509_NAME_get_text_by_NID(X509_get_subject_name(x509),
-                              NID_commonName,
-                              hostname,
-                              sizeof(hostname));
-    
-    string = wi_string_init_with_utf8_string(wi_string_alloc(), hostname);
-    
-    X509_free(x509);
-    
-    return wi_autorelease(string);
-#endif
-}
-
-#endif
-
-
-
 int wi_socket_error(wi_socket_t *socket) {
     int     error;
     
@@ -597,23 +400,23 @@ void * wi_socket_data(wi_socket_t *socket) {
 
 wi_boolean_t wi_socket_set_blocking(wi_socket_t *socket, wi_boolean_t blocking) {
     int     flags;
-
+    
     flags = fcntl(socket->sd, F_GETFL);
-
+    
     if(flags < 0) {
         wi_error_set_errno(errno);
-
+        
         return false;
     }
-
+    
     if(blocking)
         flags &= ~O_NONBLOCK;
     else
         flags |= O_NONBLOCK;
-
+    
     if(fcntl(socket->sd, F_SETFL, flags) < 0) {
         wi_error_set_errno(errno);
-
+        
         return false;
     }
     
@@ -626,10 +429,10 @@ wi_boolean_t wi_socket_blocking(wi_socket_t *socket) {
     int     flags;
     
     flags = fcntl(socket->sd, F_GETFL);
-        
+    
     if(flags < 0) {
         wi_error_set_errno(errno);
-
+        
         return false;
     }
     
@@ -648,7 +451,7 @@ wi_boolean_t wi_socket_set_timeout(wi_socket_t *socket, wi_time_interval_t inter
         
         return false;
     }
-
+    
     if(setsockopt(socket->sd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0) {
         wi_error_set_errno(errno);
         
@@ -692,6 +495,125 @@ void wi_socket_set_interactive(wi_socket_t *socket, wi_boolean_t interactive) {
 
 wi_boolean_t wi_socket_interactive(wi_socket_t *socket) {
     return socket->interactive;
+}
+
+
+
+#pragma mark -
+
+
+#ifdef WI_SSL
+
+wi_string_t * wi_socket_tls_remote_cipher_version(wi_socket_t *socket) {
+#ifdef HAVE_OPENSSL_SSL_H
+    return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_version(socket->ssl)) : NULL;
+#endif
+}
+
+#endif
+
+
+
+#ifdef WI_SSL
+
+wi_string_t * wi_socket_tls_remote_cipher_name(wi_socket_t *socket) {
+#ifdef HAVE_OPENSSL_SSL_H
+    return socket->ssl ? wi_string_with_utf8_string(SSL_get_cipher_name(socket->ssl)) : NULL;
+#endif
+}
+
+#endif
+
+
+
+#ifdef WI_SSL
+
+wi_uinteger_t wi_socket_tls_remote_cipher_bits(wi_socket_t *socket) {
+#ifdef HAVE_OPENSSL_SSL_H
+    return socket->ssl ? SSL_get_cipher_bits(socket->ssl, NULL) : 0;
+#endif
+}
+
+#endif
+
+
+
+#ifdef WI_SSL
+
+wi_x509_t * wi_socket_tls_remote_certificate(wi_socket_t *socket) {
+#ifdef HAVE_OPENSSL_SSL_H
+    X509    *x509;
+
+    x509 = SSL_get_peer_certificate(socket->ssl);
+
+    if(!x509)
+        return NULL;
+    
+    return wi_autorelease(wi_x509_init_with_openssl_x509(wi_x509_alloc(), x509));
+#endif
+}
+
+#endif
+
+
+
+#pragma mark -
+
+void wi_socket_set_tls_certificate(wi_socket_t *socket, wi_x509_t *x509) {
+    wi_release(socket->tls_x509);
+    socket->tls_x509 = NULL;
+    
+    socket->tls_x509 = wi_retain(x509);
+}
+
+
+
+wi_x509_t * wi_socket_tls_certificate(wi_socket_t *socket) {
+    return socket->tls_x509;
+}
+
+
+
+void wi_socket_set_tls_private_key(wi_socket_t *socket, wi_rsa_t *rsa) {
+    wi_release(socket->tls_rsa);
+    socket->tls_rsa = NULL;
+    
+    socket->tls_rsa = wi_retain(rsa);
+}
+
+
+
+wi_rsa_t * wi_socket_tls_private_key(wi_socket_t *socket) {
+    return socket->tls_rsa;
+}
+
+
+
+
+void wi_socket_set_tls_dh(wi_socket_t *socket, wi_dh_t *dh) {
+    wi_release(socket->tls_dh);
+    socket->tls_dh = wi_retain(dh);
+}
+
+
+
+wi_dh_t * wi_socket_tls_dh(wi_socket_t *socket) {
+    return socket->tls_dh;
+}
+
+
+
+void wi_socket_set_tls_ciphers(wi_socket_t *socket, wi_string_t *ciphers) {
+    wi_release(socket->tls_ciphers);
+    socket->tls_ciphers = NULL;
+    
+    socket->tls_ciphers = wi_retain(ciphers);
+}
+
+
+
+wi_string_t * wi_socket_tls_ciphers(wi_socket_t *socket) {
+    return socket->tls_ciphers;
 }
 
 
@@ -906,13 +828,30 @@ wi_boolean_t wi_socket_connect(wi_socket_t *socket, wi_time_interval_t timeout) 
 
 #ifdef WI_SSL
 
-wi_boolean_t wi_socket_connect_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_time_interval_t timeout) {
+wi_boolean_t wi_socket_connect_tls(wi_socket_t *socket, wi_time_interval_t timeout) {
 #ifdef HAVE_OPENSSL_SSL_H
     wi_socket_state_t   state;
     int                 err, result;
     wi_boolean_t        blocking;
     
-    socket->ssl = SSL_new(wi_socket_tls_ssl_context(tls));
+    socket->ssl_ctx = SSL_CTX_new(TLSv1_client_method());
+    
+    if(!socket->ssl_ctx) {
+        wi_error_set_openssl_error();
+        
+        return false;
+    }
+    
+    SSL_CTX_set_mode(socket->ssl_ctx, SSL_MODE_AUTO_RETRY);
+    SSL_CTX_set_quiet_shutdown(socket->ssl_ctx, 1);
+    
+    if(SSL_CTX_set_cipher_list(socket->ssl_ctx, socket->tls_ciphers ? wi_string_utf8_string(socket->tls_ciphers) : "ALL") != 1) {
+        wi_error_set_openssl_error();
+        
+        return false;
+    }
+    
+    socket->ssl = SSL_new(socket->ssl_ctx);
     
     if(!socket->ssl) {
         wi_error_set_openssl_error();
@@ -1044,13 +983,46 @@ wi_socket_t * wi_socket_accept(wi_socket_t *accept_socket, wi_time_interval_t ti
 
 #ifdef WI_SSL
 
-wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_time_interval_t timeout) {
+wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_time_interval_t timeout) {
 #ifdef HAVE_OPENSSL_SSL_H
     wi_socket_state_t   state;
     int                 err, result;
     wi_boolean_t        blocking;
     
-    socket->ssl = SSL_new(wi_socket_tls_ssl_context(tls));
+    socket->ssl_ctx = SSL_CTX_new(TLSv1_server_method());
+    
+    if(!socket->ssl_ctx) {
+        wi_error_set_openssl_error();
+        
+        return false;
+    }
+    
+    SSL_CTX_set_mode(socket->ssl_ctx, SSL_MODE_AUTO_RETRY);
+    SSL_CTX_set_quiet_shutdown(socket->ssl_ctx, 1);
+    
+    if(SSL_CTX_set_cipher_list(socket->ssl_ctx, socket->tls_ciphers ? wi_string_utf8_string(socket->tls_ciphers) : "ALL") != 1) {
+        wi_error_set_openssl_error();
+        
+        return false;
+    }
+    
+    if(socket->tls_x509) {
+        if(SSL_CTX_use_certificate(socket->ssl_ctx, wi_x509_openssl_x509(socket->tls_x509)) != 1) {
+            wi_error_set_openssl_error();
+            
+            return false;
+        }
+    }
+    
+    if(socket->tls_rsa) {
+        if(SSL_CTX_use_RSAPrivateKey(socket->ssl_ctx, wi_rsa_openssl_rsa(socket->tls_rsa)) != 1) {
+            wi_error_set_openssl_error();
+            
+            return false;
+        }
+    }
+    
+    socket->ssl = SSL_new(socket->ssl_ctx);
     
     if(!socket->ssl) {
         wi_error_set_openssl_error();
@@ -1064,8 +1036,8 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_socket_tls_t *tls, wi_
         return false;
     }
     
-    if(!wi_socket_tls_private_key(tls) && wi_socket_tls_dh(tls)) {
-        if(SSL_set_tmp_dh(socket->ssl, wi_dh_dh(wi_socket_tls_dh(tls))) != 1) {
+    if(!socket->tls_rsa && socket->tls_dh) {
+        if(SSL_set_tmp_dh(socket->ssl, wi_dh_openssl_dh(socket->tls_dh)) != 1) {
             wi_error_set_openssl_error();
             
             return false;
@@ -1148,6 +1120,12 @@ void wi_socket_close(wi_socket_t *socket) {
 #endif
     
 #ifdef HAVE_OPENSSL_SSL_H
+    if(socket->ssl_ctx) {
+        SSL_CTX_free(socket->ssl_ctx);
+        
+        socket->ssl_ctx = NULL;
+    }
+    
     if(socket->ssl) {
         ERR_clear_error();
         

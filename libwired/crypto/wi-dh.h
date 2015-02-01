@@ -36,8 +36,6 @@ WI_EXPORT wi_dh_t *                     wi_dh_alloc(void);
 WI_EXPORT wi_dh_t *                     wi_dh_init_with_bits(wi_dh_t *, wi_uinteger_t);
 WI_EXPORT wi_dh_t *                     wi_dh_init_with_data(wi_dh_t *, wi_data_t *, wi_data_t *);
 
-WI_EXPORT void *                        wi_dh_dh(wi_dh_t *);
-
 WI_EXPORT void                          wi_dh_get_data(wi_dh_t *, wi_data_t **, wi_data_t **);
 
 #endif /* WI_DH_H */
