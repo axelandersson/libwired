@@ -398,11 +398,13 @@ static wi_string_t * _wi_json_boolean_or_null_string_for_string(wi_string_t *str
 
 static wi_string_t * _wi_json_string_for_dictionary(wi_dictionary_t *dictionary) {
     wi_mutable_array_t      *strings;
+    wi_array_t              *keys;
     wi_runtime_instance_t   *key, *value;
     wi_enumerator_t         *enumerator;
     
     strings = wi_mutable_array();
-    enumerator = wi_dictionary_key_enumerator(dictionary);
+    keys = wi_array_by_sorting(wi_dictionary_all_keys(dictionary), wi_string_compare);
+    enumerator = wi_array_data_enumerator(keys);
     
     while((key = wi_enumerator_next_data(enumerator))) {
         if(wi_runtime_id(key) != wi_string_runtime_id()) {

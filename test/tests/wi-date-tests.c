@@ -49,7 +49,6 @@ void wi_test_date_time_intervals(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string(86400 + 3600 + 60 + 1), WI_STR("1:01:01:01 days"), "");
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string_with_format(86400 + 3600 + 60 + 1, WI_STR(("%Y-%m-%d %H:%M:%S"))), WI_STR("1970-01-02 02:01:01"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string_with_format(86400 + 3600 + 60 + 1, WI_STR(("%Y-%m-%d %H:%M:%S %Z"))), WI_STR("1970-01-02 01:01:01 UTC"), "");
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_rfc3339_string(86400 + 3600 + 60 + 1), WI_STR("1970-01-02T02:01:01+01:00"), "");
 }
