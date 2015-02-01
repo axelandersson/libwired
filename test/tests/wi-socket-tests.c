@@ -267,7 +267,6 @@ static void _wi_test_socket_secure_client_server_thread(wi_runtime_instance_t *i
     wi_address_t        *server_address, *client_address;
     wi_rsa_t            *rsa;
     wi_x509_t           *x509;
-    wi_dh_t             *dh;
     wi_boolean_t        result;
     
     pool = wi_pool_init(wi_pool_alloc());
@@ -296,7 +295,6 @@ static void _wi_test_socket_secure_client_server_thread(wi_runtime_instance_t *i
     
     rsa = wi_autorelease(wi_rsa_init_with_bits(wi_rsa_alloc(), 512));
     x509 = wi_autorelease(wi_x509_init_with_common_name(wi_x509_alloc(), rsa, WI_STR("helloworldserver")));
-    dh = wi_autorelease(wi_dh_init_with_bits(wi_dh_alloc(), 64));
     
     wi_socket_set_tls_certificate(client_socket, x509);
     
