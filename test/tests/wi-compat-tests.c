@@ -143,10 +143,6 @@ void wi_test_compat_timegm(void) {
     
     memset(&tm, 0, sizeof(struct tm));
     
-    time = wi_timegm(&tm);
-    
-    WI_TEST_ASSERT_EQUALS(time, -1, "");
-    
     tm.tm_sec   = 0;
     tm.tm_min   = 0;
     tm.tm_hour  = 0;
