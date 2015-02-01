@@ -134,11 +134,13 @@ static void _wi_timer_thread(wi_runtime_instance_t *argument) {
     
     pool = wi_pool_init(wi_pool_alloc());
     
+    wi_thread_set_name(wi_thread_current_thread(), WI_STR("wi_timer_t"));
+    
     while(true) {
-        fire_timer    = NULL;
-        locked        = true;
+        fire_timer  = NULL;
+        locked      = true;
         interval    = wi_time_interval();
-        timer        = _wi_timer_first_timer();
+        timer       = _wi_timer_first_timer();
 
         if(!timer) {
             locked = wi_condition_lock_lock_when_condition(_wi_timer_lock, 1, 0.0);

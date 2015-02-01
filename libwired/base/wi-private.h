@@ -213,5 +213,6 @@ WI_EXPORT void                              wi_socket_exit_thread(void);
 
 WI_EXPORT void                              wi_thread_set_poolstack(wi_thread_t *, void *);
 WI_EXPORT void *                            wi_thread_poolstack(wi_thread_t *);
+WI_EXPORT void                              wi_thread_set_name(wi_thread_t *, wi_string_t *);
 
 #endif /* WI_PRIVATE_H */

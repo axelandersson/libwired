@@ -28,34 +28,26 @@
 
 WI_TEST_EXPORT void                     wi_test_filesystem_events(void);
 
-#if defined(WI_FILESYSTEM_EVENTS) && defined(WI_PTHREADS)
-static void                             _wi_test_filesystem_events_thread(wi_runtime_instance_t *);
-static void                             _wi_test_filesystem_events_callback(wi_string_t *);
+#if defined(WI_FILESYSTEM_EVENTS)
+static void                             _wi_test_filesystem_events_callback(wi_filesystem_events_t *, wi_string_t *);
 #endif
 
 
-#if defined(WI_FILESYSTEM_EVENTS) && defined(WI_PTHREADS)
-static wi_condition_lock_t              *wi_test_filesystem_events_lock;
-static wi_mutable_array_t               *wi_test_filesystem_events_paths;
+#if defined(WI_FILESYSTEM_EVENTS)
+static wi_condition_lock_t              *_wi_test_filesystem_events_lock;
+static wi_mutable_set_t                 *_wi_test_filesystem_events_paths;
 #endif
 
-
-#if defined(WI_PTHREADS) && defined(WI_FILESYSTEM_EVENTS)
-//static void                             wi_test_fsevents_thread(wi_runtime_instance_t *);
-//static void                             wi_test_fsevents_callback(wi_string_t *);
-//
-//
-//static wi_fsevents_t                    *wi_test_fsevents_fsevents;
-//static wi_condition_lock_t              *wi_test_fsevents_lock;
-//static wi_fsevents_t                    *wi_test_fsevents_path;
-#endif
 
 
 void wi_test_filesystem_events(void) {
-#if defined(WI_FILESYSTEM_EVENTS) && defined(WI_PTHREADS)
+#if defined(WI_FILESYSTEM_EVENTS)
     wi_filesystem_events_t  *filesystem_events;
     wi_string_t             *path;
     wi_boolean_t            result;
+    
+    _wi_test_filesystem_events_lock = wi_autorelease(wi_condition_lock_init_with_condition(wi_condition_lock_alloc(), 0));
+    _wi_test_filesystem_events_paths = wi_mutable_set();
     
     path = wi_filesystem_temporary_path_with_template(WI_STR("/tmp/libwired-test-filesystem.XXXXXXX"));
     
@@ -69,68 +61,32 @@ void wi_test_filesystem_events(void) {
     
     WI_TEST_ASSERT_NOT_NULL(filesystem_events, "");
     
-    wi_filesystem_events_set_callback(filesystem_events, _wi_test_filesystem_events_callback);
-    
-    result = wi_filesystem_events_add_path(filesystem_events, path);
+    result = wi_filesystem_events_add_path_with_callback(filesystem_events, path, _wi_test_filesystem_events_callback);
     
     WI_TEST_ASSERT_TRUE(result, "");
     
-    wi_test_filesystem_events_lock = wi_autorelease(wi_condition_lock_init_with_condition(wi_condition_lock_alloc(), 0));
-    wi_test_filesystem_events_paths = wi_mutable_array();
-    
-    result = wi_thread_create_thread(_wi_test_filesystem_events_thread, filesystem_events);
+    result = wi_string_write_utf8_string_to_path(WI_STR("hello world"), wi_string_by_appending_path_component(path, WI_STR("foobar")));
     
     WI_TEST_ASSERT_TRUE(result, "");
-
-    if(wi_condition_lock_lock_when_condition(wi_test_filesystem_events_lock, 1, 1.0))
-        wi_condition_lock_unlock(wi_test_filesystem_events_lock);
-    else
+    
+    if(!wi_condition_lock_lock_when_condition(_wi_test_filesystem_events_lock, 1, 1.0)) {
         WI_TEST_FAIL("timed out waiting for filesystem events thread");
-    
-    result = wi_filesystem_create_directory_at_path(wi_string_by_appending_path_component(path, WI_STR("foobar")));
-    
-    WI_TEST_ASSERT_TRUE(result, "");
-    
-    if(wi_condition_lock_lock_when_condition(wi_test_filesystem_events_lock, 2, 1.0)) {
-        WI_TEST_ASSERT_EQUAL_INSTANCES(wi_test_filesystem_events_paths, wi_array_with_data(path, NULL), "");
-        
-        wi_condition_lock_unlock(wi_test_filesystem_events_lock);
-    } else {
-        WI_TEST_FAIL("timed out waiting for filesystem events result");
     }
     
-    wi_filesystem_delete_path(path);
+    WI_TEST_ASSERT_EQUAL_INSTANCES(_wi_test_filesystem_events_paths, wi_set_with_data(path, NULL), "");
+    
+    wi_condition_lock_unlock(_wi_test_filesystem_events_lock);
 #endif
 }
 
 
 
-#if defined(WI_FILESYSTEM_EVENTS) && defined(WI_PTHREADS)
-
-static void _wi_test_filesystem_events_thread(wi_runtime_instance_t *instance) {
-    wi_filesystem_events_t  *filesystem_events = instance;
-    wi_pool_t               *pool;
-    wi_boolean_t            result;
+static void _wi_test_filesystem_events_callback(wi_filesystem_events_t *filesystem_events, wi_string_t *path) {
+    wi_condition_lock_lock(_wi_test_filesystem_events_lock);
     
-    pool = wi_pool_init(wi_pool_alloc());
+    wi_mutable_set_add_data(_wi_test_filesystem_events_paths, path);
     
-    wi_condition_lock_lock(wi_test_filesystem_events_lock);
-    wi_condition_lock_unlock_with_condition(wi_test_filesystem_events_lock, 1);
+    wi_condition_lock_unlock_with_condition(_wi_test_filesystem_events_lock, 1);
     
-    result = wi_filesystem_events_run_with_timeout(filesystem_events, 1.0);
-    
-    WI_TEST_ASSERT_TRUE(result, "");
-    
-    wi_condition_lock_lock(wi_test_filesystem_events_lock);
-    wi_condition_lock_unlock_with_condition(wi_test_filesystem_events_lock, 2);
-    
-    wi_release(pool);
+    wi_filesystem_events_remove_path(filesystem_events, path);
 }
-
-
-
-static void _wi_test_filesystem_events_callback(wi_string_t *path) {
-    wi_mutable_array_add_data(wi_test_filesystem_events_paths, path);
-}
-
-#endif

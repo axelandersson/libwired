@@ -302,6 +302,8 @@ AC_DEFUN([WI_INCLUDE_PTHREADS], [
             AC_MSG_ERROR([could not locate pthreads])
         ])
 
+        AC_CHECK_FUNCS([pthread_setname_np])
+
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_PTHREADS])
 
         wi_include_pthreads_done="yes"
@@ -382,7 +384,7 @@ AC_DEFUN([WI_INCLUDE_LIBXML2_LIBRARY], [
 
 
 AC_DEFUN([WI_INCLUDE_FILESYSTEM_EVENTS], [
-    if test "$wi_include_filesystem_events_done" != "yes"; then
+    if test "$wi_include_filesystem_events_done" != "yes" -a "$wi_pthreads_found" = "yes"; then
         AC_CHECK_HEADERS([sys/event.h], [
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_FILESYSTEM_EVENTS])
         ], [], [

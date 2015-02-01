@@ -278,6 +278,14 @@ void * wi_thread_poolstack(wi_thread_t *thread) {
 
 
 
+void wi_thread_set_name(wi_thread_t *thread, wi_string_t *string) {
+#ifdef HAVE_PTHREAD_SETNAME_NP
+    pthread_setname_np(wi_string_utf8_string(string));
+#endif
+}
+
+
+
 #pragma mark -
 
 void wi_thread_sleep(wi_time_interval_t interval) {

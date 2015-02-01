@@ -30,7 +30,7 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-typedef void                                wi_filesystem_events_callback_t(wi_string_t *);
+typedef void                                wi_filesystem_events_callback_t(wi_filesystem_events_t *, wi_string_t *);
 
 
 WI_EXPORT wi_runtime_id_t                   wi_filesystem_events_runtime_id(void);
@@ -40,11 +40,7 @@ WI_EXPORT wi_filesystem_events_t *          wi_filesystem_events(void);
 WI_EXPORT wi_filesystem_events_t *          wi_filesystem_events_alloc(void);
 WI_EXPORT wi_filesystem_events_t *          wi_filesystem_events_init(wi_filesystem_events_t *);
 
-WI_EXPORT wi_boolean_t                      wi_filesystem_events_run_with_timeout(wi_filesystem_events_t *, wi_time_interval_t);
-
-WI_EXPORT void                              wi_filesystem_events_set_callback(wi_filesystem_events_t *, wi_filesystem_events_callback_t *);
-
-WI_EXPORT wi_boolean_t                      wi_filesystem_events_add_path(wi_filesystem_events_t *, wi_string_t *);
+WI_EXPORT wi_boolean_t                      wi_filesystem_events_add_path_with_callback(wi_filesystem_events_t *, wi_string_t *, wi_filesystem_events_callback_t *);
 WI_EXPORT void                              wi_filesystem_events_remove_path(wi_filesystem_events_t *, wi_string_t *);
 WI_EXPORT void                              wi_filesystem_events_remove_all_paths(wi_filesystem_events_t *);
 
