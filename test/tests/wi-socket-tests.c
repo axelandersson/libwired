@@ -102,7 +102,7 @@ void wi_test_socket_settings(void) {
     wi_socket_set_timeout(socket, 10.0);
     
     WI_TEST_ASSERT_TRUE(result, "");
-    WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(wi_socket_timeout(socket), 10.0, 0.001, "");
+    WI_TEST_ASSERT_EQUALS_WITH_ACCURACY(wi_socket_timeout(socket), 10.0, 0.1, "");
     
     wi_socket_set_interactive(socket, true);
     
