@@ -4,9 +4,9 @@ README
 libwired is a portable C runtime library that provides support for a lightweight
 object-oriented class system with polymorphic functions. It also provides easy
 to use APIs for common data structures, strings, files and sockets, including
-secure TLS based networking. It was originally created for a client/server
-system called "Wired", and is especially suited for creating portable network
-applications.
+secure TLS based networking. The goal of the library is ease of use, safety and
+portability. It was originally created for a client/server system called "Wired",
+and is especially suited for creating portable network applications.
 
 
 USAGE
@@ -26,6 +26,15 @@ The short, recommended way:
     ls -l run/lib run/include/wired
 
 libwired is currently only available as a static library.
+
+
+PORTABILITY
+===========
+
+libwired has been tested successfully on the following platforms:
+
+    Mac OS X 10.9
+    OpenBSD 5.6
 
 
 CLASS SYSTEM
