@@ -372,7 +372,14 @@ static wi_number_storage_type_t _wi_number_storage_type(wi_number_type_t type) {
         case WI_NUMBER_INT16:       return WI_NUMBER_STORAGE_INT16;     break;
         case WI_NUMBER_INT32:       return WI_NUMBER_STORAGE_INT32;     break;
         case WI_NUMBER_INT64:       return WI_NUMBER_STORAGE_INT64;     break;
-        case WI_NUMBER_LONG:        return WI_NUMBER_STORAGE_INT64;     break;
+        
+        case WI_NUMBER_LONG:
+            if(sizeof(long) == 8)
+                return WI_NUMBER_STORAGE_INT64;
+            else
+                return WI_NUMBER_STORAGE_INT32;
+            break;
+            
         case WI_NUMBER_LONG_LONG:   return WI_NUMBER_STORAGE_INT64;     break;
         case WI_NUMBER_FLOAT:       return WI_NUMBER_STORAGE_FLOAT;     break;
         case WI_NUMBER_DOUBLE:      return WI_NUMBER_STORAGE_DOUBLE;    break;
