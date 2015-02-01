@@ -302,7 +302,7 @@ AC_DEFUN([WI_INCLUDE_PTHREADS], [
             AC_MSG_ERROR([could not locate pthreads])
         ])
 
-        AC_CHECK_FUNCS([pthread_setname_np])
+        AC_CHECK_FUNCS([pthread_setname_np pthread_getname_np])
 
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_PTHREADS])
 

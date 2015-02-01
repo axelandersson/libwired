@@ -278,10 +278,25 @@ void * wi_thread_poolstack(wi_thread_t *thread) {
 
 
 
-void wi_thread_set_name(wi_thread_t *thread, wi_string_t *string) {
+void wi_thread_set_name(wi_string_t *string) {
 #ifdef HAVE_PTHREAD_SETNAME_NP
     pthread_setname_np(wi_string_utf8_string(string));
 #endif
+}
+
+
+
+wi_string_t * wi_thread_name(void) {
+#ifdef HAVE_PTHREAD_GETNAME_NP
+    char    buffer[1024];
+    int     result;
+    
+    result = pthread_getname_np(pthread_self(), buffer, sizeof(buffer));
+    
+    return result == 0 ? wi_string_with_utf8_string(buffer) : NULL;
+#endif
+    
+    return NULL;
 }
 
 

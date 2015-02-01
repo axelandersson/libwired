@@ -220,7 +220,6 @@ WI_EXPORT void                              wi_socket_exit_thread(void);
 
 WI_EXPORT void                              wi_thread_set_poolstack(wi_thread_t *, void *);
 WI_EXPORT void *                            wi_thread_poolstack(wi_thread_t *);
-WI_EXPORT void                              wi_thread_set_name(wi_thread_t *, wi_string_t *);
 
 #ifdef HAVE_OPENSSL_SSL_H
 WI_EXPORT wi_x509_t *                       wi_x509_init_with_openssl_x509(wi_x509_t *, void *);

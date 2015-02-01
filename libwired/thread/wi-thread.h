@@ -40,6 +40,8 @@ WI_EXPORT void                          wi_thread_enter_thread(void);
 WI_EXPORT void                          wi_thread_exit_thread(void);
 
 WI_EXPORT wi_thread_t *                 wi_thread_current_thread(void);
+WI_EXPORT void                          wi_thread_set_name(wi_string_t *);
+WI_EXPORT wi_string_t *                 wi_thread_name(void);
 WI_EXPORT wi_mutable_dictionary_t *     wi_thread_dictionary(void);
 
 WI_EXPORT void                          wi_thread_sleep(wi_time_interval_t);
