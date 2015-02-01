@@ -368,7 +368,7 @@ void wi_test_string_paths(void) {
     
     path = wi_string_by_expanding_tilde_in_path(WI_STR("~root/wired"));
     
-    WI_TEST_ASSERT_TRUE(wi_string_length(path) > wi_string_length(WI_STR("~root/wired")), "");
+    WI_TEST_ASSERT_TRUE(wi_string_length(path) >= wi_string_length(WI_STR("~root/wired")), "");
     WI_TEST_ASSERT_TRUE(wi_string_has_prefix(path, WI_STR("/")), "");
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_by_appending_path_component(WI_STR(""), WI_STR("wired")),
