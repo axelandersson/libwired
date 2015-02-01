@@ -30,6 +30,8 @@ WI_TEST_EXPORT void                     wi_test_system(void);
 
 
 void wi_test_system(void) {
+    wi_array_t  *backtrace;
+    
     WI_TEST_ASSERT_TRUE(wi_user_id() >= 0, "");
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_user_name()) > 0, "");
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_user_home()) > 0, "");
@@ -38,7 +40,13 @@ void wi_test_system(void) {
 
     WI_TEST_ASSERT_TRUE(wi_page_size() > 0, "");
     
-    WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_array_components_joined_by_string(wi_backtrace(), WI_STR("\n")), WI_STR("wi_test_system"), 0), WI_NOT_FOUND, "");
+    backtrace = wi_backtrace();
+    
+    if(backtrace) {
+        WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_array_components_joined_by_string(backtrace, WI_STR("\n")),
+                                                            WI_STR("wi_test_system"), 0),
+                                  WI_NOT_FOUND, "");
+    }
     
     WI_TEST_ASSERT_TRUE(wi_string_length(wi_getenv(WI_STR("HOME"))) > 0, "");
 }
