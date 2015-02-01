@@ -99,18 +99,12 @@ wi_rsa_t * wi_rsa_init_with_bits(wi_rsa_t *rsa, wi_uinteger_t size) {
     rsa->rsa = RSA_generate_key(size, RSA_F4, NULL, NULL);
     
     if(!rsa->rsa) {
+        wi_error_set_openssl_error();
+        
         wi_release(rsa);
         
         return NULL;
     }
-    
-    return rsa;
-}
-
-
-
-wi_rsa_t * wi_rsa_init_with_rsa(wi_rsa_t *rsa, void *_rsa) {
-    rsa->rsa = _rsa;
     
     return rsa;
 }
@@ -198,7 +192,8 @@ wi_rsa_t * wi_rsa_init_with_public_key(wi_rsa_t *rsa, wi_data_t *data) {
 static void _wi_rsa_dealloc(wi_runtime_instance_t *instance) {
     wi_rsa_t    *rsa = instance;
     
-    RSA_free(rsa->rsa);
+    if(rsa->rsa)
+        RSA_free(rsa->rsa);
     
     wi_release(rsa->public_key);
     wi_release(rsa->private_key);

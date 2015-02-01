@@ -202,6 +202,7 @@ typedef struct _wi_dh                       wi_dh_t;
 typedef struct _wi_dictionary               wi_dictionary_t;
 typedef struct _wi_dictionary               wi_mutable_dictionary_t;
 typedef struct _wi_directory_enumerator     wi_directory_enumerator_t;
+typedef struct _wi_dsa                      wi_dsa_t;
 typedef struct _wi_enumerator               wi_enumerator_t;
 typedef struct _wi_error                    wi_error_t;
 typedef struct _wi_file                     wi_file_t;

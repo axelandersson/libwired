@@ -74,6 +74,11 @@ void wi_initialize(void) {
     wi_dictionary_register();
     wi_digest_register();
     wi_directory_enumerator_register();
+    
+#ifdef WI_DSA
+    wi_dsa_register();
+#endif
+    
     wi_enumerator_register();
     wi_error_register();
     wi_file_register();
@@ -164,6 +169,11 @@ void wi_initialize(void) {
     
     wi_digest_initialize();
     wi_directory_enumerator_initialize();
+
+#ifdef WI_DSA
+    wi_dsa_initialize();
+#endif
+    
     wi_enumerator_initialize();
     wi_error_initialize();
     wi_file_initialize();

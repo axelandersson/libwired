@@ -63,6 +63,7 @@
 #include <wired/wi-address.h>
 #include <wired/wi-date.h>
 #include <wired/wi-dh.h>
+#include <wired/wi-dsa.h>
 #include <wired/wi-macros.h>
 #include <wired/wi-lock.h>
 #include <wired/wi-pool.h>
@@ -563,7 +564,9 @@ wi_x509_t * wi_socket_tls_certificate(wi_socket_t *socket) {
 
 
 void wi_socket_set_tls_private_key(wi_socket_t *socket, wi_runtime_instance_t *private_key) {
-    WI_ASSERT(wi_runtime_id(private_key) == wi_rsa_runtime_id() || wi_runtime_id(private_key) == wi_dh_runtime_id(),
+    WI_ASSERT(wi_runtime_id(private_key) == wi_rsa_runtime_id() ||
+              wi_runtime_id(private_key) == wi_dsa_runtime_id() ||
+              wi_runtime_id(private_key) == wi_dh_runtime_id(),
               "unsupported private key instance %@", private_key);
     
     wi_retain(private_key);
@@ -1000,6 +1003,7 @@ wi_boolean_t wi_socket_connect_tls(wi_socket_t *socket, wi_time_interval_t timeo
 
 wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_time_interval_t timeout) {
 #ifdef HAVE_OPENSSL_SSL_H
+    EVP_PKEY            *private_key;
     wi_socket_state_t   state;
     int                 err, result;
     wi_boolean_t        blocking;
@@ -1036,6 +1040,27 @@ wi_boolean_t wi_socket_accept_tls(wi_socket_t *socket, wi_time_interval_t timeou
                 
                 return false;
             }
+        }
+        else if(wi_runtime_id(socket->tls_private_key) == wi_dsa_runtime_id()) {
+            private_key = EVP_PKEY_new();
+            
+            if(!private_key) {
+                wi_error_set_openssl_error();
+                
+                return false;
+            }
+            
+            EVP_PKEY_set1_DSA(private_key, wi_dsa_openssl_dsa(socket->tls_private_key));
+            
+            if(SSL_CTX_use_PrivateKey(socket->ssl_ctx, private_key) != 1) {
+                wi_error_set_openssl_error();
+                
+                EVP_PKEY_free(private_key);
+                
+                return false;
+            }
+            
+            EVP_PKEY_free(private_key);
         }
     }
     

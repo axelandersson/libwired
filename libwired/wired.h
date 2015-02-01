@@ -41,6 +41,7 @@
 #include <wired/wi-dictionary.h>
 #include <wired/wi-digest.h>
 #include <wired/wi-directory-enumerator.h>
+#include <wired/wi-dsa.h>
 #include <wired/wi-enumerator.h>
 #include <wired/wi-error.h>
 #include <wired/wi-file.h>

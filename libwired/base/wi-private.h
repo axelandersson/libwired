@@ -71,6 +71,7 @@ WI_EXPORT void                              wi_dh_register(void);
 WI_EXPORT void                              wi_dictionary_register(void);
 WI_EXPORT void                              wi_digest_register(void);
 WI_EXPORT void                              wi_directory_enumerator_register(void);
+WI_EXPORT void                              wi_dsa_register(void);
 WI_EXPORT void                              wi_enumerator_register(void);
 WI_EXPORT void                              wi_error_register(void);
 WI_EXPORT void                              wi_file_register(void);
@@ -114,6 +115,7 @@ WI_EXPORT void                              wi_dh_initialize(void);
 WI_EXPORT void                              wi_dictionary_initialize(void);
 WI_EXPORT void                              wi_digest_initialize(void);
 WI_EXPORT void                              wi_directory_enumerator_initialize(void);
+WI_EXPORT void                              wi_dsa_initialize(void);
 WI_EXPORT void                              wi_enumerator_initialize(void);
 WI_EXPORT void                              wi_error_initialize(void);
 WI_EXPORT void                              wi_file_initialize(void);
@@ -168,6 +170,10 @@ WI_EXPORT void *                            wi_dh_openssl_dh(wi_dh_t *);
 WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_alloc(void);
 WI_EXPORT wi_directory_enumerator_t *       wi_directory_enumerator_init_with_path(wi_directory_enumerator_t *, wi_string_t *);
 
+#ifdef HAVE_OPENSSL_SSL_H
+WI_EXPORT void *                            wi_dsa_openssl_dsa(wi_dsa_t *);
+#endif
+
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_alloc(void);
 WI_EXPORT wi_enumerator_t *                 wi_enumerator_init_with_collection(wi_enumerator_t *, wi_runtime_instance_t *, wi_enumerator_func_t *);
 
@@ -206,7 +212,6 @@ WI_EXPORT void                              wi_error_set_libwired_error_with_str
 WI_EXPORT void                              wi_error_set_libwired_error_with_format(int, wi_string_t *, ...);
 
 #ifdef HAVE_OPENSSL_SSL_H
-WI_EXPORT wi_rsa_t *                        wi_rsa_init_with_openssl_rsa(wi_rsa_t *, void *);
 WI_EXPORT void *                            wi_rsa_openssl_rsa(wi_rsa_t *);
 #endif
 
