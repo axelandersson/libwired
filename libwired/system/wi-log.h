@@ -30,7 +30,7 @@
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-#define WI_LOG_INSTANCE(object) \
+#define WI_LOG(object) \
     wi_log_info(WI_STR("%s = %@"), #object, (object))
 
 
