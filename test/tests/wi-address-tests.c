@@ -26,7 +26,6 @@
 
 #include <wired/wired.h>
 #include <netinet/in.h>
-#include <netinet6/in6.h>
 #include <string.h>
 #include "config.h"
 
