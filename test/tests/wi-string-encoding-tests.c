@@ -33,6 +33,7 @@ WI_TEST_EXPORT void                     wi_test_string_encoding_conversion(void)
 
 
 void wi_test_string_encoding_creation(void) {
+#ifdef WI_STRING_ENCODING
     wi_string_encoding_t    *encoding;
     
     encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), 0);
@@ -46,11 +47,13 @@ void wi_test_string_encoding_creation(void) {
     WI_TEST_ASSERT_NOT_NULL(encoding, "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_string_encoding_charset(encoding), WI_STR("ASCII"), "");
     WI_TEST_ASSERT_EQUALS(wi_string_encoding_options(encoding), WI_STRING_ENCODING_IGNORE, "");
+#endif
 }
 
 
 
 void wi_test_string_encoding_runtime_functions(void) {
+#ifdef WI_STRING_ENCODING
     wi_string_encoding_t    *encoding;
 
     encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), 0);
@@ -58,6 +61,7 @@ void wi_test_string_encoding_runtime_functions(void) {
     WI_TEST_ASSERT_EQUALS(wi_runtime_id(encoding), wi_string_encoding_runtime_id(), "");
 
     WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_description(encoding), WI_STR("ASCII"), 0), WI_NOT_FOUND, "");
+#endif
 }
 
 
