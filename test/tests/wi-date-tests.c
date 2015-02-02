@@ -37,6 +37,7 @@ WI_TEST_EXPORT void                     wi_test_date_mutation(void);
 
 
 void wi_test_date_time_intervals(void) {
+    wi_string_t         *string;
     wi_time_interval_t  interval;
     
     interval = wi_time_interval();
@@ -47,10 +48,14 @@ void wi_test_date_time_intervals(void) {
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string(60 + 1), WI_STR("01:01 minutes"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string(3600 + 60 + 1), WI_STR("01:01:01 hours"), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string(86400 + 3600 + 60 + 1), WI_STR("1:01:01:01 days"), "");
-
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_string_with_format(86400 + 3600 + 60 + 1, WI_STR(("%Y-%m-%d %H:%M:%S"))), WI_STR("1970-01-02 02:01:01"), "");
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_time_interval_rfc3339_string(86400 + 3600 + 60 + 1), WI_STR("1970-01-02T02:01:01+01:00"), "");
+    string = wi_time_interval_string_with_format(0, WI_STR(("%Y-%m-%d")));
+
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("1970-01-01"), "");
+    
+    string = wi_time_interval_rfc3339_string(0);
+    
+    WI_TEST_ASSERT_TRUE(wi_string_has_prefix(string, WI_STR("1970-01-01T")), "");
 }
 
 
@@ -167,7 +172,8 @@ void wi_test_date_comparison(void) {
 
 
 void wi_test_date_accessors(void) {
-    wi_date_t   *date;
+    wi_string_t     *string;
+    wi_date_t       *date;
     
     date = wi_date_with_time_interval(0.0);
     
@@ -176,8 +182,14 @@ void wi_test_date_accessors(void) {
     WI_TEST_ASSERT_TRUE(wi_date_time_interval_since_now(date) > 0.0, "");
     WI_TEST_ASSERT_TRUE(wi_date_time_interval_since_date(date, wi_date()) > 0.0, "");
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_date_string_with_format(date, WI_STR("%Y-%m-%d %H:%M:%S")), WI_STR("1970-01-01 01:00:00"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_date_rfc3339_string(date), WI_STR("1970-01-01T01:00:00+01:00"), "");
+    string = wi_date_string_with_format(date, WI_STR("%Y-%m-%d"));
+    
+    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("1970-01-01"), "");
+    
+    string = wi_date_rfc3339_string(date);
+    
+    WI_TEST_ASSERT_TRUE(wi_string_has_prefix(string, WI_STR("1970-01-01T")), "");
+    
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_date_time_interval_string(date), WI_STR("00:00 seconds"), "");
 }
 
