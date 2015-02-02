@@ -69,9 +69,8 @@ void wi_test_filesystem_events(void) {
     
     WI_TEST_ASSERT_TRUE(result, "");
     
-    if(!wi_condition_lock_lock_when_condition(_wi_test_filesystem_events_lock, 1, 1.0)) {
+    if(!wi_condition_lock_lock_when_condition(_wi_test_filesystem_events_lock, 1, 1.0))
         WI_TEST_FAIL("timed out waiting for filesystem events thread");
-    }
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(_wi_test_filesystem_events_paths, wi_set_with_data(path, NULL), "");
     

@@ -88,6 +88,11 @@ struct _wi_filesystem_events {
 #endif
 };
 
+enum _wi_filesystem_events_state {
+    WI_FILESYSTEM_EVENTS_NO_DATA                = 0,
+    WI_FILESYSTEM_EVENTS_HAVE_DATA              = 1
+};
+
 
 static void                                     _wi_filesystem_events_dealloc(wi_runtime_instance_t *);
 
@@ -143,12 +148,14 @@ static void _wi_filesystem_events_thread(wi_runtime_instance_t *argument) {
     wi_thread_set_name(WI_STR("wi_filesystem_events_t"));
     
     while(true) {
-        wi_condition_lock_lock_when_condition(_wi_filesystem_events_lock, 1, 0.0);
+        wi_condition_lock_lock_when_condition(_wi_filesystem_events_lock, WI_FILESYSTEM_EVENTS_HAVE_DATA, 0.0);
         
         for(i = 0; i < wi_array_count(_wi_filesystem_events); i++) {
             filesystem_events = WI_ARRAY(_wi_filesystem_events, i);
 
+            wi_recursive_lock_lock(filesystem_events->lock);
             _wi_filesystem_events_run_with_timeout(filesystem_events, 0.1);
+            wi_recursive_lock_unlock(filesystem_events->lock);
         }
         
         wi_condition_lock_unlock(_wi_filesystem_events_lock);
@@ -230,10 +237,8 @@ wi_filesystem_events_t * wi_filesystem_events_init(wi_filesystem_events_t *files
     pthread_once(&_wi_filesystem_events_once_control, _wi_filesystem_events_create_thread);
     
     wi_condition_lock_lock(_wi_filesystem_events_lock);
-    
     wi_mutable_array_add_data(_wi_filesystem_events, filesystem_events);
-    
-    wi_condition_lock_unlock_with_condition(_wi_filesystem_events_lock, 1);
+    wi_condition_lock_unlock_with_condition(_wi_filesystem_events_lock, WI_FILESYSTEM_EVENTS_HAVE_DATA);
     
     return filesystem_events;
 }
@@ -263,9 +268,9 @@ static void _wi_filesystem_events_dealloc(wi_runtime_instance_t *instance) {
     wi_mutable_array_remove_data(_wi_filesystem_events, filesystem_events);
     
     if(wi_array_count(_wi_filesystem_events) > 0)
-        wi_condition_lock_unlock_with_condition(_wi_filesystem_events_lock, 1);
+        wi_condition_lock_unlock_with_condition(_wi_filesystem_events_lock, WI_FILESYSTEM_EVENTS_HAVE_DATA);
     else
-        wi_condition_lock_unlock_with_condition(_wi_filesystem_events_lock, 0);
+        wi_condition_lock_unlock_with_condition(_wi_filesystem_events_lock, WI_FILESYSTEM_EVENTS_NO_DATA);
 }
 
 
