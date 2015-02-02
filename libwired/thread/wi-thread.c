@@ -280,7 +280,11 @@ void * wi_thread_poolstack(wi_thread_t *thread) {
 
 void wi_thread_set_name(wi_string_t *string) {
 #ifdef HAVE_PTHREAD_SETNAME_NP
+#ifdef HAVE_GLIBC
+    pthread_setname_np(pthread_self(), wi_string_utf8_string(string));
+#else
     pthread_setname_np(wi_string_utf8_string(string));
+#endif
 #endif
 }
 

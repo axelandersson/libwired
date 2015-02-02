@@ -408,7 +408,7 @@ wi_boolean_t wi_filesystem_events_add_path_with_callback(wi_filesystem_events_t 
     
     wi_mutable_dictionary_set_data_for_key(filesystem_events->fds_for_paths, (void *) (intptr_t) fd, path);
 #elif defined(_WI_FILESYSTEM_EVENTS_INOTIFY)
-    fd = inotify_add_watch(filesystem_events->inotify, wi_string_cstring(path), _WI_FILESYSTEM_EVENTS_INOTIFY_MASK);
+    fd = inotify_add_watch(filesystem_events->inotify, wi_string_utf8_string(path), _WI_FILESYSTEM_EVENTS_INOTIFY_MASK);
 
     if(fd < 0) {
         wi_error_set_errno(errno);
