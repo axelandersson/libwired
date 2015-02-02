@@ -72,7 +72,7 @@ void wi_test_string_encoding_conversion(void) {
     wi_data_t               *data;
     wi_string_encoding_t    *encoding;
     
-    encoding = wi_string_encoding_with_charset(WI_STR("ASCII"), WI_STRING_ENCODING_IGNORE);
+    encoding = wi_string_encoding_with_charset(WI_STR("ISO-8859-1"), 0);
     string = wi_string_with_c_string("hello world", encoding);
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello world"), "");
@@ -89,7 +89,9 @@ void wi_test_string_encoding_conversion(void) {
     path = wi_string_by_appending_path_component(wi_test_fixture_path, WI_STR("wi-string-encoding-tests-1.txt"));
     string = wi_string_with_contents_of_file(path, encoding);
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(string, WI_STR("hello \n"), "");
+    WI_TEST_ASSERT_NOT_NULL(string, "");
+    WI_TEST_ASSERT_EQUALS(wi_string_character_at_index(string, 0), 'h', "");
+    WI_TEST_ASSERT_EQUALS(wi_string_length(string), 14, "");
     
     data = wi_string_data(WI_STR("hello world"), encoding);
 
