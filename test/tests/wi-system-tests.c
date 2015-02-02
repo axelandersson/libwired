@@ -43,8 +43,9 @@ void wi_test_system(void) {
     backtrace = wi_backtrace();
     
     if(backtrace) {
+        WI_TEST_ASSERT_TRUE(wi_array_count(backtrace) > 0, "");
         WI_TEST_ASSERT_NOT_EQUALS(wi_string_index_of_string(wi_array_components_joined_by_string(backtrace, WI_STR("\n")),
-                                                            WI_STR("wi_test_system"), 0),
+                                                            WI_STR("test"), 0),
                                   WI_NOT_FOUND, "");
     }
     
