@@ -100,9 +100,6 @@ void wi_test_filesystem_successes(void) {
     
     WI_TEST_ASSERT_TRUE(result, "");
     
-    if(filesystem_stats.filesystem_id > 0)
-        WI_TEST_ASSERT_TRUE(filesystem_stats.filesystem_id == file_stats.filesystem_id, "");
-    
     WI_TEST_ASSERT_TRUE(filesystem_stats.size > 0, "");
     WI_TEST_ASSERT_TRUE(filesystem_stats.free_size > 0, "");
     WI_TEST_ASSERT_TRUE(filesystem_stats.free_size < filesystem_stats.size, "");
