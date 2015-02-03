@@ -117,7 +117,7 @@ void wi_test_filesystem_successes(void) {
     
     contents = wi_filesystem_directory_contents_at_path(path);
     
-    WI_TEST_ASSERT_EQUAL_INSTANCES(contents, wi_array_with_data(WI_STR("foobar"), WI_STR("foobaz"), NULL), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_set_with_array(contents), wi_set_with_data(WI_STR("foobar"), WI_STR("foobaz"), NULL), "");
     
     result = wi_filesystem_delete_path_with_callback(path, _wi_test_filesystem_successes_delete_callback);
     

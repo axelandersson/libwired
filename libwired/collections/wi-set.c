@@ -201,6 +201,12 @@ wi_set_t * wi_set_with_data(void *data0, ...) {
 
 
 
+wi_set_t * wi_set_with_array(wi_array_t *array) {
+    return wi_autorelease(wi_set_init_with_array(wi_set_alloc(), array));
+}
+
+
+
 wi_mutable_set_t * wi_mutable_set(void) {
     return wi_autorelease(wi_set_init(wi_mutable_set_alloc()));
 }
