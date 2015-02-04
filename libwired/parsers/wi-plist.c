@@ -44,61 +44,43 @@ int wi_plist_dummy = 0;
 #include <wired/wi-runtime.h>
 #include <wired/wi-string.h>
 #include <wired/wi-string-encoding.h>
+#include <wired/wi-xml-parser.h>
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libxml/xmlerror.h>
 #include <libxml/xpath.h>
 
-static wi_runtime_instance_t *          _wi_plist_instance_for_document(xmlDocPtr);
-static wi_runtime_instance_t *          _wi_plist_instance_for_node(xmlNodePtr);
-static wi_boolean_t                     _wi_plist_read_node_to_instance(xmlNodePtr, wi_runtime_instance_t *);
+static wi_runtime_instance_t *          _wi_plist_instance_for_node(wi_xml_node_t *);
+static wi_runtime_instance_t *          _wi_plist_instance_for_content_node(wi_xml_node_t *);
 static wi_boolean_t                     _wi_plist_write_instance_to_node(wi_runtime_instance_t *, xmlNodePtr);
 
-static wi_string_t *                    _wi_libxml2_node_name(xmlNodePtr);
-static wi_string_t *                    _wi_libxml2_node_attribute_with_name(xmlNodePtr, wi_string_t *);
-static wi_string_t *                    _wi_libxml2_node_content(xmlNodePtr);
 static xmlNodePtr                       _wi_libxml2_node_new_child(xmlNodePtr, wi_string_t *, wi_string_t *);
 
 
+
 wi_runtime_instance_t * wi_plist_read_instance_from_path(wi_string_t *path) {
-    wi_runtime_instance_t   *instance;
-    xmlDocPtr               doc;
+    wi_xml_node_t     *node;
     
-    doc = xmlReadFile(wi_string_utf8_string(path), NULL, 0);
+    node = wi_xml_parser_read_node_from_path(path);
     
-    if(!doc) {
-        wi_error_set_libxml2_error();
-        
+    if(!node)
         return NULL;
-    }
     
-    instance = _wi_plist_instance_for_document(doc);
-    
-    xmlFreeDoc(doc);
-    
-    return instance;
+    return _wi_plist_instance_for_node(node);
 }
 
 
 
 wi_runtime_instance_t * wi_plist_instance_for_string(wi_string_t *string) {
-    wi_runtime_instance_t   *instance;
-    xmlDocPtr               doc;
+    wi_xml_node_t   *node;
     
-    doc = xmlReadMemory(wi_string_utf8_string(string), wi_string_length(string), NULL, NULL, 0);
+    node = wi_xml_parser_node_from_data(wi_string_utf8_data(string));
     
-    if(!doc) {
-        wi_error_set_libxml2_error();
-        
+    if(!node)
         return NULL;
-    }
     
-    instance = _wi_plist_instance_for_document(doc);
-    
-    xmlFreeDoc(doc);
-    
-    return instance;
+    return _wi_plist_instance_for_node(node);
 }
 
 
@@ -152,138 +134,148 @@ wi_string_t * wi_plist_string_for_instance(wi_runtime_instance_t *instance) {
 
 #pragma mark -
 
-static wi_runtime_instance_t * _wi_plist_instance_for_document(xmlDocPtr doc) {
-    wi_runtime_instance_t   *instance;
-    wi_string_t             *version;
-    xmlNodePtr              root_node, content_node = NULL, node;
+static wi_runtime_instance_t * _wi_plist_instance_for_node(wi_xml_node_t *node) {
+    wi_runtime_instance_t   *collection;
+    wi_xml_node_t           *collection_node, *content_node;
+    wi_string_t             *element;
+    wi_dictionary_t         *attributes;
+    wi_uinteger_t           i;
     
-    root_node = xmlDocGetRootElement(doc);
+    element = wi_xml_node_element(node);
+    attributes = wi_xml_node_attributes(node);
     
-    if(!wi_is_equal(_wi_libxml2_node_name(root_node), WI_STR("plist"))) {
+    if(!wi_is_equal(element, WI_STR("plist"))) {
         wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
-            WI_STR("Root node \"%@\" is not equal to \"plist\""),
-            _wi_libxml2_node_name(root_node));
+                                                WI_STR("Root node \"%@\" is not equal to \"plist\""),
+                                                element);
         
         return NULL;
     }
     
-    version = _wi_libxml2_node_attribute_with_name(root_node, WI_STR("version"));
-    
-    if(!version) {
+    if(!wi_is_equal(wi_dictionary_data_for_key(attributes, WI_STR("version")), WI_STR("1.0"))) {
         wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
-            WI_STR("No version attribute on \"plist\""));
+                                                WI_STR("Unsuppported plist version \"%@\""),
+                                                wi_dictionary_data_for_key(attributes, WI_STR("version")));
         
         return NULL;
     }
     
-    if(!wi_is_equal(version, WI_STR("1.0"))) {
+    if(wi_xml_node_number_of_children(node) != 1) {
         wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
-            WI_STR("Unhandled version \"%@\""), version);
+                                                WI_STR("Root node should have one content node"));
         
         return NULL;
     }
     
-    for(node = root_node->children; node != NULL; node = node->next) {
-        if(node->type == XML_ELEMENT_NODE) {
-            content_node = node;
+    return _wi_plist_instance_for_content_node(wi_xml_node_child_at_index(node, 0));
+}
+
+
+
+static wi_runtime_instance_t * _wi_plist_instance_for_content_node(wi_xml_node_t *node) {
+    wi_runtime_instance_t   *instance, *value;
+    wi_string_t             *element, *key;
+    wi_xml_node_t           *child_node;
+    wi_uinteger_t           i;
+    
+    element = wi_xml_node_element(node);
+
+    if(wi_is_equal(element, WI_STR("dict"))) {
+        instance = wi_mutable_dictionary();
+        
+        if(wi_xml_node_number_of_children(node) % 2 != 0) {
+            wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
+                                                    WI_STR("Content node \"dict\" must contain an even number of nodes"));
             
-            break;
+            return NULL;
         }
+        
+        for(i = 0; i < wi_xml_node_number_of_children(node); i += 2) {
+            child_node = wi_xml_node_child_at_index(node, i);
+            
+            if(!wi_is_equal(wi_xml_node_element(child_node), WI_STR("key"))) {
+                wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
+                                                        WI_STR("Content node \"dict\" node \"%@\" is not equal to \"key\""),
+                                                        wi_xml_node_element(child_node));
+                
+                return NULL;
+            }
+            
+            key = _wi_plist_instance_for_content_node(child_node);
+            
+            if(!key)
+                return NULL;
+            
+            if(wi_string_length(key) == 0) {
+                wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
+                                                        WI_STR("Content node \"dict\" node \"key\" must not be empty"),
+                                                        wi_xml_node_element(child_node));
+                
+                return NULL;
+            }
+
+            child_node = wi_xml_node_child_at_index(node, i + 1);
+            
+            if(wi_is_equal(wi_xml_node_element(child_node), WI_STR("key"))) {
+                wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
+                                                        WI_STR("Content node \"dict\" node \"%@\" is equal to \"key\""),
+                                                        wi_xml_node_element(child_node));
+                
+                return NULL;
+            }
+            
+            value = _wi_plist_instance_for_content_node(child_node);
+            
+            if(!value)
+                return NULL;
+            
+            wi_mutable_dictionary_set_data_for_key(instance, value, key);
+        }
+        
+        wi_runtime_make_immutable(instance);
     }
-    
-    if(!content_node) {
+    else if(wi_is_equal(element, WI_STR("array"))) {
+        instance = wi_mutable_array();
+        
+        for(i = 0; i < wi_xml_node_number_of_children(node); i++) {
+            child_node = wi_xml_node_child_at_index(node, i);
+            value = _wi_plist_instance_for_content_node(child_node);
+            
+            wi_mutable_array_add_data(instance, value);
+        }
+        
+        wi_runtime_make_immutable(instance);
+    }
+    else if(wi_is_equal(element, WI_STR("key")) || wi_is_equal(element, WI_STR("string"))) {
+        instance = wi_xml_node_text(node);
+    }
+    else if(wi_is_equal(element, WI_STR("integer"))) {
+        instance = wi_number_with_integer(wi_string_integer(wi_xml_node_text(node)));
+    }
+    else if(wi_is_equal(element, WI_STR("real"))) {
+        instance = wi_number_with_double(wi_string_double(wi_xml_node_text(node)));
+    }
+    else if(wi_is_equal(element, WI_STR("true"))) {
+        instance = wi_number_with_bool(true);
+    }
+    else if(wi_is_equal(element, WI_STR("false"))) {
+        instance = wi_number_with_bool(false);
+    }
+    else if(wi_is_equal(element, WI_STR("date"))) {
+        instance = wi_date_with_rfc3339_string(wi_xml_node_text(node));
+    }
+    else if(wi_is_equal(element, WI_STR("data"))) {
+        instance = wi_data_with_base64_string(wi_xml_node_text(node));
+    }
+    else {
         wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
-            WI_STR("No content"));
+                                                WI_STR("Content node \"%@\" is not supported"),
+                                                element);
         
         return NULL;
     }
-    
-    instance = _wi_plist_instance_for_node(content_node);
-    
-    if(!_wi_plist_read_node_to_instance(content_node, instance))
-        return NULL;
     
     return instance;
-}
-
-
-
-static wi_runtime_instance_t * _wi_plist_instance_for_node(xmlNodePtr node) {
-    wi_string_t     *name;
-    
-    name = _wi_libxml2_node_name(node);
-
-    if(wi_is_equal(name, WI_STR("dict")))
-        return wi_mutable_dictionary();
-    else if(wi_is_equal(name, WI_STR("array")))
-        return wi_mutable_array();
-
-    wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
-        WI_STR("Content \"%@\" is not \"dict\" or \"array\""), name);
-    
-    return NULL;
-}
-
-
-
-static wi_boolean_t _wi_plist_read_node_to_instance(xmlNodePtr content_node, wi_runtime_instance_t *collection) {
-    xmlNodePtr              node;
-    wi_string_t             *key = NULL;
-    wi_runtime_instance_t   *instance = NULL;
-    wi_boolean_t            dictionary;
-    
-    dictionary = (wi_runtime_id(collection) == wi_dictionary_runtime_id());
-    
-    for(node = content_node->children; node != NULL; node = node->next) {
-        if(node->type == XML_ELEMENT_NODE) {
-            if(strcmp((const char *) node->name, "key") == 0)
-                key = _wi_libxml2_node_content(node);
-            else if(strcmp((const char *) node->name, "string") == 0)
-                instance = _wi_libxml2_node_content(node);
-            else if(strcmp((const char *) node->name, "integer") == 0)
-                instance = wi_number_with_integer(wi_string_integer(_wi_libxml2_node_content(node)));
-            else if(strcmp((const char *) node->name, "real") == 0)
-                instance = wi_number_with_double(wi_string_double(_wi_libxml2_node_content(node)));
-            else if(strcmp((const char *) node->name, "true") == 0)
-                instance = wi_number_with_bool(true);
-            else if(strcmp((const char *) node->name, "false") == 0)
-                instance = wi_number_with_bool(false);
-            else if(strcmp((const char *) node->name, "date") == 0)
-                instance = wi_date_with_rfc3339_string(_wi_libxml2_node_content(node));
-            else if(strcmp((const char *) node->name, "data") == 0)
-                instance = wi_data_with_base64_string(_wi_libxml2_node_content(node));
-            else if(strcmp((const char *) node->name, "dict") == 0) {
-                instance = wi_mutable_dictionary();
-                
-                if(!_wi_plist_read_node_to_instance(node, instance))
-                    return false;
-            }
-            else if(strcmp((const char *) node->name, "array") == 0) {
-                instance = wi_mutable_array();
-                
-                if(!_wi_plist_read_node_to_instance(node, instance))
-                    return false;
-            }
-            else {
-                wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_READFAILED,
-                    WI_STR("Unhandled node \"%s\""), node->name);
-                
-                return false;
-            }
-        }
-            
-        if(instance) {
-            if(dictionary)
-                wi_mutable_dictionary_set_data_for_key(collection, instance, key);
-            else
-                wi_mutable_array_add_data(collection, instance);
-            
-            instance = NULL;
-            key = NULL;
-        }
-    }
-    
-    return true;
 }
 
 
@@ -371,48 +363,6 @@ static wi_boolean_t _wi_plist_write_instance_to_node(wi_runtime_instance_t *inst
 
 
 #pragma mark -
-
-static wi_string_t * _wi_libxml2_node_name(xmlNodePtr node) {
-    return wi_string_with_utf8_string((const char *) ((xmlNodePtr) node)->name);
-}
-
-
-
-static wi_string_t * _wi_libxml2_node_attribute_with_name(xmlNodePtr node, wi_string_t *attribute) {
-    wi_string_t     *string;
-    xmlChar         *prop;
-    
-    prop = xmlGetProp(node, (xmlChar *) wi_string_utf8_string(attribute));
-    
-    if(!prop)
-        return NULL;
-    
-    string = wi_string_with_utf8_string((char *) prop);
-    
-    xmlFree(prop);
-    
-    return string;
-}
-
-
-
-static wi_string_t * _wi_libxml2_node_content(xmlNodePtr node) {
-    wi_string_t     *string;
-    xmlChar         *content;
-    
-    content = xmlNodeGetContent(node);
-    
-    if(!content)
-        return NULL;
-    
-    string = wi_string_with_utf8_string((char *) content);
-    
-    xmlFree(content);
-    
-    return string;
-}
-
-
 
 static xmlNodePtr _wi_libxml2_node_new_child(xmlNodePtr node, wi_string_t *name, wi_string_t *content) {
     return xmlNewTextChild(node,
