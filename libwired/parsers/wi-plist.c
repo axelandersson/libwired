@@ -49,6 +49,7 @@ int wi_plist_dummy = 0;
 static wi_runtime_instance_t *          _wi_plist_instance_for_node(wi_xml_node_t *);
 static wi_runtime_instance_t *          _wi_plist_instance_for_content_node(wi_xml_node_t *);
 static wi_string_t *                    _wi_plist_xml_string_for_instance(wi_runtime_instance_t *, wi_uinteger_t);
+static wi_string_t *                    _wi_plist_xml_string_for_string(wi_string_t *);
 
 
 
@@ -101,7 +102,7 @@ wi_string_t * wi_plist_string_for_instance(wi_runtime_instance_t *instance) {
     wi_mutable_string_append_string(string, WI_STR("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
     wi_mutable_string_append_string(string, WI_STR("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"));
     wi_mutable_string_append_string(string, WI_STR("<plist version=\"1.0\">\n"));
-    wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(instance, 1));
+    wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(instance, 0));
     wi_mutable_string_append_string(string, WI_STR("</plist>\n"));
     
     wi_runtime_make_immutable(string);
@@ -272,7 +273,7 @@ static wi_string_t * _wi_plist_xml_string_for_instance(wi_runtime_instance_t *in
     id = wi_runtime_id(instance);
     
     for(i = 0; i < level; i++)
-        wi_mutable_string_append_string(string, WI_STR("    "));
+        wi_mutable_string_append_string(string, WI_STR("\t"));
     
     if(id == wi_dictionary_runtime_id()) {
         if(wi_dictionary_count(instance) == 0) {
@@ -287,14 +288,14 @@ static wi_string_t * _wi_plist_xml_string_for_instance(wi_runtime_instance_t *in
                 value = wi_dictionary_data_for_key(instance, key);
                 
                 for(i = 0; i < level + 1; i++)
-                    wi_mutable_string_append_string(string, WI_STR("    "));
+                    wi_mutable_string_append_string(string, WI_STR("\t"));
                 
-                wi_mutable_string_append_format(string, WI_STR("<key>%@</key>\n"), key);
+                wi_mutable_string_append_format(string, WI_STR("<key>%@</key>\n"), _wi_plist_xml_string_for_string(key));
                 wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(value, level + 1));
             }
             
             for(i = 0; i < level; i++)
-                wi_mutable_string_append_string(string, WI_STR("    "));
+                wi_mutable_string_append_string(string, WI_STR("\t"));
             
             wi_mutable_string_append_string(string, WI_STR("</dict>\n"));
         }
@@ -311,13 +312,13 @@ static wi_string_t * _wi_plist_xml_string_for_instance(wi_runtime_instance_t *in
                 wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(value, level + 1));
             
             for(i = 0; i < level; i++)
-                wi_mutable_string_append_string(string, WI_STR("    "));
+                wi_mutable_string_append_string(string, WI_STR("\t"));
             
             wi_mutable_string_append_string(string, WI_STR("</array>\n"));
         }
     }
     else if(id == wi_string_runtime_id()) {
-        wi_mutable_string_append_format(string, WI_STR("<string>%@</string>\n"), instance);
+        wi_mutable_string_append_format(string, WI_STR("<string>%@</string>\n"), _wi_plist_xml_string_for_string(instance));
     }
     else if(id == wi_number_runtime_id()) {
         type = wi_number_type(instance);
@@ -342,6 +343,22 @@ static wi_string_t * _wi_plist_xml_string_for_instance(wi_runtime_instance_t *in
     }
     
     return string;
+}
+
+
+
+static wi_string_t * _wi_plist_xml_string_for_string(wi_string_t *string) {
+    wi_mutable_string_t     *escaped_string;
+    
+    escaped_string = wi_mutable_copy(string);
+    
+    wi_mutable_string_replace_string_with_string(escaped_string, WI_STR("&"), WI_STR("&amp;"), 0);
+    wi_mutable_string_replace_string_with_string(escaped_string, WI_STR("<"), WI_STR("&lt;"), 0);
+    wi_mutable_string_replace_string_with_string(escaped_string, WI_STR(">"), WI_STR("&gt;"), 0);
+    
+    wi_runtime_make_immutable(escaped_string);
+    
+    return escaped_string;
 }
 
 #endif

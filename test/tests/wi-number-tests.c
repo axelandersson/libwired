@@ -142,7 +142,7 @@ void wi_test_number_accessors(void) {
     WI_TEST_ASSERT_EQUALS(wi_number_storage_type(wi_number_with_bool(true)), WI_NUMBER_STORAGE_INT32, "");
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_number_string(wi_number_with_int(1337)), WI_STR("1337"), "");
-    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_number_string(wi_number_with_double(42.42)), WI_STR("42.420000"), "");
+    WI_TEST_ASSERT_EQUAL_INSTANCES(wi_number_string(wi_number_with_double(42.42)), WI_STR("42.42"), "");
 }
 
 

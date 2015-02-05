@@ -1,1 +1,1 @@
-{"array":["value1", "value2"], "dict":{"key1":"value1", "key2":"value2"}, "false":false, "integer":42, "null":null, "real":3.140000, "string":"\"hello world\"", "true":true}
+{"array":["value1", "value2"], "dict":{"key1":"value1", "key2":"value2"}, "false":false, "integer":42, "null":null, "real":3.14, "string":"\"hello world\"", "true":true}

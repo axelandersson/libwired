@@ -42,7 +42,7 @@ void wi_test_plist(void) {
     WI_TEST_ASSERT_NOT_NULL(dictionary1, "%m");
     
     dictionary2 = wi_dictionary_with_data_and_keys(
-        WI_STR("hello world"),
+        WI_STR("<hello & world>"),
             WI_STR("string"),
         wi_number_with_bool(true),
             WI_STR("true"),
