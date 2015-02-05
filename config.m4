@@ -107,7 +107,8 @@ AC_DEFUN([WI_INCLUDE_COMMON_CRYPTO_LIBRARIES], [
         CommonCrypto/CommonDigest.h \
         CommonCrypto/CommonCryptor.h \
     ], [
-        WI_APPEND_FLAG([CPPFLAGS], [-DWI_DIGESTS])
+        WI_APPEND_FLAG([CPPFLAGS], [-DWI_MD5])
+        WI_APPEND_FLAG([CPPFLAGS], [-DWI_SHA1])
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_CIPHERS])
         m4_ifvaln([$1], [$1], [:])
     ], [
@@ -180,7 +181,8 @@ AC_DEFUN([WI_INCLUDE_CRYPTO_LIBRARY], [
 
         AC_CHECK_LIB([crypto], [SHA1_Init], [
             WI_APPEND_FLAG([LIBS], [-lcrypto])
-            WI_APPEND_FLAG([CPPFLAGS], [-DWI_DIGESTS])
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_MD5])
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_SHA1])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_CIPHERS])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_DH])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_RSA])

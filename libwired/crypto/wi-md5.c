@@ -26,13 +26,17 @@
 
 #include "config.h"
 
+#ifndef WI_MD5
+
+int wi_md5_dummy = 1;
+
+#else
+
 #include <wired/wi-assert.h>
 #include <wired/wi-data.h>
 #include <wired/wi-md5.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-string.h>
-
-#if defined(HAVE_OPENSSL_SHA_H) || defined(HAVE_COMMONCRYPTO_COMMONDIGEST_H)
 
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
 #define WI_MD5_COMMONCRYPTO                 1

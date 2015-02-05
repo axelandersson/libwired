@@ -362,13 +362,17 @@ wi_data_t * wi_data_by_appending_bytes(wi_data_t *data, const void *bytes, wi_ui
 
 #pragma mark -
 
-#ifdef WI_DIGESTS
+#ifdef WI_MD5
 
 wi_string_t * wi_data_md5_string(wi_data_t *data) {
     return wi_md5_digest_string(data);
 }
 
+#endif
 
+
+
+#ifdef WI_SHA1
 
 wi_string_t * wi_data_sha1_string(wi_data_t *data) {
     return wi_sha1_digest_string(data);

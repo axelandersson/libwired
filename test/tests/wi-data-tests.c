@@ -160,11 +160,14 @@ void wi_test_data_digests(void) {
     
     data = wi_data_with_base64_string(WI_STR("aGVsbG8gd29ybGQ="));
 
-#ifdef WI_DIGESTS
+#ifdef WI_MD5
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_md5_string(data), WI_STR("5eb63bbbe01eeed093cb22bb8f5acdc3"), "");
+#endif
+
+#ifdef WI_SHA1
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_sha1_string(data), WI_STR("2aae6c35c94fcfb415dbe95f408b9ce91ee846ed"), "");
 #endif
-    
+
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_base64_string(data), WI_STR("aGVsbG8gd29ybGQ="), "");
 }
 

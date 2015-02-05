@@ -32,7 +32,7 @@ WI_TEST_EXPORT void                     wi_test_sha1_digest(void);
 
 
 void wi_test_sha1_creation(void) {
-#ifdef WI_DIGESTS
+#ifdef WI_SHA1
     wi_sha1_t   *sha1;
     
     sha1 = wi_sha1();
@@ -50,6 +50,7 @@ void wi_test_sha1_creation(void) {
 
 
 void wi_test_sha1_digest(void) {
+#ifdef WI_SHA1
     wi_sha1_t       *sha1;
     wi_data_t       *data;
     unsigned char   buffer[WI_SHA1_LENGTH];
@@ -68,4 +69,5 @@ void wi_test_sha1_digest(void) {
     
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_SHA1_LENGTH), wi_data_with_base64_string(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_sha1_data(sha1), wi_data_with_base64_string(WI_STR("2jmj7l5rSw0yVb/vlWAYkK/YBwk=")), "");
+#endif
 }

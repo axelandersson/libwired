@@ -4703,12 +4703,23 @@ _ACEOF
 
 
     if test -z "$CPPFLAGS"; then
-        CPPFLAGS="-DWI_DIGESTS"
+        CPPFLAGS="-DWI_MD5"
     else
-        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DIGESTS"`
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_MD5"`
 
         if test "$MATCH" = "0"; then
-            CPPFLAGS="$CPPFLAGS -DWI_DIGESTS"
+            CPPFLAGS="$CPPFLAGS -DWI_MD5"
+        fi
+    fi
+
+
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_SHA1"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_SHA1"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_SHA1"
         fi
     fi
 
@@ -5251,12 +5262,23 @@ if test "x$ac_cv_lib_crypto_SHA1_Init" = xyes; then :
 
 
     if test -z "$CPPFLAGS"; then
-        CPPFLAGS="-DWI_DIGESTS"
+        CPPFLAGS="-DWI_MD5"
     else
-        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_DIGESTS"`
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_MD5"`
 
         if test "$MATCH" = "0"; then
-            CPPFLAGS="$CPPFLAGS -DWI_DIGESTS"
+            CPPFLAGS="$CPPFLAGS -DWI_MD5"
+        fi
+    fi
+
+
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_SHA1"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_SHA1"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_SHA1"
         fi
     fi
 

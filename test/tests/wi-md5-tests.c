@@ -32,7 +32,7 @@ WI_TEST_EXPORT void                     wi_test_md5_digest(void);
 
 
 void wi_test_md5_creation(void) {
-#ifdef WI_DIGESTS
+#ifdef WI_MD5
     wi_md5_t    *md5;
     
     md5 = wi_md5();
@@ -50,6 +50,7 @@ void wi_test_md5_creation(void) {
 
 
 void wi_test_md5_digest(void) {
+#ifdef WI_MD5
     wi_md5_t        *md5;
     wi_data_t       *data;
     unsigned char   buffer[WI_MD5_LENGTH];
@@ -68,4 +69,5 @@ void wi_test_md5_digest(void) {
 
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_data_with_bytes(buffer, WI_MD5_LENGTH), wi_data_with_base64_string(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
     WI_TEST_ASSERT_EQUAL_INSTANCES(wi_md5_data(md5), wi_data_with_base64_string(WI_STR("1B2M2Y8AsgTpgAmY7PhCfg==")), "");
+#endif
 }
