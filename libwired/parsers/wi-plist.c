@@ -46,16 +46,9 @@ int wi_plist_dummy = 0;
 #include <wired/wi-string-encoding.h>
 #include <wired/wi-xml-parser.h>
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <libxml/xmlerror.h>
-#include <libxml/xpath.h>
-
 static wi_runtime_instance_t *          _wi_plist_instance_for_node(wi_xml_node_t *);
 static wi_runtime_instance_t *          _wi_plist_instance_for_content_node(wi_xml_node_t *);
-static wi_boolean_t                     _wi_plist_write_instance_to_node(wi_runtime_instance_t *, xmlNodePtr);
-
-static xmlNodePtr                       _wi_libxml2_node_new_child(xmlNodePtr, wi_string_t *, wi_string_t *);
+static wi_string_t *                    _wi_plist_xml_string_for_instance(wi_runtime_instance_t *, wi_uinteger_t);
 
 
 
@@ -101,31 +94,17 @@ wi_boolean_t wi_plist_write_instance_to_path(wi_runtime_instance_t *instance, wi
 
 
 wi_string_t * wi_plist_string_for_instance(wi_runtime_instance_t *instance) {
-    wi_string_t     *string = NULL;
-    xmlDocPtr       doc;
-    xmlDtdPtr       dtd;
-    xmlNodePtr      root_node;
-    xmlChar         *buffer;
-    int             length;
-
-    doc = xmlNewDoc((xmlChar *) "1.0");
-
-    dtd = xmlNewDtd(doc, (xmlChar *) "plist", (xmlChar *) "-//Apple//DTD PLIST 1.0//EN", (xmlChar *) "http://www.apple.com/DTDs/PropertyList-1.0.dtd");
-    xmlAddChild((xmlNodePtr) doc, (xmlNodePtr) dtd);
+    wi_mutable_string_t     *string;
     
-    root_node = xmlNewNode(NULL, (xmlChar *) "plist");
-    xmlSetProp(root_node, (xmlChar *) "version", (xmlChar *) "1.0");
-    xmlDocSetRootElement(doc, root_node);
+    string = wi_mutable_string();
     
-    if(_wi_plist_write_instance_to_node(instance, root_node)) {
-        xmlDocDumpFormatMemoryEnc(doc, &buffer, &length, "UTF-8", 1);
+    wi_mutable_string_append_string(string, WI_STR("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
+    wi_mutable_string_append_string(string, WI_STR("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"));
+    wi_mutable_string_append_string(string, WI_STR("<plist version=\"1.0\">\n"));
+    wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(instance, 1));
+    wi_mutable_string_append_string(string, WI_STR("</plist>\n"));
     
-        string = wi_string_with_utf8_string((char *) buffer);
-        
-        xmlFree(buffer);
-    }
-    
-    xmlFreeDoc(doc);
+    wi_runtime_make_immutable(string);
     
     return string;
 }
@@ -280,95 +259,89 @@ static wi_runtime_instance_t * _wi_plist_instance_for_content_node(wi_xml_node_t
 
 
 
-static wi_boolean_t _wi_plist_write_instance_to_node(wi_runtime_instance_t *instance, xmlNodePtr node) {
+static wi_string_t * _wi_plist_xml_string_for_instance(wi_runtime_instance_t *instance, wi_uinteger_t level) {
+    wi_mutable_string_t     *string;
     wi_enumerator_t         *enumerator;
-    wi_mutable_array_t      *keys;
-    wi_runtime_instance_t   *value;
-    xmlNodePtr              child_node;
-    void                    *key;
+    wi_array_t              *keys;
+    wi_string_t             *key, *value;
     wi_runtime_id_t         id;
     wi_number_type_t        type;
-    wi_uinteger_t           i, count;
+    wi_uinteger_t           i;
     
+    string = wi_mutable_string();
     id = wi_runtime_id(instance);
     
-    if(id == wi_string_runtime_id()) {
-        _wi_libxml2_node_new_child(node, WI_STR("string"), instance);
+    for(i = 0; i < level; i++)
+        wi_mutable_string_append_string(string, WI_STR("    "));
+    
+    if(id == wi_dictionary_runtime_id()) {
+        if(wi_dictionary_count(instance) == 0) {
+            wi_mutable_string_append_string(string, WI_STR("<dict/>\n"));
+        } else {
+            wi_mutable_string_append_format(string, WI_STR("<dict>\n"));
+            
+            keys = wi_array_by_sorting(wi_dictionary_all_keys(instance), wi_string_compare);
+            enumerator = wi_array_data_enumerator(keys);
+            
+            while((key = wi_enumerator_next_data(enumerator))) {
+                value = wi_dictionary_data_for_key(instance, key);
+                
+                for(i = 0; i < level + 1; i++)
+                    wi_mutable_string_append_string(string, WI_STR("    "));
+                
+                wi_mutable_string_append_format(string, WI_STR("<key>%@</key>\n"), key);
+                wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(value, level + 1));
+            }
+            
+            for(i = 0; i < level; i++)
+                wi_mutable_string_append_string(string, WI_STR("    "));
+            
+            wi_mutable_string_append_string(string, WI_STR("</dict>\n"));
+        }
+    }
+    else if(id == wi_array_runtime_id()) {
+        if(wi_array_count(instance) == 0) {
+            wi_mutable_string_append_string(string, WI_STR("<array/>\n"));
+        } else {
+            wi_mutable_string_append_format(string, WI_STR("<array>\n"));
+            
+            enumerator = wi_array_data_enumerator(instance);
+            
+            while((value = wi_enumerator_next_data(enumerator)))
+                wi_mutable_string_append_string(string, _wi_plist_xml_string_for_instance(value, level + 1));
+            
+            for(i = 0; i < level; i++)
+                wi_mutable_string_append_string(string, WI_STR("    "));
+            
+            wi_mutable_string_append_string(string, WI_STR("</array>\n"));
+        }
+    }
+    else if(id == wi_string_runtime_id()) {
+        wi_mutable_string_append_format(string, WI_STR("<string>%@</string>\n"), instance);
     }
     else if(id == wi_number_runtime_id()) {
         type = wi_number_type(instance);
         
         if(type == WI_NUMBER_BOOL) {
             if(wi_number_bool(instance))
-                _wi_libxml2_node_new_child(node, WI_STR("true"), NULL);
+                wi_mutable_string_append_string(string, WI_STR("<true/>\n"));
             else
-                _wi_libxml2_node_new_child(node, WI_STR("false"), NULL);
+                wi_mutable_string_append_string(string, WI_STR("<false/>\n"));
         } else {
             if(type == WI_NUMBER_FLOAT || type == WI_NUMBER_DOUBLE)
-                _wi_libxml2_node_new_child(node, WI_STR("real"), wi_number_string(instance));
+                wi_mutable_string_append_format(string, WI_STR("<real>%@</real>\n"), wi_number_string(instance));
             else
-                _wi_libxml2_node_new_child(node, WI_STR("integer"), wi_number_string(instance));
+                wi_mutable_string_append_format(string, WI_STR("<integer>%@</integer>\n"), wi_number_string(instance));
         }
-    }
-    else if(id == wi_data_runtime_id()) {
-        _wi_libxml2_node_new_child(node, WI_STR("data"), wi_data_base64_string(instance));
     }
     else if(id == wi_date_runtime_id()) {
-        _wi_libxml2_node_new_child(node, WI_STR("date"), wi_date_string_with_format(instance, WI_STR("%Y-%m-%dT%H:%M:%SZ")));
+        wi_mutable_string_append_format(string, WI_STR("<date>%@</date>\n"), wi_date_string_with_format(instance, WI_STR("%Y-%m-%dT%H:%M:%SZ")));
     }
-    else if(id == wi_dictionary_runtime_id()) {
-        child_node = _wi_libxml2_node_new_child(node, WI_STR("dict"), NULL);
-        
-        keys = wi_mutable_array();
-        
-        enumerator = wi_dictionary_key_enumerator(instance);
-        
-        while((key = wi_enumerator_next_data(enumerator)))
-            wi_mutable_array_add_data_sorted(keys, key, wi_string_compare);
-        
-        count = wi_array_count(keys);
-        
-        for(i = 0; i < count; i++) {
-            key        = WI_ARRAY(keys, i);
-            value    = wi_dictionary_data_for_key(instance, key);
-            
-            _wi_libxml2_node_new_child(child_node, WI_STR("key"), key);
-            
-            if(!_wi_plist_write_instance_to_node(value, child_node))
-                return false;
-        }
-    }
-    else if(id == wi_array_runtime_id()) {
-        child_node = _wi_libxml2_node_new_child(node, WI_STR("array"), NULL);
-        
-        xmlAddChild(node, child_node);
-        
-        enumerator = wi_array_data_enumerator(instance);
-        
-        while((value = wi_enumerator_next_data(enumerator))) {
-            if(!_wi_plist_write_instance_to_node(value, child_node))
-                return false;
-        }
-    }
-    else {
-        wi_error_set_libwired_error_with_format(WI_ERROR_PLIST_WRITEFAILED,
-            WI_STR("Unhandled class %@"), wi_runtime_class_name(instance));
-        
-        return false;
+    else if(id == wi_data_runtime_id()) {
+        wi_mutable_string_append_format(string, WI_STR("<data>%@</data>\n"), wi_data_base64_string(instance));
     }
     
-    return true;
-}
-
-
-
-#pragma mark -
-
-static xmlNodePtr _wi_libxml2_node_new_child(xmlNodePtr node, wi_string_t *name, wi_string_t *content) {
-    return xmlNewTextChild(node,
-                           NULL,
-                           (xmlChar *) wi_string_utf8_string(name),
-                           content ? (xmlChar *) wi_string_utf8_string(content) : NULL);
+    return string;
 }
 
 #endif
