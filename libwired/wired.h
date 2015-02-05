@@ -31,6 +31,7 @@
 #include <wired/wi-array.h>
 #include <wired/wi-assert.h>
 #include <wired/wi-base.h>
+#include <wired/wi-base64.h>
 #include <wired/wi-byteorder.h>
 #include <wired/wi-cipher.h>
 #include <wired/wi-compat.h>
@@ -54,6 +55,7 @@
 #include <wired/wi-lock.h>
 #include <wired/wi-log.h>
 #include <wired/wi-macros.h>
+#include <wired/wi-md5.h>
 #include <wired/wi-null.h>
 #include <wired/wi-number.h>
 #include <wired/wi-pipe.h>

@@ -31,11 +31,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <wired/wi-base64.h>
 #include <wired/wi-data.h>
-#include <wired/wi-digest.h>
 #include <wired/wi-file.h>
 #include <wired/wi-filesystem.h>
 #include <wired/wi-macros.h>
+#include <wired/wi-md5.h>
 #include <wired/wi-pool.h>
 #include <wired/wi-private.h>
 #include <wired/wi-random.h>
