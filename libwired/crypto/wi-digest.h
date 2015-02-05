@@ -68,8 +68,4 @@ WI_EXPORT void                          wi_sha1_get_data(wi_sha1_t *, unsigned c
 WI_EXPORT wi_data_t *                   wi_sha1_data(wi_sha1_t *);
 WI_EXPORT wi_string_t *                 wi_sha1_string(wi_sha1_t *);
 
-
-WI_EXPORT wi_string_t *                 wi_base64_string_from_data(wi_data_t *);
-WI_EXPORT wi_data_t *                   wi_data_from_base64_string(wi_string_t *);
-
 #endif /* WI_DIGEST_H */
