@@ -72,7 +72,6 @@ void wi_initialize(void) {
 #endif
     
     wi_dictionary_register();
-    wi_digest_register();
     wi_directory_enumerator_register();
     
 #ifdef WI_DSA
@@ -96,6 +95,7 @@ void wi_initialize(void) {
     
     wi_log_register();
     wi_null_register();
+    wi_md5_register();
     wi_number_register();
     wi_pipe_register();
     wi_pool_register();
@@ -114,6 +114,7 @@ void wi_initialize(void) {
 #endif
     
     wi_set_register();
+    wi_sha1_register();
     wi_socket_register();
     wi_string_register();
     
@@ -167,7 +168,6 @@ void wi_initialize(void) {
     wi_dh_initialize();
 #endif
     
-    wi_digest_initialize();
     wi_directory_enumerator_initialize();
 
 #ifdef WI_DSA
@@ -185,6 +185,7 @@ void wi_initialize(void) {
     wi_host_initialize();
     wi_indexset_initialize();
     wi_log_initialize();
+    wi_md5_initialize();
     wi_null_initialize();
     wi_number_initialize();
     wi_pipe_initialize();
@@ -197,6 +198,8 @@ void wi_initialize(void) {
     wi_rsa_initialize();
 #endif
     
+    wi_sha1_initialize();
+
 #ifdef WI_STRING_ENCODING
     wi_string_encoding_initialize();
 #endif

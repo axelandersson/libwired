@@ -51,11 +51,11 @@
 #endif
 
 
-#define _WI_MD5_ASSERT_OPEN(digest) \
-    WI_ASSERT(!(digest)->closed, "%@ has been closed", (digest))
+#define _WI_MD5_ASSERT_OPEN(md5) \
+    WI_ASSERT(!(md5)->closed, "%@ has been closed", (md5))
 
-#define _WI_MD5_ASSERT_CLOSED(digest) \
-    WI_ASSERT((digest)->closed, "%@ is open", (digest))
+#define _WI_MD5_ASSERT_CLOSED(md5) \
+    WI_ASSERT((md5)->closed, "%@ is open", (md5))
 
 
 struct _wi_md5_ctx {

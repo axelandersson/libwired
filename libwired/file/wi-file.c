@@ -39,7 +39,6 @@
 #include <wired/wi-assert.h>
 #include <wired/wi-byteorder.h>
 #include <wired/wi-compat.h>
-#include <wired/wi-digest.h>
 #include <wired/wi-file.h>
 #include <wired/wi-fts.h>
 #include <wired/wi-lock.h>

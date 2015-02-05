@@ -40,7 +40,6 @@
 #include <wired/wi-date.h>
 #include <wired/wi-dh.h>
 #include <wired/wi-dictionary.h>
-#include <wired/wi-digest.h>
 #include <wired/wi-directory-enumerator.h>
 #include <wired/wi-dsa.h>
 #include <wired/wi-enumerator.h>
@@ -69,6 +68,7 @@
 #include <wired/wi-regexp.h>
 #include <wired/wi-runtime.h>
 #include <wired/wi-set.h>
+#include <wired/wi-sha1.h>
 #include <wired/wi-socket.h>
 #include <wired/wi-string.h>
 #include <wired/wi-string-encoding.h>

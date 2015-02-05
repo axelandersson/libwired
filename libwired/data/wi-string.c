@@ -51,7 +51,6 @@
 #include <wired/wi-compat.h>
 #include <wired/wi-data.h>
 #include <wired/wi-dictionary.h>
-#include <wired/wi-digest.h>
 #include <wired/wi-file.h>
 #include <wired/wi-filesystem.h>
 #include <wired/wi-lock.h>

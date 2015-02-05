@@ -24,31 +24,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WI_DIGEST_H
-#define WI_DIGEST_H 1
+#ifndef WI_SHA1_H
+#define WI_SHA1_H 1
 
 #include <wired/wi-base.h>
 #include <wired/wi-runtime.h>
 
-#define WI_MD5_DIGEST_LENGTH            16
-#define WI_SHA1_DIGEST_LENGTH           20
-
-WI_EXPORT void                          wi_md5_digest(const void *, wi_uinteger_t, unsigned char *);
-WI_EXPORT wi_string_t *                 wi_md5_digest_string(wi_data_t *);
-
-WI_EXPORT wi_runtime_id_t               wi_md5_runtime_id(void);
-
-WI_EXPORT wi_md5_t *                    wi_md5(void);
-
-WI_EXPORT wi_md5_t *                    wi_md5_alloc(void);
-WI_EXPORT wi_md5_t *                    wi_md5_init(wi_md5_t *);
-
-WI_EXPORT void                          wi_md5_update(wi_md5_t *, const void *, wi_uinteger_t);
-WI_EXPORT void                          wi_md5_close(wi_md5_t *);
-
-WI_EXPORT void                          wi_md5_get_data(wi_md5_t *, unsigned char *);
-WI_EXPORT wi_data_t *                   wi_md5_data(wi_md5_t *);
-WI_EXPORT wi_string_t *                 wi_md5_string(wi_md5_t *);
+#define WI_SHA1_LENGTH                  20
 
 
 WI_EXPORT void                          wi_sha1_digest(const void *, wi_uinteger_t, unsigned char *);
@@ -68,4 +50,4 @@ WI_EXPORT void                          wi_sha1_get_data(wi_sha1_t *, unsigned c
 WI_EXPORT wi_data_t *                   wi_sha1_data(wi_sha1_t *);
 WI_EXPORT wi_string_t *                 wi_sha1_string(wi_sha1_t *);
 
-#endif /* WI_DIGEST_H */
+#endif /* WI_SHA1_H */

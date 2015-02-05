@@ -41,6 +41,7 @@
 #include <wired/wi-private.h>
 #include <wired/wi-random.h>
 #include <wired/wi-runtime.h>
+#include <wired/wi-sha1.h>
 #include <wired/wi-string.h>
 #include <wired/wi-system.h>
 
