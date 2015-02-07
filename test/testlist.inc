@@ -124,6 +124,8 @@ wi_tests_run_test("wi_test_set_enumeration", wi_test_set_enumeration);
 wi_tests_run_test("wi_test_set_mutation", wi_test_set_mutation);
 wi_tests_run_test("wi_test_sha1_creation", wi_test_sha1_creation);
 wi_tests_run_test("wi_test_sha1_digest", wi_test_sha1_digest);
+wi_tests_run_test("wi_test_sha2_creation", wi_test_sha2_creation);
+wi_tests_run_test("wi_test_sha2_digest", wi_test_sha2_digest);
 wi_tests_run_test("wi_test_socket_creation", wi_test_socket_creation);
 wi_tests_run_test("wi_test_socket_runtime_functions", wi_test_socket_runtime_functions);
 wi_tests_run_test("wi_test_socket_settings", wi_test_socket_settings);

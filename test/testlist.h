@@ -124,6 +124,8 @@ WI_TEST_EXPORT void                     wi_test_set_enumeration(void);
 WI_TEST_EXPORT void                     wi_test_set_mutation(void);
 WI_TEST_EXPORT void                     wi_test_sha1_creation(void);
 WI_TEST_EXPORT void                     wi_test_sha1_digest(void);
+WI_TEST_EXPORT void                     wi_test_sha2_creation(void);
+WI_TEST_EXPORT void                     wi_test_sha2_digest(void);
 WI_TEST_EXPORT void                     wi_test_socket_creation(void);
 WI_TEST_EXPORT void                     wi_test_socket_runtime_functions(void);
 WI_TEST_EXPORT void                     wi_test_socket_settings(void);

@@ -4725,6 +4725,17 @@ _ACEOF
 
 
     if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_SHA2"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_SHA2"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_SHA2"
+        fi
+    fi
+
+
+    if test -z "$CPPFLAGS"; then
         CPPFLAGS="-DWI_CIPHERS"
     else
         MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_CIPHERS"`
@@ -5279,6 +5290,17 @@ if test "x$ac_cv_lib_crypto_SHA1_Init" = xyes; then :
 
         if test "$MATCH" = "0"; then
             CPPFLAGS="$CPPFLAGS -DWI_SHA1"
+        fi
+    fi
+
+
+    if test -z "$CPPFLAGS"; then
+        CPPFLAGS="-DWI_SHA2"
+    else
+        MATCH=`expr -- "$CPPFLAGS" : ".*-DWI_SHA2"`
+
+        if test "$MATCH" = "0"; then
+            CPPFLAGS="$CPPFLAGS -DWI_SHA2"
         fi
     fi
 

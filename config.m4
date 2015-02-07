@@ -109,6 +109,7 @@ AC_DEFUN([WI_INCLUDE_COMMON_CRYPTO_LIBRARIES], [
     ], [
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_MD5])
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_SHA1])
+        WI_APPEND_FLAG([CPPFLAGS], [-DWI_SHA2])
         WI_APPEND_FLAG([CPPFLAGS], [-DWI_CIPHERS])
         m4_ifvaln([$1], [$1], [:])
     ], [
@@ -183,6 +184,7 @@ AC_DEFUN([WI_INCLUDE_CRYPTO_LIBRARY], [
             WI_APPEND_FLAG([LIBS], [-lcrypto])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_MD5])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_SHA1])
+            WI_APPEND_FLAG([CPPFLAGS], [-DWI_SHA2])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_CIPHERS])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_DH])
             WI_APPEND_FLAG([CPPFLAGS], [-DWI_RSA])

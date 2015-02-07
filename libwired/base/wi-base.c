@@ -114,7 +114,15 @@ void wi_initialize(void) {
 #endif
     
     wi_set_register();
+    
+#ifdef WI_SHA1
     wi_sha1_register();
+#endif
+    
+#ifdef WI_SHA2
+    wi_sha2_register();
+#endif
+    
     wi_socket_register();
     wi_string_register();
     
@@ -198,7 +206,13 @@ void wi_initialize(void) {
     wi_rsa_initialize();
 #endif
     
+#ifdef WI_SHA1
     wi_sha1_initialize();
+#endif
+    
+#ifdef WI_SHA2
+    wi_sha2_initialize();
+#endif
 
 #ifdef WI_STRING_ENCODING
     wi_string_encoding_initialize();

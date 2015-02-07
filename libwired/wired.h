@@ -69,6 +69,7 @@
 #include <wired/wi-runtime.h>
 #include <wired/wi-set.h>
 #include <wired/wi-sha1.h>
+#include <wired/wi-sha2.h>
 #include <wired/wi-socket.h>
 #include <wired/wi-string.h>
 #include <wired/wi-string-encoding.h>

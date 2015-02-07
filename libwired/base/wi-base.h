@@ -224,6 +224,7 @@ typedef struct _wi_rsa                      wi_rsa_t;
 typedef struct _wi_set                      wi_set_t;
 typedef struct _wi_set                      wi_mutable_set_t;
 typedef struct _wi_sha1                     wi_sha1_t;
+typedef struct _wi_sha2                     wi_sha2_t;
 typedef struct _wi_socket                   wi_socket_t;
 typedef struct _wi_socket_tls               wi_socket_tls_t;
 typedef struct _wi_string                   wi_string_t;
